@@ -1,0 +1,397 @@
+Heimdall v1.4 RC1
+
+Copyright (c) 2010-2012, Benjamin Dobell, Glass Echidna
+http://www.glassechidna.com.au/
+
+This software is provided free of charge. Copying and redistribution is
+encouraged.
+
+If you appreciate this software and you would like to support future
+development please consider donating:
+http://www.glassechidna.com.au/donate/
+
+Entry Count: 25
+Unknown 1: 1280725581
+Unknown 2: 0
+Unknown 3: 0
+Unknown 4: 0
+Unknown 5: 0
+Unknown 6: 0
+Unknown 7: 0
+Unknown 8: 0
+
+
+--- Entry #0 ---
+Binary Type: 0 (AP)
+Device Type: 0 (OneNAND)
+Identifier: 0
+Attributes: 1 (Read/Write)
+Update Attributes: 0
+Partition Block Size: 256
+Partition Block Count: 1
+File Offset (Obsolete): 0
+File Size (Obsolete): 0
+Partition Name: OBM
+Flash Filename: TIM_OBM.bin
+FOTA Filename: 
+
+
+--- Entry #1 ---
+Binary Type: 0 (AP)
+Device Type: 0 (OneNAND)
+Identifier: 1
+Attributes: 1 (Read/Write)
+Update Attributes: 0
+Partition Block Size: 256
+Partition Block Count: 1
+File Offset (Obsolete): 0
+File Size (Obsolete): 0
+Partition Name: MRD
+Flash Filename: 
+FOTA Filename: 
+
+
+--- Entry #2 ---
+Binary Type: 0 (AP)
+Device Type: 0 (OneNAND)
+Identifier: 2
+Attributes: 1 (Read/Write)
+Update Attributes: 0
+Partition Block Size: 256
+Partition Block Count: 1
+File Offset (Obsolete): 0
+File Size (Obsolete): 0
+Partition Name: PINMUX
+Flash Filename: PINMUX.bin
+FOTA Filename: 
+
+
+--- Entry #3 ---
+Binary Type: 0 (AP)
+Device Type: 0 (OneNAND)
+Identifier: 3
+Attributes: 1 (Read/Write)
+Update Attributes: 0
+Partition Block Size: 256
+Partition Block Count: 3
+File Offset (Obsolete): 0
+File Size (Obsolete): 0
+Partition Name: LOKE
+Flash Filename: TIM_loke3.bin
+FOTA Filename: 
+
+
+--- Entry #4 ---
+Binary Type: 0 (AP)
+Device Type: 0 (OneNAND)
+Identifier: 4
+Attributes: 1 (Read/Write)
+Update Attributes: 0
+Partition Block Size: 256
+Partition Block Count: 3
+File Offset (Obsolete): 0
+File Size (Obsolete): 0
+Partition Name: LOKE_FOTA
+Flash Filename: 
+FOTA Filename: 
+
+
+--- Entry #5 ---
+Binary Type: 0 (AP)
+Device Type: 0 (OneNAND)
+Identifier: 5
+Attributes: 1 (Read/Write)
+Update Attributes: 0
+Partition Block Size: 256
+Partition Block Count: 1
+File Offset (Obsolete): 0
+File Size (Obsolete): 0
+Partition Name: PIT
+Flash Filename: Marvell_Partition.pit
+FOTA Filename: 
+
+
+--- Entry #6 ---
+Binary Type: 0 (AP)
+Device Type: 0 (OneNAND)
+Identifier: 6
+Attributes: 1 (Read/Write)
+Update Attributes: 0
+Partition Block Size: 256
+Partition Block Count: 3
+File Offset (Obsolete): 0
+File Size (Obsolete): 0
+Partition Name: Bootlogo
+Flash Filename: Bootlogo.img
+FOTA Filename: 
+
+
+--- Entry #7 ---
+Binary Type: 1 (CP)
+Device Type: 0 (OneNAND)
+Identifier: 7
+Attributes: 1 (Read/Write)
+Update Attributes: 0
+Partition Block Size: 256
+Partition Block Count: 24
+File Offset (Obsolete): 0
+File Size (Obsolete): 0
+Partition Name: CP
+Flash Filename: Arbel_CP.bin
+FOTA Filename: 
+
+
+--- Entry #8 ---
+Binary Type: 0 (AP)
+Device Type: 0 (OneNAND)
+Identifier: 8
+Attributes: 1 (Read/Write)
+Update Attributes: 0
+Partition Block Size: 256
+Partition Block Count: 7
+File Offset (Obsolete): 0
+File Size (Obsolete): 0
+Partition Name: DSP
+Flash Filename: TAVOR_DSP.bin
+FOTA Filename: 
+
+
+--- Entry #9 ---
+Binary Type: 0 (AP)
+Device Type: 0 (OneNAND)
+Identifier: 9
+Attributes: 1 (Read/Write)
+Update Attributes: 0
+Partition Block Size: 256
+Partition Block Count: 1
+File Offset (Obsolete): 0
+File Size (Obsolete): 0
+Partition Name: RF_Plugin
+Flash Filename: rf_plugin.bin
+FOTA Filename: 
+
+
+--- Entry #10 ---
+Binary Type: 0 (AP)
+Device Type: 0 (OneNAND)
+Identifier: 10
+Attributes: 1 (Read/Write)
+Update Attributes: 0
+Partition Block Size: 256
+Partition Block Count: 16
+File Offset (Obsolete): 0
+File Size (Obsolete): 0
+Partition Name: KERNEL
+Flash Filename: zImage
+FOTA Filename: 
+
+
+--- Entry #11 ---
+Binary Type: 0 (AP)
+Device Type: 0 (OneNAND)
+Identifier: 11
+Attributes: 1 (Read/Write)
+Update Attributes: 0
+Partition Block Size: 256
+Partition Block Count: 16
+File Offset (Obsolete): 0
+File Size (Obsolete): 0
+Partition Name: KERNEL_FOTA
+Flash Filename: 
+FOTA Filename: 
+
+
+--- Entry #12 ---
+Binary Type: 0 (AP)
+Device Type: 0 (OneNAND)
+Identifier: 12
+Attributes: 1 (Read/Write)
+Update Attributes: 0
+Partition Block Size: 256
+Partition Block Count: 1
+File Offset (Obsolete): 0
+File Size (Obsolete): 0
+Partition Name: RAMDISK
+Flash Filename: ramdisk.img
+FOTA Filename: 
+
+
+--- Entry #13 ---
+Binary Type: 0 (AP)
+Device Type: 0 (OneNAND)
+Identifier: 13
+Attributes: 1 (Read/Write)
+Update Attributes: 0
+Partition Block Size: 256
+Partition Block Count: 1
+File Offset (Obsolete): 0
+File Size (Obsolete): 0
+Partition Name: RAMDISK_FOTA
+Flash Filename: ramdisk.img
+FOTA Filename: 
+
+
+--- Entry #14 ---
+Binary Type: 0 (AP)
+Device Type: 0 (OneNAND)
+Identifier: 14
+Attributes: 1 (Read/Write)
+Update Attributes: 0
+Partition Block Size: 256
+Partition Block Count: 6
+File Offset (Obsolete): 0
+File Size (Obsolete): 0
+Partition Name: RAMDISK_RCVY
+Flash Filename: ramdisk-recovery.img
+FOTA Filename: 
+
+
+--- Entry #15 ---
+Binary Type: 0 (AP)
+Device Type: 0 (OneNAND)
+Identifier: 20
+Attributes: 2 (STL Read-Only)
+Update Attributes: 0
+Partition Block Size: 256
+Partition Block Count: 986
+File Offset (Obsolete): 0
+File Size (Obsolete): 0
+Partition Name: SYSTEM
+Flash Filename: system.img
+FOTA Filename: 
+
+
+--- Entry #16 ---
+Binary Type: 0 (AP)
+Device Type: 0 (OneNAND)
+Identifier: 21
+Attributes: 2 (STL Read-Only)
+Update Attributes: 0
+Partition Block Size: 256
+Partition Block Count: 688
+File Offset (Obsolete): 0
+File Size (Obsolete): 0
+Partition Name: USERDATA
+Flash Filename: userdata.img
+FOTA Filename: 
+
+
+--- Entry #17 ---
+Binary Type: 0 (AP)
+Device Type: 0 (OneNAND)
+Identifier: 22
+Attributes: 2 (STL Read-Only)
+Update Attributes: 0
+Partition Block Size: 256
+Partition Block Count: 40
+File Offset (Obsolete): 0
+File Size (Obsolete): 0
+Partition Name: PXAFS
+Flash Filename: pxafs.img
+FOTA Filename: 
+
+
+--- Entry #18 ---
+Binary Type: 0 (AP)
+Device Type: 0 (OneNAND)
+Identifier: 23
+Attributes: 2 (STL Read-Only)
+Update Attributes: 0
+Partition Block Size: 256
+Partition Block Count: 24
+File Offset (Obsolete): 0
+File Size (Obsolete): 0
+Partition Name: NVM
+Flash Filename: NVM.img
+FOTA Filename: 
+
+
+--- Entry #19 ---
+Binary Type: 0 (AP)
+Device Type: 0 (OneNAND)
+Identifier: 24
+Attributes: 2 (STL Read-Only)
+Update Attributes: 0
+Partition Block Size: 256
+Partition Block Count: 118
+File Offset (Obsolete): 0
+File Size (Obsolete): 0
+Partition Name: CACHE
+Flash Filename: cache.img
+FOTA Filename: 
+
+
+--- Entry #20 ---
+Binary Type: 0 (AP)
+Device Type: 0 (OneNAND)
+Identifier: 25
+Attributes: 2 (STL Read-Only)
+Update Attributes: 0
+Partition Block Size: 256
+Partition Block Count: 20
+File Offset (Obsolete): 0
+File Size (Obsolete): 0
+Partition Name: LFS
+Flash Filename: param.lfs
+FOTA Filename: 
+
+
+--- Entry #21 ---
+Binary Type: 0 (AP)
+Device Type: 0 (OneNAND)
+Identifier: 26
+Attributes: 2 (STL Read-Only)
+Update Attributes: 0
+Partition Block Size: 256
+Partition Block Count: 40
+File Offset (Obsolete): 0
+File Size (Obsolete): 0
+Partition Name: EFS
+Flash Filename: efs.img
+FOTA Filename: 
+
+
+--- Entry #22 ---
+Binary Type: 0 (AP)
+Device Type: 0 (OneNAND)
+Identifier: 15
+Attributes: 1 (Read/Write)
+Update Attributes: 0
+Partition Block Size: 256
+Partition Block Count: 1
+File Offset (Obsolete): 0
+File Size (Obsolete): 0
+Partition Name: PARAM
+Flash Filename: 
+FOTA Filename: 
+
+
+--- Entry #23 ---
+Binary Type: 0 (AP)
+Device Type: 0 (OneNAND)
+Identifier: 16
+Attributes: 1 (Read/Write)
+Update Attributes: 0
+Partition Block Size: 256
+Partition Block Count: 1
+File Offset (Obsolete): 0
+File Size (Obsolete): 0
+Partition Name: CUB
+Flash Filename: 
+FOTA Filename: 
+
+
+--- Entry #24 ---
+Binary Type: 0 (AP)
+Device Type: 0 (OneNAND)
+Identifier: 17
+Attributes: 1 (Read/Write)
+Update Attributes: 0
+Partition Block Size: 256
+Partition Block Count: 1
+File Offset (Obsolete): 0
+File Size (Obsolete): 0
+Partition Name: SRD
+Flash Filename: 
+FOTA Filename: 
+
