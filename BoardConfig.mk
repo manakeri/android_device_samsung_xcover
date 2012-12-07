@@ -1,18 +1,45 @@
-USE_CAMERA_STUB := true
+# USE_CAMERA_STUB := true
 
 # inherit from the proprietary version
 -include vendor/samsung/xcover/BoardConfigVendor.mk
 
-TARGET_NO_BOOTLOADER := true
-TARGET_BOARD_PLATFORM := unknown
-TARGET_CPU_ABI := armeabi
+TARGET_BOARD_PLATFORM := marvell
 TARGET_BOOTLOADER_BOARD_NAME := xcover
+TARGET_NO_BOOTLOADER := true
+TARGET_NO_RADIOIMAGE := true
+# TARGET_NO_KERNEL := true
+TARGET_CPU_ABI := armeabi-v7a
+TARGET_CPU_ABI2 := armeabi
+TARGET_ARCH_VARIANT := armv7-a
 
-#BOARD_KERNEL_CMDLINE := no_console_suspend
-BOARD_KERNEL_CMDLINE := rdinit=/busybox/rdinit androidboot.console=ttyS0 console=ttyS0,115200 mem=240M@0x80000000 comm_v75 uart_dma vmalloc=0x18000000 reserve_pmem=0x2800000
+# HAVE_HTC_AUDIO_DRIVER := false
+# BOARD_USES_GENERIC_AUDIO := true
+# BOARD_USES_ALSA_AUDIO := true
+# BOARD_HAVE_BLUETOOTH := true
+# BOARD_HAVE_FM_RADIO := true
+# USE_CAMERA_STUB := true
+# BOARD_ENABLE_GSTREAMER := true
+# BOARD_ENABLE_FAST_OVERLAY := true
+
+# TARGET_PROVIDES_INIT := true
+# TARGET_PROVIDES_INIT_TARGET_RC := true
+TARGET_RECOVERY_INITRC := device/samsung/xcover/recovery.rc
+
+# Provide our own libaudio
+TARGET_PROVIDES_LIBAUDIO := false
+
+BOARD_NAND_PAGE_SIZE := 4096 -s 128
+# BOARD_KERNEL_CMDLINE := console=ttyS0,115200 init=/init no_console_suspend
+# BOARD_KERNEL_CMDLINE :=
+#BOARD_KERNEL_CMDLINE := rdinit=/busybox/rdinit androidboot.console=ttyS0 console=ttyS0,115200 mem=240M@0x80000000 comm_v75 uart_dma vmalloc=0x18000000 reserve_pmem=0x2800000
+
 BOARD_KERNEL_BASE := 0x80000000
 BOARD_KERNEL_PAGESIZE := 4096
+
 # BOARD_PAGE_SIZE := 0x00001000
+# TARGET_KERNEL_CONFIG := alkon_03_defconfig
+
+TARGET_PREBUILT_KERNEL := device/samsung/xcover/kernel
 
 #   1: 0x00000000-0x00040000 0x00040000      1        0
 #   2: 0x00040000-0x00080000 0x00040000      1        1
@@ -47,21 +74,26 @@ BOARD_KERNEL_PAGESIZE := 4096
 #/dev/stl21 /mnt/.lfs j4fs
 #/dev/stl22 /efs rfs
 
-BOARD_BOOTIMAGE_PARTITION_SIZE := 0x00400000
+TARGET_USERIMAGES_USE_EXT4 := false
+
+BOARD_HAS_SMALL_RECOVERY := true
+# BOARD_LDPI_RECOVERY := true
+BOARD_RECOVERY_HANDLES_MOUNT := true
+
 BOARD_BML_BOOT := /dev/block/bml11
-BOARD_BOOTIMAGE_PARTITION := /dev/block/bml11
-
-BOARD_RECOVERYIMAGE_PARTITION_SIZE := 0x00400000
 BOARD_BML_RECOVERY := /dev/block/bml12
-BOARD_RECOVERY_DEVICE := /dev/block/bml12
-BOARD_RECOVERYIMAGE_PARTITION := /dev/block/bml12
 
-BOARD_SYSTEMIMAGE_PARTITION_SIZE := 0x0f680000
+# BOARD_BOOTIMAGE_PARTITION_SIZE := 0x00400000
+# BOARD_BOOTIMAGE_PARTITION := /dev/block/bml11
+# BOARD_RECOVERYIMAGE_PARTITION_SIZE := 0x00400000
+# BOARD_RECOVERY_DEVICE := /dev/block/bml11
+# BOARD_RECOVERY_PARTITION := /dev/block/bml11
+# BOARD_RECOVERYIMAGE_PARTITION := /dev/block/bml11
+# BOARD_SYSTEMIMAGE_PARTITION_SIZE := 0x0f680000
+# BOARD_USERDATAIMAGE_PARTITION_SIZE := 0x0ac00000
+
 BOARD_SYSTEM_DEVICE := /dev/block/stl16
-
-BOARD_USERDATAIMAGE_PARTITION_SIZE := 0x0ac00000
 BOARD_DATA_DEVICE := /dev/block/stl17
-
 BOARD_CACHE_DEVICE := /dev/block/stl20
 
 BOARD_FLASH_BLOCK_SIZE := 131072
@@ -70,8 +102,4 @@ BOARD_CUSTOM_RECOVERY_KEYMAPPING:= ../../device/samsung/xcover/recovery_ui.c
 BOARD_HAS_NO_MISC_PARTITION := true
 BOARD_HAS_DOWNLOAD_MODE := true
 
-TARGET_PREBUILT_KERNEL := device/samsung/xcover/kernel
-
-#BOARD_HAS_NO_SELECT_BUTTON := true
-# Use this flag if the board has a ext4 partition larger than 2gb
-#BOARD_HAS_LARGE_FILESYSTEM := true
+# BOARD_HAS_NO_SELECT_BUTTON := true
