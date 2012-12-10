@@ -1,13 +1,9 @@
-$(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
+LOCAL_PATH := device/samsung/xcover
 
-# The gps config appropriate for this device
-$(call inherit-product, device/common/gps/gps_us_supl.mk)
-
+# $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
+# $(call inherit-product, $(SRC_TARGET_DIR)/product/full.mk)
 $(call inherit-product-if-exists, vendor/samsung/xcover/xcover-vendor.mk)
 
-DEVICE_PACKAGE_OVERLAYS += device/samsung/xcover/overlay
-
-LOCAL_PATH := device/samsung/xcover
 ifeq ($(TARGET_PREBUILT_KERNEL),)
 	LOCAL_KERNEL := $(LOCAL_PATH)/kernel
 else
@@ -17,8 +13,11 @@ endif
 PRODUCT_COPY_FILES += \
     $(LOCAL_KERNEL):kernel
 
-$(call inherit-product, build/target/product/full.mk)
-
-PRODUCT_BUILD_PROP_OVERRIDES += BUILD_UTC_DATE=0
 PRODUCT_NAME := full_xcover
 PRODUCT_DEVICE := xcover
+PRODUCT_BRAND := samsung
+PRODUCT_MANUFACTURER := samsung
+PRODUCT_BOARD := marvell
+PRODUCT_MODEL := xcover
+PRODUCT_PLATFORM := marvell
+

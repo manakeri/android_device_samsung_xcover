@@ -1,8 +1,0 @@
-/dev/stl16 /system rfs ro,relatime,vfat,log_off,check=no,gid/uid/rwx,iocharset=cp437 0 0
-/dev/stl19 /mnt/nvm rfs rw,nosuid,nodev,relatime,vfat,llw,gid/uid/rwx,iocharset=cp437 0 0
-/dev/stl20 /cache rfs rw,nosuid,nodev,relatime,vfat,llw,check=no,gid/uid/rwx,iocharset=cp437 0 0
-/dev/stl21 /mnt/.lfs j4fs rw,relatime 0 0
-/dev/stl22 /efs rfs rw,nosuid,nodev,relatime,vfat,llw,check=no,gid/uid/rwx,iocharset=cp437 0 0
-/dev/stl17 /data rfs rw,nosuid,nodev,relatime,vfat,llw,check=no,gid/uid/rwx,iocharset=cp437 0 0
-/dev/stl18 /marvell rfs rw,relatime,vfat,llw,check=no,gid/uid/rwx,iocharset=cp437 0 0
-

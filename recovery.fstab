@@ -1,17 +1,7 @@
-#/system	rfs		/dev/stl16		default		default
-#/cache		rfs		/dev/stl20		rfs16		default
-#/sdcard	vfat		/dev/block/mmcblk0p1	default		default
-#/data		rfs		/dev/stl17		rfs16		default
-#/efs		rfs		/dev/stl22		rfs16		default
-
-
-# mount point	fstype		device			format option	mount option
 /boot		bml		boot
 /recovery	bml		recovery
-
-/system		ext4		/dev/block/stl16	NULL	rfs	NULL	rw,check=no
-/data		ext4		/dev/block/stl17	NULL	rfs	NULL	rw,nosuid,nodev,check=no
-/cache		ext4		/dev/block/stl20	NULL	rfs	NULL	rw,nosuid,nodev,check=no
-
-/sdcard		vfat		/dev/block/mmcblk0p1
-/sd-ext		ext4		/dev/block/mmcblk0p2
+#/system		rfs		/dev/block/stl16	rw,check=no
+#/data		rfs		/dev/block/stl17	rw,nosuid,nodev,check=no
+#/cache		rfs		/dev/block/stl20	rw,nosuid,nodev,check=no
+#/sdcard		vfat		/dev/block/mmcblk0p1
+#/sd-ext		ext4		/dev/block/mmcblk0p2

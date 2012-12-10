@@ -1,3 +1,10 @@
 #
-# system.prop for xcover
+# system.prop for GT-S5690
 #
+
+# rild.libpath=/system/lib/libsec-ril.so
+# rild.libargs=-d /dev/smd0
+debug.sf.hw=1
+debug.composition.type=mdp
+dalvik.vm.heapsize=64m
+ro.sf.lcd_density=160
