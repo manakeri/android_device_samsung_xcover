@@ -11,6 +11,7 @@ on init
     symlink /system/etc /etc
 
     mkdir /boot
+    mkdir /recovery
     mkdir /sdcard
     mkdir /sd-ext
     mkdir /datadata

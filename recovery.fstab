@@ -1,7 +1,7 @@
-/boot		bml		boot
-/recovery	bml		recovery
-#/system		rfs		/dev/block/stl16	rw,check=no
-#/data		rfs		/dev/block/stl17	rw,nosuid,nodev,check=no
-#/cache		rfs		/dev/block/stl20	rw,nosuid,nodev,check=no
-#/sdcard		vfat		/dev/block/mmcblk0p1
-#/sd-ext		ext4		/dev/block/mmcblk0p2
+/boot           bml       boot
+/recovery       bml       recovery
+/system         ext4      /dev/block/stl16        llw,check=no
+/data           ext4      /dev/block/stl17        llw,nosuid,nodev,check=no
+/cache          ext4      /dev/block/stl20        llw,nosuid,nodev,check=no
+/sdcard         ext4      /dev/block/mmcblk0p1	  llw,nosuid,nodev,check=no
+/sd-ext         ext4      /dev/block/mmcblk0p2    llw,check=no

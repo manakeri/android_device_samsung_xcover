@@ -24,14 +24,14 @@ rm -rf ../../../vendor/samsung/$DEVICE/*
 mkdir -p ../../../vendor/samsung/$DEVICE/proprietary
 
 if [ -f "$1" ]; then
-	rm -rf tmp
-	mkdir tmp
-	unzip -q "$1" -d tmp
-	if [ $? != 0 ]; then
-		echo "$1 is not a valid zip file. Bye."
-		exit 1
-	fi
-	echo "$1 successfully unzip'd. Copying files..."
+#	rm -rf tmp
+#	mkdir tmp
+#	unzip -q "$1" -d tmp
+#	if [ $? != 0 ]; then
+#		echo "$1 is not a valid zip file. Bye."
+#		exit 1
+#	fi
+#	echo "$1 successfully unzip'd. Copying files..."
 	ZIP="true"
 else
 	unset ZIP
@@ -92,12 +92,12 @@ media/Disconnected.qmg
 
 for FILE in $FILES; do
 	if [ "$ZIP" ]; then
-		cp tmp/system/"$FILE" ../../../vendor/samsung/$DEVICE/proprietary/$FILE
+		cp system/"$FILE" ../../../vendor/samsung/$DEVICE/proprietary/$FILE
 	else
 		adb pull system/$FILE ../../../vendor/samsung/$DEVICE/proprietary/$FILE
 	fi
 done
-if [ "$ZIP" ]; then rm -rf tmp ; fi
+#if [ "$ZIP" ]; then rm -rf tmp ; fi
 
 (cat << EOF) | sed s/__DEVICE__/$DEVICE/g > ../../../vendor/samsung/$DEVICE/$DEVICE-vendor-blobs.mk
 # Copyright (C) 2010 The Android Open Source Project
