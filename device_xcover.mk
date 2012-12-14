@@ -10,15 +10,15 @@ else
 	LOCAL_KERNEL := $(TARGET_PREBUILT_KERNEL)
 endif
 
-PRODUCT_COPY_FILES += \\
-	$(LOCAL_KERNEL):kernel \\
+PRODUCT_COPY_FILES += \
+	$(LOCAL_KERNEL):kernel \
 	$(call find-copy-subdir-files,*,device/samsung/xcover/modules,system/lib/modules)
     
-PRODUCT_PACKAGES += \\
-	libvmetahal \\
-	libpmemhelper \\
-	libphycontmem \\
-	libgcu \\
+PRODUCT_PACKAGES += \
+	libvmetahal \
+	libpmemhelper \
+	libphycontmem \
+	libgcu \
 	libbmm
 
   
