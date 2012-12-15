@@ -54,14 +54,13 @@ FILES="
 etc/gps.conf
 cameradata/datapattern_420sp.yuv
 cameradata/datapattern_front_420sp.yuv
+cameradata/datapattern_420sp_alkon.yuv
 lib/libcamera.so
 lib/egl/libEGL_MRVL.so
-lib/egl/libGLES_android.so
 lib/egl/libGLESv1_CM_MRVL.so
 lib/egl/libGLESv2_MRVL.so
 lib/hw/sensors.default.so
 lib/hw/gps.default.so
-lib/hw/gralloc.default.so
 lib/hw/lights.default.so
 bin/playlpm
 bin/charging_mode
@@ -124,9 +123,10 @@ PRODUCT_COPY_FILES += \\
 #
 PRODUCT_COPY_FILES += \\
     vendor/samsung/__DEVICE__/proprietary/lib/egl/libEGL_MRVL.so:system/lib/egl/libEGL_MRVL.so \\
-    vendor/samsung/__DEVICE__/proprietary/lib/egl/libGLES_android.so:system/lib/egl/libGLES_android.so \\
     vendor/samsung/__DEVICE__/proprietary/lib/egl/libGLESv1_CM_MRVL.so:system/lib/egl/libGLESv1_CM_MRVL.so \\
     vendor/samsung/__DEVICE__/proprietary/lib/egl/libGLESv2_MRVL.so:system/lib/egl/libGLESv2_MRVL.so
+#    vendor/samsung/__DEVICE__/proprietary/lib/libGAL.so:system/lib/libGAL.so \\
+#    vendor/samsung/__DEVICE__/proprietary/lib/libgcu.so:system/lib/libgcu.so
 
 #
 # Sensors, Lights etc
@@ -135,7 +135,6 @@ PRODUCT_COPY_FILES += \\
     vendor/samsung/__DEVICE__/proprietary/lib/hw/sensors.default.so:system/lib/hw/sensors.default.so \\
     vendor/samsung/__DEVICE__/proprietary/lib/hw/lights.default.so:system/lib/hw/lights.default.so \\
     vendor/samsung/__DEVICE__/proprietary/lib/hw/gps.default.so:system/lib/hw/gps.default.so \\
-    vendor/samsung/__DEVICE__/proprietary/lib/hw/gralloc.default.so:system/lib/hw/gralloc.default.so
 
 #
 # Camera
@@ -143,6 +142,7 @@ PRODUCT_COPY_FILES += \\
 PRODUCT_COPY_FILES += \\
     vendor/samsung/__DEVICE__/proprietary/cameradata/datapattern_420sp.yuv:system/cameradata/datapattern_420sp.yuv \\
     vendor/samsung/__DEVICE__/proprietary/cameradata/datapattern_front_420sp.yuv:system/cameradata/datapattern_front_420sp.yuv \\
+    vendor/samsung/__DEVICE__/proprietary/cameradata/datapattern_420sp_alkon.yuv:system/cameradata/datapattern_420sp_alkon.yuv \\
     vendor/samsung/__DEVICE__/proprietary/lib/libcamera.so:system/lib/libcamera.so
 
 #

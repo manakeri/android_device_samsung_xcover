@@ -13,7 +13,6 @@ TARGET_NO_RADIOIMAGE := true
 # media 
 HAVE_HTC_AUDIO_DRIVER := false
 BOARD_USES_GENERIC_AUDIO := true
-
 USE_CAMERA_STUB := true
 ifeq ($(USE_CAMERA_STUB),false)
 BOARD_CAMERA_LIBRARIES := libcamera
@@ -24,15 +23,18 @@ BOARD_USES_ALSA_AUDIO := true
 BUILD_WITH_ALSA_UTILS := true
 BOARD_ENABLE_FAST_OVERLAY := true
 
-BOARD_HAVE_BLUETOOTH := false
-BOARD_HAVE_FM_RADIO := false
+#BOARD_USES_HGL := true
+
+BOARD_HAVE_BLUETOOTH := true
+BOARD_HAVE_FM_RADIO := true
 
 BOARD_UMS_LUNFILE := /sys/devices/platform/usb_mass_storage/lun0/file
 TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/usb_mass_storage/lun0/file
 
 BOARD_LDPI_RECOVERY := true
 TARGET_PROVIDES_INIT_TARGET_RC := true
-TARGET_RECOVERY_INITRC := device/samsung/xcover/recovery.rc
+TARGET_INIT_RC := device/samsung/xcover/init.marvell.rc
+TARGET_RECOVERY_INITRC := device/samsung/xcover/recovery/recovery.rc
 
 BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/xcover/recovery/recovery_ui.c
 BOARD_CUSTOM_GRAPHICS := ../../../device/samsung/xcover/recovery/graphics.c
@@ -50,7 +52,7 @@ TARGET_PREBUILT_KERNEL := device/samsung/xcover/kernel
 
 
 # partitions
-TARGET_USERIMAGES_USE_EXT4 := false
+TARGET_USERIMAGES_USE_EXT4 := true
 BOARD_RECOVERY_HANDLES_MOUNT := true
 
 BOARD_BML_BOOT := /dev/block/bml11
@@ -59,8 +61,8 @@ BOARD_BOOT_DEVICE := /dev/block/bml11
 BOARD_BML_RECOVERY := /dev/block/bml15
 BOARD_RECOVERY_DEVICE := /dev/block/bml15
 
-BOARD_DATA_DEVICE := /dev/block/stl17
-BOARD_DATA_FILESYSTEM := auto
+BOARD_DATA_DEVICE := /dev/block/stl16
+BOARD_DATA_FILESYSTEM := ext4
 BOARD_DATA_FILESYSTEM_OPTIONS := llw,check=no,nosuid,nodev
 
 #BOARD_HAS_DATADATA := true
@@ -68,12 +70,12 @@ BOARD_DATA_FILESYSTEM_OPTIONS := llw,check=no,nosuid,nodev
 #BOARD_DATADATA_FILESYSTEM := auto
 #BOARD_DATADATA_FILESYSTEM_OPTIONS := llw,check=no,nosuid,nodev
 
-BOARD_SYSTEM_DEVICE := /dev/block/stl16
-BOARD_SYSTEM_FILESYSTEM := auto
+BOARD_SYSTEM_DEVICE := /dev/block/stl17
+BOARD_SYSTEM_FILESYSTEM := ext4
 BOARD_SYSTEM_FILESYSTEM_OPTIONS := llw,check=no
 
 BOARD_CACHE_DEVICE := /dev/block/stl20
-BOARD_CACHE_FILESYSTEM := auto
+BOARD_CACHE_FILESYSTEM := vfat
 BOARD_CACHE_FILESYSTEM_OPTIONS := llw,check=no,nosuid,nodev
 
 BOARD_SDEXT_DEVICE := /dev/block/mmcblk0p2
@@ -84,7 +86,8 @@ BOARD_HAS_NO_MISC_PARTITION := true
 BOARD_HAS_DOWNLOAD_MODE := true
 BOARD_HAS_NO_SELECT_BUTTON := true
 
-# BOARD_USES_BML_OVER_MTD := false
+BOARD_USES_BML_OVER_MTD := true
+TARGET_OTA_ASSERT_DEVICE := xcover,GT-S5690
 
 # ICS FLAGS for compatibility
 #BOARD_USE_LEGACY_TOUCHSCREEN := true

@@ -2,59 +2,60 @@ on early-init
     start ueventd
 
 on init
-
-
-# setup the global environment
-    export PATH /sbin:/system/bin
+    export PATH /sbin:/vendor/bin:/system/sbin:/system/bin:/system/xbin
+    export LD_LIBRARY_PATH /vendor/lib:/system/lib
     export ANDROID_ROOT /system
+    export ANDROID_DATA /data
+    export EXTERNAL_STORAGE /sdcard
 
+    symlink /system/etc /etc
 
-
-# create mountpoints and mount tmpfs on sqlite_stmt_journals
+    mkdir /sdcard
+    mkdir /preload
     mkdir /system
+    mkdir /data
+    mkdir /cache
+    mkdir /efs
+    mkdir /tmp
+    mkdir /dbdata
 
-    mount rootfs rootfs / ro remount
+    mkdir /mnt 0775 root root
 
-    write /proc/sys/kernel/panic_on_oops 1
-
-
-
-# mount mtd partitions
-    # Mount /system rw first to give the filesystem a chance to save a checkpoint
-    #mount yaffs2 mtd@system /system
-    mount rfs /dev/stl16 /system check=no
-    mount rfs /dev/stl16 /system ro remount
-# Comment the next line for having system in RW mode (debug)
-    #mount yaffs2 mtd@system /system ro remount
-
-
+on fs
+    mount tmpfs tmpfs /tmp
+    mount yaffs2 mtd@system /system
 on boot
-# basic network init
+
     ifup lo
     hostname localhost
     domainname localdomain
 
-
     class_start default
 
-## Daemon processes to be run by init.
-##
 service ueventd /sbin/ueventd
     critical
 
+service console /system/bin/sh
+    console
 
-service debuggerd /system/bin/debuggerd
-
+# adbd is controlled by the persist.service.adb.enable system property
+service adbd /sbin/adbd
+    disabled
 
 service playlpm /system/bin/playlpm
     user root
-	oneshot
+    oneshot
 
-#service immvibed /system/bin/immvibed 
-	#oneshot
+service immvibed /system/bin/immvibed 
+    oneshot
 
 service lpmkey /system/bin/charging_mode
     user root
     oneshot
 
+on property:persist.service.adb.enable=1
+    start adbd
+
+on property:persist.service.adb.enable=0
+    stop adbd
 
