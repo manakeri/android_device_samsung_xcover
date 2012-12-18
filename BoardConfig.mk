@@ -1,41 +1,40 @@
 # inherit from the proprietary version
--include vendor/samsung/xcover/BoardConfigVendor.mk
+#-include vendor/samsung/xcover/BoardConfigVendor.mk
 
 TARGET_BOARD_PLATFORM := marvell
 TARGET_BOOTLOADER_BOARD_NAME := marvell
 TARGET_CPU_ABI := armeabi-v7a
 TARGET_CPU_ABI2 := armeabi
+#TARGET_ARCH_VARIANT=armv7-a
 
 TARGET_NO_KERNEL := false
 TARGET_NO_BOOTLOADER := true
 TARGET_NO_RADIOIMAGE := true
 
-# media 
-HAVE_HTC_AUDIO_DRIVER := false
+#HAVE_HTC_AUDIO_DRIVER := false
 BOARD_USES_GENERIC_AUDIO := true
 USE_CAMERA_STUB := true
 ifeq ($(USE_CAMERA_STUB),false)
 BOARD_CAMERA_LIBRARIES := libcamera
 endif
 
-BOARD_ENABLE_GSTREAMER := true
-BOARD_USES_ALSA_AUDIO := true
-BUILD_WITH_ALSA_UTILS := true
-BOARD_ENABLE_FAST_OVERLAY := true
-
+#BOARD_ENABLE_GSTREAMER := true
+#BOARD_USES_ALSA_AUDIO := true
+#BUILD_WITH_ALSA_UTILS := true
+#BOARD_ENABLE_FAST_OVERLAY := true
 #BOARD_USES_HGL := true
+#BOARD_HAVE_BLUETOOTH := true
+#BOARD_HAVE_FM_RADIO := true
 
-BOARD_HAVE_BLUETOOTH := true
-BOARD_HAVE_FM_RADIO := true
+#BOARD_UMS_LUNFILE := /sys/devices/platform/usb_mass_storage/lun0/file
+#TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/usb_mass_storage/lun0/file
 
-BOARD_UMS_LUNFILE := /sys/devices/platform/usb_mass_storage/lun0/file
-TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/usb_mass_storage/lun0/file
-
-BOARD_LDPI_RECOVERY := true
-TARGET_PROVIDES_INIT_TARGET_RC := true
-TARGET_INIT_RC := device/samsung/xcover/init.marvell.rc
+#BOARD_LDPI_RECOVERY := true
+#BOARD_USE_CUSTOM_RECOVERY_FONT := font_7x16.h
+#TARGET_PROVIDES_INIT_TARGET_RC := true
+#TARGET_INIT_RC := device/samsung/xcover/init.marvell.rc
 TARGET_RECOVERY_INITRC := device/samsung/xcover/recovery/recovery.rc
-
+TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
 BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/xcover/recovery/recovery_ui.c
 BOARD_CUSTOM_GRAPHICS := ../../../device/samsung/xcover/recovery/graphics.c
 
@@ -44,7 +43,7 @@ BOARD_EGL_CFG := device/samsung/xcover/egl.cfg
 # kernel
 BOARD_NAND_PAGE_SIZE := 4096
 BOARD_NAND_SPARE_SIZE := 128
-BOARD_KERNEL_CMDLINE := rdinit=/busybox/rdinit androidboot.console=ttyS0 console=ttyS0,115200 mem=240M@0x80000000 comm_v75 uart_dma vmalloc=0x18000000 reserve_pmem=0x2800000
+BOARD_KERNEL_CMDLINE := rdinit=/rdinit console=ttyS0,115200
 BOARD_KERNEL_BASE := 0x80000000
 BOARD_KERNEL_PAGESIZE := 4096
 TARGET_PREBUILT_KERNEL := device/samsung/xcover/kernel
