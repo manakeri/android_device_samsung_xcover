@@ -24,14 +24,14 @@ rm -rf ../../../vendor/samsung/$DEVICE/*
 mkdir -p ../../../vendor/samsung/$DEVICE/proprietary
 
 if [ -f "$1" ]; then
-#	rm -rf tmp
-#	mkdir tmp
-#	unzip -q "$1" -d tmp
-#	if [ $? != 0 ]; then
-#		echo "$1 is not a valid zip file. Bye."
-#		exit 1
-#	fi
-#	echo "$1 successfully unzip'd. Copying files..."
+	rm -rf tmp
+	mkdir tmp
+	unzip -q "$1" -d tmp
+	if [ $? != 0 ]; then
+		echo "$1 is not a valid zip file. Bye."
+		exit 1
+	fi
+	echo "$1 successfully unzip'd. Copying files..."
 	ZIP="true"
 else
 	unset ZIP
