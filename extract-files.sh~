@@ -57,8 +57,6 @@ done
 #etc/gst.conf
 #lib/libgcu.so
 #lib/libGAL.so
-#lib/libcamera.so
-#lib/hw/gralloc.default.so
 
 FILES="
 etc/firmware/mrvl/WlanCalData_ext.conf
@@ -67,6 +65,7 @@ etc/firmware/mrvl/sd8787_uapsta.bin
 cameradata/datapattern_420sp.yuv
 cameradata/datapattern_front_420sp.yuv
 cameradata/datapattern_420sp_alkon.yuv
+lib/libcamera.so
 lib/libmarvell-ril.so
 lib/libMarvellWireless.so
 lib/libomx_mrvl_sharedlibrary.so
@@ -77,6 +76,7 @@ lib/egl/libGLESv2_MRVL.so
 lib/hw/sensors.default.so
 lib/hw/gps.default.so
 lib/hw/lights.default.so
+lib/hw/gralloc.default.so
 bin/playlpm
 bin/charging_mode
 lib/libQmageDecoder.so
@@ -138,7 +138,7 @@ PRODUCT_COPY_FILES += \\
     vendor/samsung/__DEVICE__/proprietary/etc/firmware/mrvl/WlanCalData_ext.conf:system/etc/firmware/mrvl/WlanCalData_ext.conf \\
     vendor/samsung/__DEVICE__/proprietary/etc/firmware/mrvl/w8787_wlan_SDIO_bt_SDIO.bin:system/etc/firmware/mrvl/w8787_wlan_SDIO_bt_SDIO.bin \\
     vendor/samsung/__DEVICE__/proprietary/etc/firmware/mrvl/sd8787_uapsta.bin:system/etc/firmware/mrvl/sd8787_uapsta.bin
-
+	
 #
 # RIL
 #
@@ -165,8 +165,8 @@ PRODUCT_COPY_FILES += \\
 PRODUCT_COPY_FILES += \\
     vendor/samsung/__DEVICE__/proprietary/lib/hw/sensors.default.so:system/lib/hw/sensors.default.so \\
     vendor/samsung/__DEVICE__/proprietary/lib/hw/lights.default.so:system/lib/hw/lights.default.so \\
-    vendor/samsung/__DEVICE__/proprietary/lib/hw/gps.default.so:system/lib/hw/gps.default.so
-#    vendor/samsung/__DEVICE__/proprietary/lib/hw/gralloc.default.so:system/lib/hw/gralloc.default.so
+    vendor/samsung/__DEVICE__/proprietary/lib/hw/gps.default.so:system/lib/hw/gps.default.so \\
+    vendor/samsung/__DEVICE__/proprietary/lib/hw/gralloc.default.so:system/lib/hw/gralloc.default.so 
 #
 # Camera
 #

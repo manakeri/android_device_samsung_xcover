@@ -17,7 +17,7 @@ char* MENU_ITEMS[] = { "reboot system now",
                        "advanced",
                        "power off",
                        NULL };
-                       
+
 int device_recovery_start() {
     return 0;
 }

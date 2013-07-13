@@ -1,0 +1,12 @@
+# mount point	 fstype	    device
+# /boot            bml        boot
+# /recovery        bml        recovery
+/system rfs /dev/block/stl16 
+/data rfs /dev/block/stl17 
+/marvell rfs /dev/stl18
+/mnt/nvm rfs /dev/stl19
+/cache rfs /dev/block/stl20 
+/mnt/.lfs j4fs /dev/stl21 
+/efs rfs /dev/stl22 
+/sdcard vfat /dev/block/mmcblk0p1 
+/sd-ext ext2 /dev/block/mmcblk0p2 
