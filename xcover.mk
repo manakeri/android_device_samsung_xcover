@@ -19,23 +19,32 @@
 # application settings that are stored in resourced.
 
 
-#DEVICE_PACKAGE_OVERLAYS := device/samsung/xcover/overlay
-
+DEVICE_PACKAGE_OVERLAYS := device/samsung/xcover/overlay
 
 # These are the hardware-specific configuration files
-#PRODUCT_COPY_FILES := device/samsung/xcover/prebuilt/etc/asound.conf:system/etc/asound.conf
-#PRODUCT_COPY_FILES += device/samsung/xcover/prebuilt/etc/vold.fstab:system/etc/vold.fstab
-#PRODUCT_COPY_FILES += device/samsung/xcover/prebuilt/etc/egl.cfg:system/lib/egl/egl.cfg
+#PRODUCT_COPY_FILES := \
+#    device/samsung/xcover/prebuilt/asound.conf:system/etc/asound.conf \
+#    device/samsung/xcover/prebuilt/vold.fstab:system/etc/vold.fstab
+#    device/samsung/xcover/prebuilt/egl.cfg:system/lib/egl/egl.cfg
+
+
+PRODUCT_COPY_FILES += $(call find-copy-subdir-files,*,device/samsung/xcover/prebuilt/modules,system/lib/modules)
 
 # Init files
-#PRODUCT_COPY_FILES += device/samsung/epicmtd/ueventd.victory.rc:root/ueventd.victory.rc
-#PRODUCT_COPY_FILES += device/samsung/epicmtd/lpm.rc:root/lpm.rc
-#PRODUCT_COPY_FILES += device/samsung/epicmtd/init.victory.rc:root/init.victory.rc \
-#PRODUCT_COPY_FILES += device/samsung/epicmtd/init.victory.usb.rc:root/init.victory.usb.rc
+#PRODUCT_COPY_FILES += \
+#  device/samsung/epicmtd/ueventd.victory.rc:root/ueventd.victory.rc \
+#  device/samsung/epicmtd/lpm.rc:root/lpm.rc \
+#  device/samsung/epicmtd/init.victory.rc:root/init.victory.rc \
+#  device/samsung/epicmtd/init.victory.usb.rc:root/init.victory.usb.rc
 
 # update utilities
-#PRODUCT_PACKAGES += bml_over_mtd
-#PRODUCT_PACKAGES += setup_fs
+#PRODUCT_PACKAGES += \
+#	bml_over_mtd \
+#	setup_fs
+
+# copy the filesystem converter
+#PRODUCT_COPY_FILES += \
+#  device/samsung/epicmtd/updater.sh:updater.sh
 
 # Enable "Android debugging" in Settings menu.
 # Enable USB mass storage (and adb) at boot.
@@ -43,12 +52,11 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES := \
     persist.service.adb.enable=1 \
     persist.sys.usb.config=mass_storage
 
-# copy the filesystem converter
-PRODUCT_COPY_FILES += \
-  device/samsung/xcover/updater.sh:updater.sh
+# The OpenGL ES API level that is natively supported by this device.
+# This is a 16.16 fixed point number
+PRODUCT_PROPERTY_OVERRIDES := \
+    ro.opengles.version=131072
 
-# See comment at the top of this file. This is where the other
-# half of the device-specific product definition file takes care
-# of the aspects that require proprietary drivers that aren't
-# commonly available
-#$(call inherit-product-if-exists, vendor/samsung/epicmtd/epicmtd-vendor.mk)
+
+
+$(call inherit-product-if-exists, vendor/samsung/xcover/xcover-vendor.mk)

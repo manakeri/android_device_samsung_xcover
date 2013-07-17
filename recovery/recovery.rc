@@ -2,13 +2,13 @@ on early-init
     start ueventd
 
 on init
-    export PATH /sbin:/system/sbin:/system/bin:/system/xbin
+    export PATH /sbin:/bin:/system/sbin:/system/bin:/system/xbin
     export LD_LIBRARY_PATH /system/lib
+    export ANDROID_CACHE /cache
     export ANDROID_ROOT /system
     export ANDROID_DATA /data
     export EXTERNAL_STORAGE /sdcard
-
-    symlink /system/etc /etc
+    export SD_EXT_DIRECTORY /sd-ext
 
     mkdir /boot
     mkdir /recovery
@@ -19,22 +19,24 @@ on init
     mkdir /system
     mkdir /data
     mkdir /cache
-#    mkdir /efs
-#    mkdir /mnt/nvm
-#    mkdir /mnt/.lfs
-#    mkdir /marvell
- 
+
+    symlink /system/etc /etc
+
 on fs
+    exec /sbin/dd if=/dev/block/bml12 of=/ext4_modules.cpio.gz bs=4096k count=1
+    exec /sbin/gzip -d ext4_modules.cpio.gz
+    exec /sbin/cpio -iF ext4_modules.cpio
+    rm ext4_modules.cpio
+
+    insmod jbd2.ko
+    insmod ext4.ko
+
     mount tmpfs tmpfs /tmp
-    mount rfs /dev/stl16 /system
-    mount rfs /dev/stl17 /data
-#    mount rfs /dev/stl18 /marvell
-#    mount rfs /dev/stl19 /mnt/nvm
-    mount rfs /dev/stl20 /cache
-#    mount j4fs /dev/stl21 /mnt/.lfs
-#    mount rfs /dev/stl22 /efs
+    mount ext4 /dev/stl16 /data
+    mount ext4 /dev/stl17 /system
+    mount ext4 /dev/stl20 /cache
     mount vfat /dev/block/mmcblk0p1 /sdcard
-    mount ext2 /dev/block/mmcblk0p2 /sd-ext
+    mount ext4 /dev/block/mmcblk0p2 /sd-ext
 
 on post-fs
     write /proc/sys/kernel/panic_on_oops 1

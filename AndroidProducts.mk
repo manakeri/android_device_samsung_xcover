@@ -1,2 +1,2 @@
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/cyanogen_xcover.mk
+    $(LOCAL_DIR)/full_xcover.mk
