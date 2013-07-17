@@ -41,7 +41,7 @@ TARGET_OTA_ASSERT_DEVICE := xcover,GT-S5690
 BOARD_RECOVERY_HANDLES_MOUNT := true
 
 # 3D
-BOARD_EGL_CFG := device/samsung/xcover/prebuilt/egl.cfg
+BOARD_EGL_CFG := device/samsung/xcover/prebuilt/etc/egl.cfg
 
 # Kernel
 BOARD_NAND_PAGE_SIZE := 4096
