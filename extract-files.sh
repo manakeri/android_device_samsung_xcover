@@ -113,7 +113,7 @@ for FILE in $FILES; do
 done
 #if [ "$ZIP" ]; then rm -rf tmp ; fi
 
-(cat << EOF) | sed s/__DEVICE__/$DEVICE/g > ../../../vendor/$VENDOR/$DEVICE/$DEVICE-vendor-blobs.mk
+(cat << EOF) | sed s/__DEVICE__/$DEVICE/g > ../../../vendor/samsung/$DEVICE/$DEVICE-vendor-blobs.mk
 # Copyright (C) 2010 The Android Open Source Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
