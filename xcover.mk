@@ -22,20 +22,20 @@
 DEVICE_PACKAGE_OVERLAYS := device/samsung/xcover/overlay
 
 # These are the hardware-specific configuration files
-#PRODUCT_COPY_FILES := \
-#    device/samsung/xcover/prebuilt/etc/asound.conf:system/etc/asound.conf \
-#    device/samsung/xcover/prebuilt/etc/vold.fstab:system/etc/vold.fstab
-#    device/samsung/xcover/prebuilt/etc/egl.cfg:system/lib/egl/egl.cfg
-
+PRODUCT_COPY_FILES := \
+    device/samsung/xcover/prebuilt/etc/asound.conf:system/etc/asound.conf \
+    device/samsung/xcover/prebuilt/etc/vold.fstab:system/etc/vold.fstab \
+    device/samsung/xcover/prebuilt/etc/egl.cfg:system/lib/egl/egl.cfg
 
 PRODUCT_COPY_FILES += $(call find-copy-subdir-files,*,device/samsung/xcover/prebuilt/modules,system/lib/modules)
 
 # Init files
-#PRODUCT_COPY_FILES += \
-#  device/samsung/epicmtd/ueventd.victory.rc:root/ueventd.victory.rc \
-#  device/samsung/epicmtd/lpm.rc:root/lpm.rc \
-#  device/samsung/epicmtd/init.victory.rc:root/init.victory.rc \
-#  device/samsung/epicmtd/init.victory.usb.rc:root/init.victory.usb.rc
+PRODUCT_COPY_FILES += \
+  device/samsung/xcover/prebuilt/lpm.rc:root/lpm.rc
+
+#  device/samsung/xcover/prebuilt/ueventd.pxa968.rc:root/ueventd.pxa968.rc \
+#  device/samsung/xcover/prebuilt/init.pxa968.rc:root/init.pxa968.rc \
+
 
 # update utilities
 #PRODUCT_PACKAGES += \
@@ -44,19 +44,20 @@ PRODUCT_COPY_FILES += $(call find-copy-subdir-files,*,device/samsung/xcover/preb
 
 # copy the filesystem converter
 #PRODUCT_COPY_FILES += \
-#  device/samsung/epicmtd/updater.sh:updater.sh
+#	device/samsung/epicmtd/updater.sh:updater.sh
 
 # Enable "Android debugging" in Settings menu.
 # Enable USB mass storage (and adb) at boot.
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES := \
-    persist.service.adb.enable=1 \
-    persist.sys.usb.config=mass_storage
+	persist.service.adb.enable=1 \
+	persist.sys.usb.config=mass_storage
 
 # The OpenGL ES API level that is natively supported by this device.
 # This is a 16.16 fixed point number
 PRODUCT_PROPERTY_OVERRIDES := \
-    ro.opengles.version=131072
-
-
+	ro.opengles.version=131072 \
+	ro.secure=0 \
+	ro.kernel.android.checkjni=1 \
+	dalvik.vm.checkjni=true
 
 $(call inherit-product-if-exists, vendor/samsung/xcover/xcover-vendor.mk)
