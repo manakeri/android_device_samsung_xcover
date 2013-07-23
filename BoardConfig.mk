@@ -9,12 +9,13 @@ TARGET_ARCH := arm
 TARGET_ARCH_VARIANT := armv7-a
 
 # Misc
-TARGET_NO_KERNEL := true
+TARGET_NO_KERNEL := false
 TARGET_NO_BOOTLOADER := true
 TARGET_NO_RADIOIMAGE := true
 BOARD_HAS_NO_MISC_PARTITION := true
 BOARD_HAS_DOWNLOAD_MODE := true
 BOARD_HAS_NO_SELECT_BUTTON := true
+TARGET_NO_INITLOGO := true
 
 # Accessories
 BOARD_USES_GENERIC_AUDIO := true
@@ -24,8 +25,8 @@ BOARD_CAMERA_LIBRARIES := libcamera
 endif
 BOARD_HAVE_BLUETOOTH := false
 BOARD_HAVE_FM_RADIO := false
-BOARD_UMS_LUNFILE := /sys/devices/platform/usb_mass_storage/lun0/file
-TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/usb_mass_storage/lun0/file
+#BOARD_UMS_LUNFILE := /sys/devices/platform/usb_mass_storage/lun0/file
+#TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/usb_mass_storage/lun0/file
 
 # Init
 TARGET_PROVIDES_INIT_RC := true
@@ -36,9 +37,12 @@ TARGET_RECOVERY_INITRC := device/samsung/xcover/recovery/recovery.rc
 TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
 BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/xcover/recovery/recovery_ui.c
 #BOARD_CUSTOM_GRAPHICS := ../../../device/samsung/xcover/recovery/graphics.c
-#BOARD_USES_BML_OVER_MTD := true
+BOARD_USES_BML_OVER_MTD := true
 #BOARD_CUSTOM_BOOTIMG_MK := device/samsung/xcover/shbootimg.mk
 TARGET_OTA_ASSERT_DEVICE := xcover,GT-S5690
+BOARD_RECOVERY_HANDLES_MOUNT := true
+#BOARD_HAS_SMALL_RECOVERY := true
+BOARD_LDPI_RECOVERY := true
 
 # 3D
 BOARD_EGL_CFG := device/samsung/xcover/prebuilt/egl.cfg
@@ -58,46 +62,15 @@ TARGET_PREBUILT_KERNEL := device/samsung/xcover/prebuilt/kernel
 #TARGET_RELEASETOOL_IMG_FROM_TARGET_SCRIPT := device/samsung/xcover/releasetools/xcover_img_from_target_files
 
 # Partitions
-TARGET_USERIMAGES_USE_EXT4 := false
+TARGET_USERIMAGES_USE_EXT4 := true
+BOARD_FLASH_BLOCK_SIZE := 131072
 BOARD_BML_BOOT := /dev/block/bml13
 BOARD_BML_RECOVERY := /dev/block/bml15
+BOARD_BOOTIMAGE_PARTITION_SIZE := $(call image-size-from-data-size,0x00400000)
+BOARD_RECOVERYIMAGE_PARTITION_SIZE := $(call image-size-from-data-size,0x00400000)
+BOARD_USERDATAIMAGE_PARTITION_SIZE := $(call image-size-from-data-size,0x0f680000)
+BOARD_SYSTEMIMAGE_PARTITION_SIZE :=   $(call image-size-from-data-size,0x0ac00000)
 
-#  11: 0x00b40000-0x00f40000 0x00400000
-#  13: 0x01340000-0x01380000 0x00040000
-#  15: 0x013c0000-0x01540000 0x00180000
-#  16: 0x01540000-0x10bc0000 0x0f680000
-#  17: 0x10bc0000-0x1b7c0000 0x0ac00000
-BOARD_BOOTIMAGE_PARTITION_SIZE :=      $(call image-size-from-data-size, 0x00400000)
-BOARD_RECOVERYIMAGE_PARTITION_SIZE :=  $(call image-size-from-data-size, 0x00400000)
-BOARD_USERDATAIMAGE_PARTITION_SIZE :=  $(call image-size-from-data-size, 0x0f680000)
-BOARD_SYSTEMIMAGE_PARTITION_SIZE :=    $(call image-size-from-data-size, 0x0ac00000) 
 
-#BOARD_HAS_SMALL_RECOVERY := true
-BOARD_LDPI_RECOVERY := true
-BOARD_RECOVERY_HANDLES_MOUNT := true
-BOARD_FLASH_BLOCK_SIZE := 131072
-
-# partitions
-#TARGET_USERIMAGES_USE_EXT4 := false
-#BOARD_RECOVERY_HANDLES_MOUNT := false
-#BOARD_BML_BOOT := /dev/block/bml11
-#BOARD_BOOT_DEVICE := /dev/block/bml11
-#BOARD_BML_RECOVERY := /dev/block/bml15
-#BOARD_RECOVERY_DEVICE := /dev/block/bml15
-
-BOARD_DATA_DEVICE := /dev/block/stl16
-BOARD_DATA_FILESYSTEM := ext4
-#BOARD_DATA_FILESYSTEM_OPTIONS := llw,check=no,nosuid,nodev
-
-BOARD_SYSTEM_DEVICE := /dev/block/stl17
-BOARD_SYSTEM_FILESYSTEM := ext4
-#BOARD_SYSTEM_FILESYSTEM_OPTIONS := llw,check=no
-
-BOARD_CACHE_DEVICE := /dev/block/stl20
-BOARD_CACHE_FILESYSTEM := ext4
-#BOARD_CACHE_FILESYSTEM_OPTIONS := llw,check=no,nosuid,nodev
-
-BOARD_SDEXT_DEVICE := /dev/block/mmcblk0p2
-BOARD_SDEXT_FILESYSTEM := ext4
 
 

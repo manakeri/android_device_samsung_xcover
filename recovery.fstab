@@ -1,23 +1,8 @@
-# mount point	 fstype	    device
-#/boot bml /dev/block/bml13
-#/recovery bml /dev/block/bml15
-#/marvell rfs /dev/stl18
-#/mnt/nvm rfs /dev/stl19
-#/mnt/.lfs j4fs /dev/stl21 
-#/efs rfs /dev/stl22 
-#/system vfat /dev/block/stl16 
-#/data vfat /dev/block/stl17 
-#/cache vfat /dev/block/stl20 
-#/sdcard vfat /dev/block/mmcblk0p1 
-#/sd-ext ext2 /dev/block/mmcblk0p2 
-
-
-# mount     fstype  device                  [device2]   [fstype2]   [fsoptions]       [fsoptions2]
-
+# mount     fstype  device                 [device2]        [fstype2]   [fsoptions]   [fsoptions2]
 /boot       bml     boot
 /recovery   bml     recovery
-/system     ext4    /dev/block/stl17       NULL        rfs         NULL              rw,check=no
-/data       ext4    /dev/block/stl16       NULL        rfs         NULL              rw,nosuid,nodev,check=no
-/cache      ext4    /dev/block/stl20       NULL        rfs         NULL              rw,nosuid,nodev,check=no
-/sdcard     vfat    /dev/block/mmcblk0p1
-/sd-ext     ext4    /dev/block/mmcblk0p2   NULL        ext3        NULL              rw,nosuid,nodev,check=no
+/system     ext4    /dev/block/stl17       /dev/block/stl16 rfs         NULL          rw,check=no
+/data       ext4    /dev/block/stl16       /dev/block/stl17 rfs         NULL          rw,nosuid,nodev,check=no
+/cache      ext4    /dev/block/stl20       NULL             rfs         NULL          rw,nosuid,nodev,check=no
+/sdcard     vfat    /dev/block/mmcblk0p1 
+/sd-ext     ext4    /dev/block/mmcblk0p2   NULL             NULL        NULL          rw,nosuid,nodev,check=no
