@@ -3,18 +3,13 @@ on early-init
 
 on init
 
-# VibeTonz
-    export VIBE_PIPE_PATH /dev/pipes
-    mkdir /dev/pipes 0771 shell shell
-
 sysclktz 0
 
-loglevel 3
+loglevel 15
 
 # setup the global environment
-    export PATH /sbin:/vendor/bin:/system/sbin:/system/bin:/system/xbin
-# SEC_SECURITYLAB_LATONA_DEVICE_ENCRYPTION: include /lib /*ASW3 YONG_ODE*/
-    export LD_LIBRARY_PATH /lib:/vendor/lib:/system/lib
+    export PATH /sbin:/bin:/vendor/bin:/system/sbin:/system/bin:/system/xbin
+    export LD_LIBRARY_PATH /vendor/lib:/system/lib
     export ANDROID_BOOTLOGO 0
     export ANDROID_CACHE /cache
     export ANDROID_ROOT /system
@@ -27,6 +22,8 @@ loglevel 3
     export SD_EXT_DIRECTORY /sd-ext
     export BOOTCLASSPATH /system/framework/core.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/core-junit.jar
 
+    mount rootfs rootfs / rw remount
+
 # Backward compatibility
     symlink /system/etc /etc
     symlink /sys/kernel/debug /d
@@ -38,9 +35,6 @@ loglevel 3
 # create mountpoints
     mkdir /mnt 0775 root system
     mkdir /mnt/sdcard 0000 system system
-    mkdir /mnt/.lfs 0755 root root
-    mkdir /sd-ext 0775 system system
-
 
 # Create cgroup mount point for cpu accounting
     mkdir /acct
@@ -54,10 +48,6 @@ loglevel 3
     mkdir /data 0771 system system
     mkdir /cache 0771 system cache
     mkdir /config 0500 root root
-
-    mkdir /efs 0771 system system
-    chown system system /efs
-    chmod 0771 /efs
 
     # Directory for putting things only root should see.
     mkdir /mnt/secure 0700 root root
@@ -86,7 +76,6 @@ loglevel 3
     write /proc/sys/kernel/sched_wakeup_granularity_ns 2000000
     write /proc/sys/kernel/sched_compat_yield 1
     write /proc/sys/kernel/sched_child_runs_first 0
-    write /proc/sys/kernel/sched_tty_sched_enabled 1
 
 # Create cgroup mount points for process groups
     mkdir /dev/cpuctl
@@ -107,45 +96,27 @@ loglevel 3
     # 5.0 %
     write /dev/cpuctl/bg_non_interactive/cpu.shares 52
 
-#FSR module
-    insmod /fsr.ko
-    insmod /fsr_stl.ko
-#RFS module
-    insmod /rfs_glue.ko
-    insmod /rfs_fat.ko
+    mkdir /tmp
+    exec /sbin/dd if=/dev/block/bml12 of=/tmp/ext4_modules.cpio.gz bs=4096k count=1
+    exec /sbin/gzip -d /tmp/ext4_modules.cpio.gz
+    exec /sbin/cpio -iF /tmp/ext4_modules.cpio
+    rm /tmp/ext4_modules.cpio
+
+    insmod /tmp/jbd2.ko
+    insmod /tmp/ext4.ko
 
 on fs
-# /data
-    mount ext4 /dev/block/stl17 /data wait nosuid nodev noatime nodiratime noauto_da_alloc
-    mount rfs /dev/block/stl17 /data nosuid nodev check=no
-    chown system system /data
-    chmod 0771 /data
+# mount mtd partitions
+    # Mount /system rw first to give the filesystem a chance to save a checkpoint
+    #mount yaffs2 mtd@system /system
+    #mount yaffs2 mtd@system /system ro remount
+    #mount yaffs2 mtd@userdata /data nosuid nodev
+    #mount yaffs2 mtd@cache /cache nosuid nodev
 
-# /cache
-    mount ext4 /dev/block/stl20 /cache wait nosuid nodev noatime nodiratime noauto_da_alloc
-    mount rfs /dev/block/stl20 /cache nosuid nodev
-
-# /system rw first to give the filesystem a chance to save a checkpoint
-    mount ext4 /dev/block/stl16 /system rw remount wait noatime nodiratime noauto_da_alloc
-    mount rfs /dev/stl16 /system rw remount ckeck=no
-
-    
-#J4FS module
-    insmod /j4fs.ko
-
-    mount j4fs /dev/stl6 /mnt/.lfs 
-    mount rfs /dev/stl12 /efs nosuid nodev check=no    
-    chown radio system /efs
-    chmod 0771 /efs
-
-    exec apply_sec_devenc_init
-
-    chown root root /sbin/fat.format
-    chmod 750 /sbin/fat.format
- 
-    insmod /sec_param.ko
-
-#    setprop keyguard.no_require_sim 1
+    mount ext4 /dev/block/stl17 /system
+    # mount ext4 /dev/block/stl17 /system ro remount
+    mount ext4 /dev/block/stl16 /data nosuid nodev
+    mount ext4 /dev/block/stl20 /cache nosuid nodev
 
 on post-fs
     # once everything is setup, no need to modify /
@@ -156,145 +127,13 @@ on post-fs
     chmod 0771 /data
 
     # Mount compressed filesystems
-    # mount squashfs loop@/system/lib/modules/modules.sqf /system/lib/modules ro
-    # mount squashfs loop@/system/xbin/xbin.sqf /system/xbin ro
+    mount squashfs loop@/system/lib/modules/modules.sqf /system/lib/modules ro
+    mount squashfs loop@/system/xbin/xbin.sqf /system/xbin ro
 
     # Create dump dir and collect dumps.
     # Do this before we mount cache so eventually we can use cache for
     # storing dumps on platforms which do not have a dedicated dump partition.
-
-    mkdir /data/dontpanic
-    chown root log /data/dontpanic
-    chmod 0750 /data/dontpanic
-
-    # Collect apanic data, free resources and re-arm trigger
-    copy /proc/apanic_console /data/dontpanic/apanic_console
-    chown root log /data/dontpanic/apanic_console
-    chmod 0640 /data/dontpanic/apanic_console
-
-    copy /proc/apanic_threads /data/dontpanic/apanic_threads
-    chown root log /data/dontpanic/apanic_threads
-    chmod 0640 /data/dontpanic/apanic_threads
-
-# copy cp dump 
-    copy /proc/cp_dump /data/dontpanic/cp_dump
-
-    write /proc/apanic_console 1
-    write /proc/cp_dump 1
-
-    # Collect ramconsole data
-    copy /proc/last_kmsg /data/dontpanic/last_kmsg
-    chown root log /data/dontpanic/last_kmsg
-    chmod 0640 /data/dontpanic/last_kmsg
-    # Same reason as /data above
-    chown system cache /cache
-    chmod 0771 /cache
-
-    # cache folder for bigger file than /cache
-    mkdir /data/cache
-    chown system cache /data/cache
-    chmod 0770 /data/cache
-
-    # This may have been created by the recovery system with odd permissions
-    chown system cache /cache/recovery
-    chmod 0770 /cache/recovery
-
-    #change permissions on vmallocinfo so we can grab it from bugreports
-    chown root log /proc/vmallocinfo
-    chmod 0440 /proc/vmallocinfo
-
-    #change permissions on kmsg & sysrq-trigger so bugreports can grab kthread stacks
-    chown root system /proc/kmsg
-    chmod 0440 /proc/kmsg
-    chown root system /proc/sysrq-trigger
-    chmod 0220 /proc/sysrq-trigger
-
-# create basic filesystem structure
-    mkdir /data/misc 01771 system misc
-    mkdir /data/misc/bluetoothd 0770 bluetooth bluetooth
-    mkdir /data/misc/bluetooth 0770 system system
-    mkdir /data/misc/keystore 0700 keystore keystore
-    mkdir /data/misc/vpn 0770 system system
-    mkdir /data/misc/systemkeys 0700 system system
-    mkdir /data/misc/vpn/profiles 0770 system system
-    # give system access to wpa_supplicant.conf for backup and restore
-    mkdir /data/misc/wifi 0770 wifi wifi
-    mkdir /data/misc/radionv 0770 radio system
-    chmod 0770 /data/misc/radionv
-    chmod 0770 /data/misc/wifi
-    chmod 0660 /data/misc/wifi/wpa_supplicant.conf
-    mkdir /data/local 0751 root root
-    mkdir /data/local/tmp 0771 shell shell
-    mkdir /data/local/download 0771 system cache
-    mkdir /data/data 0771 system system
-    mkdir /data/app-private 0771 system system
-    mkdir /data/app 0771 system system
-    mkdir /data/property 0700 root root
-    mkdir /data/misc/radio 0775 radio radio
-
-    mkdir /cache/download 0771 system cache
-
-    # create log system 
-    mkdir /data/log 0775 system log
-    chown system log /data/log
-
-    chmod 0775 /data/log
-
-    # Create directory for FOTA 
-    mkdir /data/fota 0775 radio radio
-    chown radio radio /data/fota
-    chmod 0777 /data/fota
-
-    # anr mode chage
-    mkdir /data/anr 0775 system system 
-    chmod 0775 /data/anr
-
-    chmod 0662 /dev/log/system
-    chmod 0662 /dev/log/radio
-    chmod 0662 /dev/log/events
-    chmod 0662 /dev/log/main
-
-    # create dalvik-cache and double-check the perms
-    mkdir /data/dalvik-cache 0771 system system
-    chown system system /data/dalvik-cache
-    chmod 0771 /data/dalvik-cache
-
-    mkdir /cache/dalvik-cache 0771 system system
-    chown system system /cache/dalvik-cache
-    chmod 0771 /cache/dalvik-cache
-
-    # create the lost+found directories, so as to enforce our permissions
-    mkdir /data/lost+found 0770
-    mkdir /cache/lost+found 0770
-
-    # double check the perms, in case lost+found already exists, and set owner
-    chown root root /data/lost+found
-    chmod 0770 /data/lost+found
-    chown root root /cache/lost+found
-    chmod 0770 /cache/lost+found
-
-    mkdir /data/data/.drm/ 0755
-
-    # allow net_raw to have access to /dev/socket directory
-    chown root net_raw /dev/socket
-    chmod 0775 /dev/socket
-
-    # allow system to modify cpufreq control files
-    chown root system /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-    chown root system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-    chown root system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-
-on post-fs
-    # once everything is setup, no need to modify /
-    mount rootfs rootfs / ro remount
-
-    # We chown/chmod /data again so because mount is run as root + defaults
-    chown system system /data
-    chmod 0771 /data
-
+   
     mkdir /data/dontpanic
     chown root log /data/dontpanic
     chmod 0750 /data/dontpanic
@@ -491,7 +330,7 @@ on boot
 service ueventd /sbin/ueventd
     critical
 
-service console /system/bin/sh
+service console /sbin/sh
     console
     disabled
     user shell
@@ -520,6 +359,8 @@ on property:service.adb.tcp.port=5555
 on property:service.adb.tcp.port=-1
     restart adbd
 
+service akmd /sbin/logwrapper /sbin/akmd -f /dev/kmsg
+
 service servicemanager /system/bin/servicemanager
     user system
     critical
@@ -536,11 +377,11 @@ service netd /system/bin/netd
 
 service debuggerd /system/bin/debuggerd
 
-service ril-daemon /system/bin/rild -l libmarvell-ril.so
+service ril-daemon /system/bin/rild
     socket rild stream 660 root radio
     socket rild-debug stream 660 radio system
     user root
-    group radio cache inet misc audio sdcard_rw net_admin net_raw qcom_oncrpc diag log system
+    group radio cache inet misc audio sdcard_rw net_admin net_raw qcom_oncrpc diag
 
 service zygote /system/bin/app_process -Xzygote /system/bin --zygote --start-system-server
     socket zygote stream 660 root system
@@ -629,6 +470,3 @@ service dumpstate /system/bin/dumpstate -s
     socket dumpstate stream 0660 shell log
     disabled
     oneshot
-
-
-

@@ -10,6 +10,7 @@ on init
 
     symlink /system/etc /etc
 
+    mkdir /tmp
     mkdir /boot
     mkdir /recovery
     mkdir /sdcard
@@ -19,22 +20,30 @@ on init
     mkdir /system
     mkdir /data
     mkdir /cache
-#    mkdir /efs
-#    mkdir /mnt/nvm
-#    mkdir /mnt/.lfs
-#    mkdir /marvell
+    mkdir /efs
+    #mkdir /mnt/nvm
+    #mkdir /mnt/.lfs
+    #mkdir /marvell
  
 on fs
     mount tmpfs tmpfs /tmp
-    mount rfs /dev/stl16 /system
-    mount rfs /dev/stl17 /data
-#    mount rfs /dev/stl18 /marvell
-#    mount rfs /dev/stl19 /mnt/nvm
-    mount rfs /dev/stl20 /cache
-#    mount j4fs /dev/stl21 /mnt/.lfs
-#    mount rfs /dev/stl22 /efs
+
+    exec /sbin/dd if=/dev/block/bml12 of=/tmp/ext4_modules.cpio.gz bs=4096k count=1
+    exec /sbin/gzip -d /tmp/ext4_modules.cpio.gz
+    exec /sbin/cpio -iF /tmp/ext4_modules.cpio
+    rm /tmp/ext4_modules.cpio
+
+    insmod /tmp/jbd2.ko
+    insmod /tmp/ext4.ko
+    mount ext4 /dev/stl16 /data
+    mount ext4 /dev/stl17 /system
+    #mount rfs /dev/stl18 /marvell
+    #mount rfs /dev/stl19 /mnt/nvm
+    mount ext4 /dev/stl20 /cache
+    #mount j4fs /dev/stl21 /mnt/.lfs
+    #mount rfs /dev/stl22 /efs
     mount vfat /dev/block/mmcblk0p1 /sdcard
-    mount ext2 /dev/block/mmcblk0p2 /sd-ext
+    mount ext4 /dev/block/mmcblk0p2 /sd-ext
 
 on post-fs
     write /proc/sys/kernel/panic_on_oops 1

@@ -29,7 +29,7 @@ TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/usb_mass_storage/lun0/f
 
 # Init
 TARGET_PROVIDES_INIT_RC := true
-TARGET_PROVIDES_INIT_TARGET_RC := false
+TARGET_PROVIDES_INIT_TARGET_RC := true
 TARGET_RECOVERY_INITRC := device/samsung/xcover/recovery/recovery.rc
 
 # Recovery
