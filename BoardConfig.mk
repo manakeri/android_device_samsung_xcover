@@ -17,6 +17,7 @@ BOARD_HAS_NO_MISC_PARTITION := true
 BOARD_HAS_DOWNLOAD_MODE := true
 BOARD_HAS_NO_SELECT_BUTTON := true
 #ENABLE_WEBGL := true
+TARGET_OTA_ASSERT_DEVICE := xcover,GT-S5690
 
 # Accessories
 BOARD_USES_GENERIC_AUDIO := true
@@ -26,22 +27,23 @@ BOARD_CAMERA_LIBRARIES := libcamera
 endif
 BOARD_HAVE_BLUETOOTH := false
 BOARD_HAVE_FM_RADIO := false
-BOARD_UMS_LUNFILE := /sys/devices/platform/usb_mass_storage/lun0/file
-TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/usb_mass_storage/lun0/file
+#BOARD_UMS_LUNFILE := /sys/devices/platform/usb_mass_storage/lun0/file
+#TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/usb_mass_storage/lun0/file
 
 # Init
-TARGET_PROVIDES_INIT_RC := false
-TARGET_PROVIDES_INIT_TARGET_RC := false
+TARGET_PROVIDES_INIT_RC := true
+TARGET_PROVIDES_INIT_TARGET_RC := true
 TARGET_RECOVERY_INITRC := device/samsung/xcover/recovery/recovery.rc
 
 # Recovery
 TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
 BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/xcover/recovery/recovery_keys.c
 #BOARD_CUSTOM_GRAPHICS := ../../../device/samsung/xcover/recovery/graphics.c
-BOARD_USES_BML_OVER_MTD := true
+#BOARD_USES_BML_OVER_MTD := true
 #BOARD_CUSTOM_BOOTIMG_MK := device/samsung/xcover/shbootimg.mk
-TARGET_OTA_ASSERT_DEVICE := xcover,GT-S5690
 BOARD_RECOVERY_HANDLES_MOUNT := true
+#BOARD_HAS_SMALL_RECOVERY := true
+#BOARD_LDPI_RECOVERY := true
 
 # 3D
 BOARD_EGL_CFG := device/samsung/xcover/prebuilt/etc/egl.cfg
@@ -62,12 +64,12 @@ TARGET_PREBUILT_KERNEL := device/samsung/xcover/prebuilt/kernel
 
 # Partitions
 TARGET_USERIMAGES_USE_EXT4 := true
-#BOARD_BML_BOOT := /dev/block/bml13
-#BOARD_BML_RECOVERY := /dev/block/bml15
-#BOARD_DATA_DEVICE := /dev/block/stl16
-#BOARD_SYSTEM_DEVICE := /dev/block/stl17
-#BOARD_CACHE_DEVICE := /dev/block/stl20
-#BOARD_SDEXT_DEVICE := /dev/block/mmcblk0p2
+BOARD_BML_BOOT := /dev/block/bml13
+BOARD_BML_RECOVERY := /dev/block/bml15
+BOARD_DATA_DEVICE := /dev/block/stl16
+BOARD_SYSTEM_DEVICE := /dev/block/stl17
+BOARD_CACHE_DEVICE := /dev/block/stl20
+BOARD_SDEXT_DEVICE := /dev/block/mmcblk0p2
 
 #  11: 0x00b40000-0x00f40000 0x00400000 Kernel
 #  12: 0x00b40000-0x00f40000 0x00400000 FOTA Kernel
@@ -82,8 +84,6 @@ BOARD_SYSTEMIMAGE_PARTITION_SIZE :=  $(call image-size-from-data-size, 0x0f68000
 BOARD_USERDATAIMAGE_PARTITION_SIZE :=  $(call image-size-from-data-size, 0x0ac00000)
 BOARD_FLASH_BLOCK_SIZE := 131072
 
-#BOARD_HAS_SMALL_RECOVERY := true
-#BOARD_LDPI_RECOVERY := true
 
 
 
