@@ -24,17 +24,16 @@ DEVICE_PACKAGE_OVERLAYS := device/samsung/xcover/overlay
 # These are the hardware-specific configuration files
 PRODUCT_COPY_FILES := \
     device/samsung/xcover/prebuilt/etc/asound.conf:system/etc/asound.conf \
-    device/samsung/xcover/prebuilt/etc/vold.fstab:system/etc/vold.fstab \
-    device/samsung/xcover/prebuilt/etc/egl.cfg:system/lib/egl/egl.cfg
+    device/samsung/xcover/prebuilt/etc/vold.fstab:system/etc/vold.fstab 
+#    device/samsung/xcover/prebuilt/etc/egl.cfg:system/lib/egl/egl.cfg
 
 PRODUCT_COPY_FILES += $(call find-copy-subdir-files,*,device/samsung/xcover/prebuilt/modules,system/lib/modules)
 
 # Init files
 PRODUCT_COPY_FILES += \
-  device/samsung/xcover/prebuilt/lpm.rc:root/lpm.rc
-
-#  device/samsung/xcover/prebuilt/ueventd.pxa968.rc:root/ueventd.pxa968.rc \
-#  device/samsung/xcover/prebuilt/init.pxa968.rc:root/init.pxa968.rc \
+  device/samsung/xcover/prebuilt/lpm.rc:root/lpm.rc \
+  device/samsung/xcover/prebuilt/ueventd.pxa968.rc:root/ueventd.pxa968.rc \
+  device/samsung/xcover/prebuilt/init.pxa968.rc:root/init.pxa968.rc 
 
 
 # update utilities

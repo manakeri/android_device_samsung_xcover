@@ -2,6 +2,8 @@ on early-init
     start ueventd
 
 on init
+    loglevel 15
+
     export PATH /sbin:/bin:/system/sbin:/system/bin:/system/xbin
     export LD_LIBRARY_PATH /system/lib
     export ANDROID_CACHE /cache
@@ -24,14 +26,16 @@ on init
     #mkdir /mnt/nvm
     #mkdir /mnt/.lfs
     #mkdir /marvell
- 
-on fs
+
     exec /sbin/dd if=/dev/block/bml12 of=/ext4_modules.cpio.gz bs=4096k count=1
     exec /sbin/gzip -d ext4_modules.cpio.gz
     exec /sbin/cpio -iF ext4_modules.cpio
-    rm ext4_modules.cpio
+    exec /sbin/rm ext4_modules.cpio
     insmod jbd2.ko
-    insmod ext4.ko
+    insmod ext4.ko 
+
+on fs
+    mount rfs /dev/block/stl20 /cache
 
 on post-fs
     write /proc/sys/kernel/panic_on_oops 1

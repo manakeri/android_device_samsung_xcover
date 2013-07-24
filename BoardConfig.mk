@@ -7,7 +7,9 @@ TARGET_BOOTLOADER_BOARD_NAME := pxa968
 TARGET_CPU_ABI := armeabi-v7a
 TARGET_CPU_ABI2 := armeabi
 TARGET_ARCH := arm
-TARGET_ARCH_VARIANT := armv7-a
+TARGET_ARCH_VARIANT := armv6-vfp
+ARCH_ARM_HAVE_TLS_REGISTER := false
+
 
 # Misc
 TARGET_NO_KERNEL := false
@@ -37,9 +39,9 @@ TARGET_PROVIDES_INIT_TARGET_RC := true
 TARGET_RECOVERY_INITRC := device/samsung/xcover/recovery/recovery.rc
 
 # Recovery
-TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
+#TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
 BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/xcover/recovery/recovery_keys.c
-#BOARD_CUSTOM_GRAPHICS := ../../../device/samsung/xcover/recovery/graphics.c
+BOARD_CUSTOM_GRAPHICS := ../../../device/samsung/xcover/recovery/graphics.c
 #BOARD_USES_BML_OVER_MTD := true
 #BOARD_CUSTOM_BOOTIMG_MK := device/samsung/xcover/shbootimg.mk
 BOARD_RECOVERY_HANDLES_MOUNT := true
@@ -65,6 +67,7 @@ TARGET_PREBUILT_KERNEL := device/samsung/xcover/prebuilt/kernel
 
 # Partitions
 TARGET_USERIMAGES_USE_EXT4 := true
+BOARD_FLASH_BLOCK_SIZE := 131072
 
 #  11: 0x00b40000-0x00f40000 0x00400000 Kernel
 #  12: 0x00b40000-0x00f40000 0x00400000 FOTA Kernel
@@ -75,9 +78,17 @@ TARGET_USERIMAGES_USE_EXT4 := true
 
 BOARD_BML_BOOT := /dev/block/bml13
 BOARD_BML_RECOVERY := /dev/block/bml15
+
 BOARD_BOOTIMAGE_PARTITION_SIZE := $(call image-size-from-data-size,0x00400000)
 BOARD_RECOVERYIMAGE_PARTITION_SIZE := $(call image-size-from-data-size,0x00400000)
-BOARD_USERDATAIMAGE_PARTITION_SIZE := $(call image-size-from-data-size,0x0f680000)
-BOARD_SYSTEMIMAGE_PARTITION_SIZE :=   $(call image-size-from-data-size,0x0ac00000)
+
+# from STL dump
+BOARD_USERDATAIMAGE_PARTITION_SIZE := 250085376 
+BOARD_SYSTEMIMAGE_PARTITION_SIZE := 173539328
+
+# from bmlinfo
+#BOARD_USERDATAIMAGE_PARTITION_SIZE := 258473984
+#BOARD_SYSTEMIMAGE_PARTITION_SIZE := 180355072
+
 
 
