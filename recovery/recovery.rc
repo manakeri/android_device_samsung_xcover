@@ -10,6 +10,7 @@ on init
     export EXTERNAL_STORAGE /sdcard
     export SD_EXT_DIRECTORY /sd-ext
 
+    mkdir /tmp
     mkdir /boot
     mkdir /recovery
     mkdir /sdcard
@@ -19,24 +20,18 @@ on init
     mkdir /system
     mkdir /data
     mkdir /cache
-
-    symlink /system/etc /etc
-
+    mkdir /efs
+    #mkdir /mnt/nvm
+    #mkdir /mnt/.lfs
+    #mkdir /marvell
+ 
 on fs
     exec /sbin/dd if=/dev/block/bml12 of=/ext4_modules.cpio.gz bs=4096k count=1
     exec /sbin/gzip -d ext4_modules.cpio.gz
     exec /sbin/cpio -iF ext4_modules.cpio
     rm ext4_modules.cpio
-
     insmod jbd2.ko
     insmod ext4.ko
-
-    mount tmpfs tmpfs /tmp
-    mount ext4 /dev/stl16 /data
-    mount ext4 /dev/stl17 /system
-    mount ext4 /dev/stl20 /cache
-    mount vfat /dev/block/mmcblk0p1 /sdcard
-    mount ext4 /dev/block/mmcblk0p2 /sd-ext
 
 on post-fs
     write /proc/sys/kernel/panic_on_oops 1

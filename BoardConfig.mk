@@ -4,10 +4,10 @@
 TARGET_BOARD_PLATFORM := pxa968
 TARGET_BOOTLOADER_BOARD_NAME := pxa968
 
-TARGET_ARCH := arm
-TARGET_ARCH_VARIANT := armv7-a
 TARGET_CPU_ABI := armeabi-v7a
 TARGET_CPU_ABI2 := armeabi
+TARGET_ARCH := arm
+TARGET_ARCH_VARIANT := armv7-a
 
 # Misc
 TARGET_NO_KERNEL := false
@@ -18,6 +18,7 @@ BOARD_HAS_DOWNLOAD_MODE := true
 BOARD_HAS_NO_SELECT_BUTTON := true
 #ENABLE_WEBGL := true
 TARGET_OTA_ASSERT_DEVICE := xcover,GT-S5690
+TARGET_NO_INITLOGO := true
 
 # Accessories
 BOARD_USES_GENERIC_AUDIO := true
@@ -64,12 +65,6 @@ TARGET_PREBUILT_KERNEL := device/samsung/xcover/prebuilt/kernel
 
 # Partitions
 TARGET_USERIMAGES_USE_EXT4 := true
-BOARD_BML_BOOT := /dev/block/bml13
-BOARD_BML_RECOVERY := /dev/block/bml15
-BOARD_DATA_DEVICE := /dev/block/stl16
-BOARD_SYSTEM_DEVICE := /dev/block/stl17
-BOARD_CACHE_DEVICE := /dev/block/stl20
-BOARD_SDEXT_DEVICE := /dev/block/mmcblk0p2
 
 #  11: 0x00b40000-0x00f40000 0x00400000 Kernel
 #  12: 0x00b40000-0x00f40000 0x00400000 FOTA Kernel
@@ -78,12 +73,11 @@ BOARD_SDEXT_DEVICE := /dev/block/mmcblk0p2
 #  16: 0x01540000-0x10bc0000 0x0f680000 System
 #  17: 0x10bc0000-0x1b7c0000 0x0ac00000 Data
 
-BOARD_BOOTIMAGE_PARTITION_SIZE :=  $(call image-size-from-data-size, 0x00400000)
-BOARD_RECOVERYIMAGE_PARTITION_SIZE :=  $(call image-size-from-data-size, 0x00400000)
-BOARD_SYSTEMIMAGE_PARTITION_SIZE :=  $(call image-size-from-data-size, 0x0f680000)
-BOARD_USERDATAIMAGE_PARTITION_SIZE :=  $(call image-size-from-data-size, 0x0ac00000)
-BOARD_FLASH_BLOCK_SIZE := 131072
-
-
+BOARD_BML_BOOT := /dev/block/bml13
+BOARD_BML_RECOVERY := /dev/block/bml15
+BOARD_BOOTIMAGE_PARTITION_SIZE := $(call image-size-from-data-size,0x00400000)
+BOARD_RECOVERYIMAGE_PARTITION_SIZE := $(call image-size-from-data-size,0x00400000)
+BOARD_USERDATAIMAGE_PARTITION_SIZE := $(call image-size-from-data-size,0x0f680000)
+BOARD_SYSTEMIMAGE_PARTITION_SIZE :=   $(call image-size-from-data-size,0x0ac00000)
 
 
