@@ -33,6 +33,7 @@ PRODUCT_COPY_FILES += $(call find-copy-subdir-files,*,device/samsung/xcover/preb
 PRODUCT_COPY_FILES += \
   device/samsung/xcover/prebuilt/lpm.rc:root/lpm.rc \
   device/samsung/xcover/prebuilt/ueventd.pxa968.rc:root/ueventd.pxa968.rc \
+  device/samsung/xcover/prebuilt/init.rc:root/init.rc \
   device/samsung/xcover/prebuilt/init.pxa968.rc:root/init.pxa968.rc 
 
 

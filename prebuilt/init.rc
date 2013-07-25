@@ -92,19 +92,18 @@ loglevel 15
 # This is needed by any process that uses socket tagging.
     chmod 0644 /dev/xt_qtaguid
 
-    exec /sbin/dd if=/dev/block/bml12 of=/tmp/ext4_modules.cpio.gz bs=4096k count=1
-    exec /sbin/gzip -d /tmp/ext4_modules.cpio.gz
-    exec /sbin/cpio -iF /tmp/ext4_modules.cpio
-    rm /tmp/ext4_modules.cpio
+    exec /sbin/dd if=/dev/block/bml12 of=/ext4_modules.cpio.gz bs=4096k count=1
+    exec /sbin/gzip -d /ext4_modules.cpio.gz
+    exec /sbin/cpio -iF /ext4_modules.cpio
+    rm /ext4_modules.cpio
 
-    insmod /tmp/jbd2.ko
-    insmod /tmp/ext4.ko
+    insmod /jbd2.ko
+    insmod /ext4.ko
 
 on fs
-# mount mtd partitions
     # Mount /system rw first to give the filesystem a chance to save a checkpoint
     mount ext4 /dev/block/stl17 /system
-    #mount yaffs2 mtd@system /system ro remount
+    mount ext4 /dev/block/stl17 /system ro remount
     mount ext4 /dev/block/stl16 /data nosuid nodev
     mount ext4 /dev/block/stl20 /cache nosuid nodev
 
@@ -379,7 +378,7 @@ on property:ro.debuggable=1
     start console
 
 # adbd is controlled via property triggers in init.<platform>.usb.rc
-service adbd /sbin/adbd
+service adbd /sbin/adbd recovery
     class core
     disabled
 
