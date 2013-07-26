@@ -28,8 +28,8 @@ USE_CAMERA_STUB := true
 ifeq ($(USE_CAMERA_STUB),false)
 BOARD_CAMERA_LIBRARIES := libcamera
 endif
-BOARD_HAVE_BLUETOOTH := false
-BOARD_HAVE_FM_RADIO := false
+BOARD_HAVE_BLUETOOTH := true
+BOARD_HAVE_FM_RADIO := true
 #BOARD_UMS_LUNFILE := /sys/devices/platform/usb_mass_storage/lun0/file
 #TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/usb_mass_storage/lun0/file
 
@@ -62,7 +62,7 @@ TARGET_PREBUILT_KERNEL := device/samsung/xcover/prebuilt/kernel
 #WIFI_DRIVER_FW_PATH_STA     := "/etc/firmware/fw_bcmdhd.bin"
 #WIFI_DRIVER_FW_PATH_AP      := "/etc/firmware/mrvl/sd8787_uapsta.bin"
 
-#TARGET_RELEASETOOL_OTA_FROM_TARGET_SCRIPT := device/samsung/xcover/releasetools/xcover_ota_from_target_files
+#TARGET_RELEASETOOL_OTA_FROM_TARGET_SCRIPT := device/samsung/xcover/releasetools/ota_from_target_files
 #TARGET_RELEASETOOL_IMG_FROM_TARGET_SCRIPT := device/samsung/xcover/releasetools/xcover_img_from_target_files
 
 # Partitions

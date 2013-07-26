@@ -19,12 +19,12 @@
 # application settings that are stored in resourced.
 
 
-DEVICE_PACKAGE_OVERLAYS := device/samsung/xcover/overlay
+#DEVICE_PACKAGE_OVERLAYS := device/samsung/xcover/overlay
 
 # These are the hardware-specific configuration files
-PRODUCT_COPY_FILES := \
-    device/samsung/xcover/prebuilt/etc/asound.conf:system/etc/asound.conf \
-    device/samsung/xcover/prebuilt/etc/vold.fstab:system/etc/vold.fstab 
+#PRODUCT_COPY_FILES := \
+#    device/samsung/xcover/prebuilt/etc/asound.conf:system/etc/asound.conf \
+#    device/samsung/xcover/prebuilt/etc/vold.fstab:system/etc/vold.fstab 
 #    device/samsung/xcover/prebuilt/etc/egl.cfg:system/lib/egl/egl.cfg
 
 PRODUCT_COPY_FILES += $(call find-copy-subdir-files,*,device/samsung/xcover/prebuilt/modules,system/lib/modules)
@@ -60,4 +60,4 @@ PRODUCT_PROPERTY_OVERRIDES := \
 	ro.kernel.android.checkjni=1 \
 	dalvik.vm.checkjni=true
 
-$(call inherit-product-if-exists, vendor/samsung/xcover/xcover-vendor.mk)
+#$(call inherit-product-if-exists, vendor/samsung/xcover/xcover-vendor.mk)

@@ -85,6 +85,9 @@ try:
 except ImportError:
   from sha import sha as sha1
 
+RELEASETOOLS_DIR = os.path.abspath(os.path.join(LOCAL_DIR, '../../../build/tools/releasetools'))
+sys.path.append(RELEASETOOLS_DIR)
+
 import common
 import edify_generator
 
@@ -94,7 +97,7 @@ OPTIONS.incremental_source = None
 OPTIONS.require_verbatim = set()
 OPTIONS.prohibit_verbatim = set(("system/build.prop",))
 OPTIONS.patch_threshold = 0.95
-OPTIONS.wipe_user_data = False
+OPTIONS.wipe_user_data = True
 OPTIONS.omit_prereq = False
 OPTIONS.extra_script = None
 OPTIONS.aslr_mode = True
@@ -400,10 +403,10 @@ def WriteFullOTAPackage(input_zip, output_zip):
 
   AppendAssertions(script, input_zip)
   device_specific.FullOTA_Assertions()
-  if OPTIONS.backuptool:
-    script.Mount("/system")
-    script.RunBackup("backup")
-    script.Unmount("/system")
+  #if OPTIONS.backuptool:
+  #  script.Mount("/system")
+  #  script.RunBackup("backup")
+  #  script.Unmount("/system")
 
   script.ShowProgress(0.5, 0)
 
@@ -422,28 +425,26 @@ def WriteFullOTAPackage(input_zip, output_zip):
   else:
     script.UndoRetouchBinaries(retouch_files)
 
-  boot_img = common.GetBootableImage("boot.img", "boot.img",
-                                     OPTIONS.input_tmp, "BOOT")
-  #recovery_img = common.GetBootableImage("recovery.img", "recovery.img",
-  #                                       OPTIONS.input_tmp, "RECOVERY")
+  #boot_img = common.GetBootableImage("boot.img", "boot.img", OPTIONS.input_tmp, "BOOT")
+  #recovery_img = common.GetBootableImage("recovery.img", "recovery.img", OPTIONS.input_tmp, "RECOVERY")
   #MakeRecoveryPatch(output_zip, recovery_img, boot_img)
 
   Item.GetMetadata(input_zip)
   Item.Get("system").SetPermissions(script)
 
-  common.CheckSize(boot_img.data, "boot.img", OPTIONS.info_dict)
-  common.ZipWriteStr(output_zip, "boot.img", boot_img.data)
-  script.ShowProgress(0.2, 0)
+  #common.CheckSize(boot_img.data, "boot.img", OPTIONS.info_dict)
+  #common.ZipWriteStr(output_zip, "boot.img", boot_img.data)
+  #script.ShowProgress(0.2, 0)
 
-  if OPTIONS.backuptool:
-    script.ShowProgress(0.2, 10)
-    script.RunBackup("restore")
+  #if OPTIONS.backuptool:
+  #  script.ShowProgress(0.2, 10)
+  #  script.RunBackup("restore")
 
   if OPTIONS.modelidcfg:
     script.RunConfig("")
 
-  script.ShowProgress(0.2, 10)
-  script.WriteRawImage("/boot", "boot.img")
+  #script.ShowProgress(0.2, 10)
+  #script.WriteRawImage("/boot", "boot.img")
 
   script.ShowProgress(0.1, 0)
   device_specific.FullOTA_InstallEnd()
