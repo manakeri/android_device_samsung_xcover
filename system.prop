@@ -1,8 +1,0 @@
-#
-# system.prop for device
-#
-ro.secure=0
-ro.debuggable=1
-dalvik.vm.dexopt-data-only=1
-persist.service.adb.enable=1
-

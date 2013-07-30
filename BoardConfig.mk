@@ -40,7 +40,7 @@ BOARD_HAVE_FM_RADIO := true
 #TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/usb_mass_storage/lun0/file
 
 # Init
-TARGET_PROVIDES_INIT_RC := true
+TARGET_PROVIDES_INIT_RC := false
 TARGET_PROVIDES_INIT_TARGET_RC := true
 
 # Recovery

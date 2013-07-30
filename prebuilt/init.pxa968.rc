@@ -40,6 +40,33 @@ on init
     # write /sys/power/mspm/prof 1
     # write /sys/power/cp 0
 
+on fs
+    # Mount /system rw first to give the filesystem a chance to save a checkpoint
+    mount rfs /dev/block/stl17 /system
+    mount rfs /dev/block/stl17 /system ro remount
+    mount rfs /dev/block/stl16 /data nosuid nodev
+
+    mkdir /marvell 0771 system system
+    mount rfs /dev/block/stl18 /marvell check=no
+    chown system system /marvell
+    chmod 0771 /marvell
+
+    mkdir /mnt/nvm
+    mount rfs /dev/block/stl19 /mnt/nvm nosuid nodev
+
+    mount rfs /dev/block/stl20 /cache nosuid nodev
+
+    mkdir /mnt/.lfs 0755 system system
+    mount j4fs /dev/block/stl21 /mnt/.lfs
+    chown system system /efs
+    chmod 0755 /efs
+
+    mkdir /efs 0771 system system
+    mount rfs /dev/block/stl22 /efs nosuid nodev check=no
+    chown radio system /efs
+    chmod 0771 /efs
+
+
 on post-fs
     insmod /system/lib/modules/bmm.ko bmm_size_mb=0
     insmod /system/lib/modules/touch.ko

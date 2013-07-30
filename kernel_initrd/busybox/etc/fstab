@@ -1,3 +1,0 @@
-none			/tmp			ramfs	defaults	0 0
-none			/proc			proc	defaults	0 0
-sysfs                   /sys                    sysfs   defaults        0 0

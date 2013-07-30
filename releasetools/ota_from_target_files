@@ -438,9 +438,9 @@ def WriteFullOTAPackage(input_zip, output_zip):
 
   script.ShowProgress(0.2, 2)
   output_zip.write(os.path.join(TARGET_DIR, "ramdisk.img"),"ramdisk.img")
-  output_zip.write(os.path.join(TARGET_DIR, "recovery.img"),"recovery.img")
+  #output_zip.write(os.path.join(TARGET_DIR, "recovery.img"),"recovery.img")
   script.WriteRawImage("/boot", "ramdisk.img")
-  script.WriteRawImage("/recovery", "recovery.img")
+  #script.WriteRawImage("/recovery", "recovery.img")
 
   script.ShowProgress(0.1, 0)
 
