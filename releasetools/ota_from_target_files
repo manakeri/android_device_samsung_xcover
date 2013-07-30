@@ -85,7 +85,9 @@ try:
 except ImportError:
   from sha import sha as sha1
 
+LOCAL_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 RELEASETOOLS_DIR = os.path.abspath(os.path.join(LOCAL_DIR, '../../../build/tools/releasetools'))
+TARGET_DIR = os.getenv('OUT')
 sys.path.append(RELEASETOOLS_DIR)
 
 import common
@@ -103,7 +105,7 @@ OPTIONS.extra_script = None
 OPTIONS.aslr_mode = True
 OPTIONS.worker_threads = 3
 OPTIONS.backuptool = False
-OPTIONS.modelidcfg = True
+OPTIONS.modelidcfg = False
 OPTIONS.override_device = 'auto'
 
 def MostPopularKey(d, default):
@@ -376,7 +378,6 @@ fi
   common.ZipWriteStr(output_zip, "recovery/etc/install-recovery.sh", sh)
   return Item.Get("system/etc/install-recovery.sh", dir=False)
 
-
 def WriteFullOTAPackage(input_zip, output_zip):
   # TODO: how to determine this?  We don't know what version it will
   # be installed on top of.  For now, we expect the API just won't
@@ -408,13 +409,16 @@ def WriteFullOTAPackage(input_zip, output_zip):
   #  script.RunBackup("backup")
   #  script.Unmount("/system")
 
-  script.ShowProgress(0.5, 0)
+  script.ShowProgress(0.1, 0)
 
-  if OPTIONS.wipe_user_data:
-    script.FormatPartition("/data")
+  #if OPTIONS.wipe_user_data:
+  #  script.FormatPartition("/data")
 
-  script.FormatPartition("/system")
+  script.ShowProgress(0.1, 0)
+  #script.FormatPartition("/system")
   script.Mount("/system")
+
+  script.ShowProgress(0.5, 10)
   #script.UnpackPackageDir("recovery", "/system")
   script.UnpackPackageDir("system", "/system")
 
@@ -425,28 +429,23 @@ def WriteFullOTAPackage(input_zip, output_zip):
   else:
     script.UndoRetouchBinaries(retouch_files)
 
-  #boot_img = common.GetBootableImage("boot.img", "boot.img", OPTIONS.input_tmp, "BOOT")
-  #recovery_img = common.GetBootableImage("recovery.img", "recovery.img", OPTIONS.input_tmp, "RECOVERY")
-  #MakeRecoveryPatch(output_zip, recovery_img, boot_img)
-
   Item.GetMetadata(input_zip)
   Item.Get("system").SetPermissions(script)
-
-  #common.CheckSize(boot_img.data, "boot.img", OPTIONS.info_dict)
-  #common.ZipWriteStr(output_zip, "boot.img", boot_img.data)
-  #script.ShowProgress(0.2, 0)
-
-  #if OPTIONS.backuptool:
-  #  script.ShowProgress(0.2, 10)
-  #  script.RunBackup("restore")
 
   if OPTIONS.modelidcfg:
     script.RunConfig("")
 
-  #script.ShowProgress(0.2, 10)
-  #script.WriteRawImage("/boot", "boot.img")
+  output_zip.write(os.path.join(TARGET_DIR, "ramdisk.img"),"ramdisk.img")
+  output_zip.write(os.path.join(TARGET_DIR, "ramdisk-recovery.img"),"ramdisk-recovery.img")
+  script.ShowProgress(0.2, 10)
+  script.WriteRawImage("/boot", "ramdisk.img")
+  #script.WriteRawImage("/recovery", "ramdisk-recovery.img")
+
+  #script.AppendExtra('assert(package_extract_file("ramdisk.img", "/tmp/ramdisk.img"),write_raw_image("/tmp/ramdisk.img", "/dev/block/bml13"),delete("/tmp/ramdisk.img"));')
+  #script.AppendExtra('assert(package_extract_file("ramdisk-recovery.img", "/tmp/ramdisk.img"),write_raw_image("/tmp/ramdisk.img", "/dev/block/bml15"),delete("/tmp/ramdisk.img"));')
 
   script.ShowProgress(0.1, 0)
+
   device_specific.FullOTA_InstallEnd()
 
   if OPTIONS.extra_script is not None:
@@ -455,7 +454,6 @@ def WriteFullOTAPackage(input_zip, output_zip):
   script.UnmountAll()
   script.AddToZip(input_zip, output_zip)
   WriteMetadata(metadata, output_zip)
-
 
 def WriteMetadata(metadata, output_zip):
   common.ZipWriteStr(output_zip, "META-INF/com/android/metadata",
@@ -566,17 +564,6 @@ def WriteIncrementalOTAPackage(target_zip, source_zip, output_zip):
   script.Mount("/system")
   script.AssertSomeFingerprint(source_fp, target_fp)
 
-  source_boot = common.GetBootableImage(
-      "/tmp/boot.img", "boot.img", OPTIONS.source_tmp, "BOOT")
-  target_boot = common.GetBootableImage(
-      "/tmp/boot.img", "boot.img", OPTIONS.target_tmp, "BOOT")
-  updating_boot = (source_boot.data != target_boot.data)
-
-  #source_recovery = common.GetBootableImage(
-  #    "/tmp/recovery.img", "recovery.img", OPTIONS.source_tmp, "RECOVERY")
-  #target_recovery = common.GetBootableImage(
-  #    "/tmp/recovery.img", "recovery.img", OPTIONS.target_tmp, "RECOVERY")
-  #updating_recovery = (source_recovery.data != target_recovery.data)
   updating_recovery = false
 
   # Here's how we divide up the progress bar:

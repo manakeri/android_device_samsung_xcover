@@ -27,15 +27,11 @@ on init
     #mkdir /mnt/.lfs
     #mkdir /marvell
 
-    exec /sbin/dd if=/dev/block/bml12 of=/ext4_modules.cpio.gz bs=4096k count=1
-    exec /sbin/gzip -d ext4_modules.cpio.gz
-    exec /sbin/cpio -iF ext4_modules.cpio
-    exec /sbin/rm ext4_modules.cpio
-    insmod jbd2.ko
-    insmod ext4.ko 
-
 on fs
-    mount rfs /dev/block/stl20 /cache
+    #mount vfat /dev/block/mmcblk0p1 /sdcard
+    #insmod /sdcard/jbd2.ko
+    #insmod /sdcard/ext4.ko 
+    #mount rfs /dev/block/stl20 /cache
 
 on post-fs
     write /proc/sys/kernel/panic_on_oops 1

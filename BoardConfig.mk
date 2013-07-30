@@ -8,6 +8,7 @@ TARGET_CPU_ABI := armeabi-v7a
 TARGET_CPU_ABI2 := armeabi
 TARGET_ARCH := arm
 TARGET_ARCH_VARIANT := armv6-vfp
+#TARGET_ARCH_VARIANT := armv7-a # crashes?
 ARCH_ARM_HAVE_TLS_REGISTER := false
 
 
@@ -21,8 +22,13 @@ BOARD_HAS_NO_SELECT_BUTTON := true
 #ENABLE_WEBGL := true
 TARGET_OTA_ASSERT_DEVICE := xcover,GT-S5690
 TARGET_NO_INITLOGO := true
+#BOARD_ENABLE_GSTREAMER := true
+BOARD_USES_ALSA_AUDIO := true
+BUILD_WITH_ALSA_UTILS := true
+BOARD_ENABLE_FAST_OVERLAY := true
 
 # Accessories
+HAVE_HTC_AUDIO_DRIVER := false
 BOARD_USES_GENERIC_AUDIO := true
 USE_CAMERA_STUB := true
 ifeq ($(USE_CAMERA_STUB),false)
@@ -30,23 +36,19 @@ BOARD_CAMERA_LIBRARIES := libcamera
 endif
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_FM_RADIO := true
-#BOARD_UMS_LUNFILE := /sys/devices/platform/usb_mass_storage/lun0/file
-#TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/usb_mass_storage/lun0/file
 
 # Init
 TARGET_PROVIDES_INIT_RC := true
 TARGET_PROVIDES_INIT_TARGET_RC := true
-TARGET_RECOVERY_INITRC := device/samsung/xcover/recovery/recovery.rc
 
 # Recovery
 #TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
 BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/xcover/recovery/recovery_keys.c
 BOARD_CUSTOM_GRAPHICS := ../../../device/samsung/xcover/recovery/graphics.c
 #BOARD_USES_BML_OVER_MTD := true
-#BOARD_CUSTOM_BOOTIMG_MK := device/samsung/xcover/shbootimg.mk
 BOARD_RECOVERY_HANDLES_MOUNT := true
-#BOARD_HAS_SMALL_RECOVERY := true
-#BOARD_LDPI_RECOVERY := true
+TARGET_RECOVERY_INITRC := device/samsung/xcover/recovery/recovery.rc
+TARGET_RECOVERY_FSTAB := device/samsung/xcover/recovery/recovery.fstab
 
 # 3D
 BOARD_EGL_CFG := device/samsung/xcover/prebuilt/etc/egl.cfg
@@ -62,17 +64,16 @@ TARGET_PREBUILT_KERNEL := device/samsung/xcover/prebuilt/kernel
 #WIFI_DRIVER_FW_PATH_STA     := "/etc/firmware/fw_bcmdhd.bin"
 #WIFI_DRIVER_FW_PATH_AP      := "/etc/firmware/mrvl/sd8787_uapsta.bin"
 
-#TARGET_RELEASETOOL_OTA_FROM_TARGET_SCRIPT := device/samsung/xcover/releasetools/ota_from_target_files
-#TARGET_RELEASETOOL_IMG_FROM_TARGET_SCRIPT := device/samsung/xcover/releasetools/xcover_img_from_target_files
+TARGET_RELEASETOOL_OTA_FROM_TARGET_SCRIPT := device/samsung/xcover/releasetools/ota_from_target_files
 
 # Partitions
-TARGET_USERIMAGES_USE_EXT4 := true
+TARGET_USERIMAGES_USE_EXT4 := false
 BOARD_FLASH_BLOCK_SIZE := 131072
 
 #  11: 0x00b40000-0x00f40000 0x00400000 Kernel
-#  12: 0x00b40000-0x00f40000 0x00400000 FOTA Kernel
-#  13: 0x01340000-0x01380000 0x00040000 Recovery ramdisk
-#  15: 0x013c0000-0x01540000 0x00180000 Ramdisk
+#  12: 0x00b40000-0x00f40000 0x00400000 FOTA Kernel / empty
+#  13: 0x01340000-0x01380000 0x00040000 Ramdisk
+#  15: 0x013c0000-0x01540000 0x00180000 Recovery ramdisk
 #  16: 0x01540000-0x10bc0000 0x0f680000 System
 #  17: 0x10bc0000-0x1b7c0000 0x0ac00000 Data
 
@@ -82,13 +83,9 @@ BOARD_BML_RECOVERY := /dev/block/bml15
 BOARD_BOOTIMAGE_PARTITION_SIZE := $(call image-size-from-data-size,0x00400000)
 BOARD_RECOVERYIMAGE_PARTITION_SIZE := $(call image-size-from-data-size,0x00400000)
 
-# from STL dump
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 250085376 
 BOARD_SYSTEMIMAGE_PARTITION_SIZE := 173539328
 
-# from bmlinfo
-#BOARD_USERDATAIMAGE_PARTITION_SIZE := 258473984
-#BOARD_SYSTEMIMAGE_PARTITION_SIZE := 180355072
 
 
 
