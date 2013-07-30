@@ -409,19 +409,20 @@ def WriteFullOTAPackage(input_zip, output_zip):
   #  script.RunBackup("backup")
   #  script.Unmount("/system")
 
-  script.ShowProgress(0.1, 0)
+  #script.ShowProgress(0.1, 0)
 
   #if OPTIONS.wipe_user_data:
   #  script.FormatPartition("/data")
 
-  script.ShowProgress(0.1, 0)
+  script.ShowProgress(0.1, 2)
   #script.FormatPartition("/system")
   script.Mount("/system")
 
-  script.ShowProgress(0.5, 10)
+  script.ShowProgress(0.7, 30)
   #script.UnpackPackageDir("recovery", "/system")
   script.UnpackPackageDir("system", "/system")
 
+  script.ShowProgress(0.1, 2)
   (symlinks, retouch_files) = CopySystemFiles(input_zip, output_zip)
   script.MakeSymlinks(symlinks)
   if OPTIONS.aslr_mode:
@@ -435,14 +436,11 @@ def WriteFullOTAPackage(input_zip, output_zip):
   if OPTIONS.modelidcfg:
     script.RunConfig("")
 
+  script.ShowProgress(0.2, 2)
   output_zip.write(os.path.join(TARGET_DIR, "ramdisk.img"),"ramdisk.img")
-  output_zip.write(os.path.join(TARGET_DIR, "ramdisk-recovery.img"),"ramdisk-recovery.img")
-  script.ShowProgress(0.2, 10)
+  output_zip.write(os.path.join(TARGET_DIR, "recovery.img"),"recovery.img")
   script.WriteRawImage("/boot", "ramdisk.img")
-  #script.WriteRawImage("/recovery", "ramdisk-recovery.img")
-
-  #script.AppendExtra('assert(package_extract_file("ramdisk.img", "/tmp/ramdisk.img"),write_raw_image("/tmp/ramdisk.img", "/dev/block/bml13"),delete("/tmp/ramdisk.img"));')
-  #script.AppendExtra('assert(package_extract_file("ramdisk-recovery.img", "/tmp/ramdisk.img"),write_raw_image("/tmp/ramdisk.img", "/dev/block/bml15"),delete("/tmp/ramdisk.img"));')
+  script.WriteRawImage("/recovery", "recovery.img")
 
   script.ShowProgress(0.1, 0)
 

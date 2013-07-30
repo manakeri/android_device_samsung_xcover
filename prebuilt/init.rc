@@ -26,11 +26,6 @@ on init
 # but someday that may change.
     symlink /system/vendor /vendor
 
-# Create cgroup mount point for cpu accounting
-#    mkdir /acct
-#    mount cgroup none /acct cpuacct
-#    mkdir /acct/uid
-
     mkdir /system
     mkdir /data 0771 system system
     mkdir /cache 0771 system cache
@@ -63,6 +58,11 @@ on init
     write /proc/sys/kernel/sched_child_runs_first 0
     write /proc/sys/kernel/randomize_va_space 2
 
+# Create cgroup mount point for cpu accounting
+#    mkdir /acct
+#    mount cgroup none /acct cpuacct
+#    mkdir /acct/uid
+
 # Create cgroup mount points for process groups
 #    mkdir /dev/cpuctl
 #    mount cgroup none /dev/cpuctl cpu
@@ -87,13 +87,11 @@ on init
     mkdir /marvell 0771 system system
     mkdir /mnt/.lfs 0755 system system
     mkdir /efs 0771 system system
+
+on post-fs
     mkdir /mnt/nvm
 
 on fs
-    #mount vfat /dev/block/mmcblk0p1 /sdcard
-    #insmod /sdcard/jbd2.ko
-    #insmod /sdcard/ext4.ko 
-
     # Mount /system rw first to give the filesystem a chance to save a checkpoint
     mount rfs /dev/block/stl17 /system
     mount rfs /dev/block/stl17 /system ro remount
@@ -104,8 +102,15 @@ on fs
     mount j4fs /dev/block/stl21 /mnt/.lfs
     mount rfs /dev/block/stl22 /efs nosuid nodev check=no
 
+    chown system system /marvell
+    chmod 0771 /marvell
+
+    chown radio system /efs
+    chmod 0771 /efs
 
 on post-fs
+    insmod /system/lib/modules/touch.ko
+
     # once everything is setup, no need to modify /
     mount rootfs rootfs / ro remount
 
@@ -199,7 +204,7 @@ on post-fs-data
     chmod 0660 /sys/class/android_usb/android0/f_rndis/ethaddr
 
 # Include extra init file
-#    import /init.cm.rc
+    import /init.cm.rc
 
 on boot
 # basic network init
@@ -317,11 +322,11 @@ on boot
 #    class_reset main
 
 # Used to disable USB when switching states
-on property:sys.usb.config=none
-    stop adbd
-    write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/bDeviceClass 0
-    setprop sys.usb.state $sys.usb.config
+#on property:sys.usb.config=none
+#    stop adbd
+#    write /sys/class/android_usb/android0/enable 0
+#    write /sys/class/android_usb/android0/bDeviceClass 0
+#    setprop sys.usb.state $sys.usb.config
 
 # adb only USB configuration
 # This should only be used during device bringup
@@ -387,10 +392,10 @@ service adbd /sbin/adbd
 # here when adbd sets the service.adb.root property to 1.  We also restart adbd here
 # rather than waiting for init to notice its death and restarting it so the timing
 # of USB resetting and adb restarting more closely matches the previous behavior.
-#on property:service.adb.root=1
-#    write /sys/class/android_usb/android0/enable 0
-#    restart adbd
-#    write /sys/class/android_usb/android0/enable 1
+on property:service.adb.root=1
+    write /sys/class/android_usb/android0/enable 0
+    restart adbd
+    write /sys/class/android_usb/android0/enable 1
 
 service servicemanager /system/bin/servicemanager
     class core

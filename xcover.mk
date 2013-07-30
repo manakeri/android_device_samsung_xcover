@@ -22,16 +22,23 @@
 DEVICE_PACKAGE_OVERLAYS := device/samsung/xcover/overlay
 
 PRODUCT_COPY_FILES := \
-    device/samsung/xcover/prebuilt/etc/asound.conf:system/etc/asound.conf \
-    device/samsung/xcover/prebuilt/etc/vold.fstab:system/etc/vold.fstab 
+	device/samsung/xcover/prebuilt/etc/asound.conf:system/etc/asound.conf \
+	device/samsung/xcover/prebuilt/etc/vold.fstab:system/etc/vold.fstab 
 
 PRODUCT_COPY_FILES += $(call find-copy-subdir-files,*,device/samsung/xcover/prebuilt/modules,system/lib/modules)
 
 PRODUCT_COPY_FILES += \
-  device/samsung/xcover/prebuilt/lpm.rc:root/lpm.rc \
-  device/samsung/xcover/prebuilt/ueventd.pxa968.rc:root/ueventd.pxa968.rc \
-  device/samsung/xcover/prebuilt/init.rc:root/init.rc \
-  device/samsung/xcover/prebuilt/init.pxa968.rc:root/init.pxa968.rc 
+	device/samsung/xcover/prebuilt/init.rc:root/init.rc \
+	device/samsung/xcover/prebuilt/init.pxa968.rc:root/init.pxa968.rc \
+	device/samsung/xcover/prebuilt/lpm.rc:root/lpm.rc \
+	device/samsung/xcover/prebuilt/ueventd.pxa968.rc:root/ueventd.pxa968.rc 
+
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
+	ro.secure=0 \
+	ro.debuggable=1 \
+	dalvik.vm.dexopt-data-only=1 \
+	ro.allow.mock.location=1 \
+	persist.service.adb.enable=1 
 
 
 # update utilities
@@ -42,13 +49,5 @@ PRODUCT_COPY_FILES += \
 # copy the filesystem converter
 #PRODUCT_COPY_FILES += \
 #	device/samsung/epicmtd/updater.sh:updater.sh
-
-PRODUCT_DEFAULT_PROPERTY_OVERRIDES := \
-	persist.service.adb.enable=1 \
-	persist.sys.usb.config=mass_storage
-
-PRODUCT_PROPERTY_OVERRIDES := \
-	ro.opengles.version=131072 \
-	ro.secure=0 
 
 $(call inherit-product-if-exists, vendor/samsung/xcover/xcover-vendor.mk)
