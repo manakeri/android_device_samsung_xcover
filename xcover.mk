@@ -18,7 +18,6 @@
 # of hardware-specific resource overrides, typically the frameworks and
 # application settings that are stored in resourced.
 
-
 DEVICE_PACKAGE_OVERLAYS := device/samsung/xcover/overlay
 
 PRODUCT_COPY_FILES := \
@@ -28,28 +27,36 @@ PRODUCT_COPY_FILES := \
 PRODUCT_COPY_FILES += $(call find-copy-subdir-files,*,device/samsung/xcover/prebuilt/modules,system/lib/modules)
 
 PRODUCT_COPY_FILES += \
-	device/samsung/xcover/prebuilt/init.pxa968.rc:root/init.pxa968.rc \
+	device/samsung/xcover/prebuilt/init.rc:root/init.rc \
 	device/samsung/xcover/prebuilt/lpm.rc:root/lpm.rc \
 	device/samsung/xcover/prebuilt/ueventd.pxa968.rc:root/ueventd.pxa968.rc 
 
-#	device/samsung/xcover/prebuilt/init.rc:root/init.rc \
-
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
-	ro.secure=0 \
-	ro.debuggable=1 \
+	ro.cwm.enable_key_repeat=true \
+	ro.cwm.repeatable_keys=114,115 \
+	wifi.interface=mlan0 \
+	ro.kernel.android.checkjni=1 \
+	dalvik.vm.checkjni=true \
 	dalvik.vm.dexopt-data-only=1 \
-	ro.allow.mock.location=1 \
-	persist.service.adb.enable=1 \
-	ro.sf.lcd_density=160 \
-	dalvik.vm.heapsize=64m
+	dalvik.vm.heapsize=64m \
+	battery.fake_ac=false \
+	video.accelerate.hw=gc 
 
-# update utilities
-#PRODUCT_PACKAGES += \
-#	bml_over_mtd \
-#	setup_fs
+PRODUCT_PROPERTY_OVERRIDES += \
+	ro.cwm.enable_key_repeat=true \
+	ro.cwm.repeatable_keys=114,115 \
+	wifi.interface=mlan0 \
+	ro.kernel.android.checkjni=1 \
+	dalvik.vm.checkjni=true \
+	dalvik.vm.dexopt-data-only=1 \
+	dalvik.vm.heapsize=64m \
+	battery.fake_ac=false \
+	video.accelerate.hw=gc 
 
-# copy the filesystem converter
-#PRODUCT_COPY_FILES += \
-#	device/samsung/epicmtd/updater.sh:updater.sh
+#ro.secure=0
+#ro.debuggable=1
+#persist.service.adb.enable=1
+#service.adb.root=1
+#ro.allow.mock.location=1
 
 $(call inherit-product-if-exists, vendor/samsung/xcover/xcover-vendor.mk)

@@ -1,0 +1,17 @@
+ro.opengles.version=131072
+ro.sf.lcd_density=160
+ro.cwm.enable_key_repeat=true
+ro.cwm.repeatable_keys=114,115
+wifi.interface=mlan0
+ro.kernel.android.checkjni=1
+dalvik.vm.checkjni=true
+dalvik.vm.dexopt-data-only=1
+dalvik.vm.heapsize=64m
+rild.libpath=/system/lib/libmarvell-ril.so
+rild.libargs=-d /dev/ttyS0
+ril.ecclist=112,911
+overlay.rotate.sensor=1
+service.overlay.rotate=90
+ro.ril.wake_lock_timeout=3000
+video.accelerate.hw=gc
+

@@ -1,17 +1,10 @@
 on early-init
-    # Set init and its forked children's oom_adj.
     write /proc/1/oom_adj -16
-
     start ueventd
 
-# create mountpoints
-    mkdir /mnt 0775 root system
-
 on init
-
-sysclktz 0
-
-loglevel 15
+    sysclktz 0
+    loglevel 15
 
 # setup the global environment
     export PATH /sbin:/vendor/bin:/system/sbin:/system/bin:/system/xbin
@@ -20,45 +13,38 @@ loglevel 15
     export ANDROID_ROOT /system
     export ANDROID_ASSETS /system/app
     export ANDROID_DATA /data
+    export ANDROID_CACHE /data/cache
+    export EXTERNAL_STORAGE /sdcard
+    export SD_EXT_DIRECTORY /sd-ext
+
     export ASEC_MOUNTPOINT /mnt/asec
     export LOOP_MOUNTPOINT /mnt/obb
     export BOOTCLASSPATH /system/framework/core.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/filterfw.jar
 
-# Backward compatibility
     symlink /system/etc /etc
     symlink /sys/kernel/debug /d
-
-# Right now vendor lives on the same filesystem as system,
-# but someday that may change.
     symlink /system/vendor /vendor
+    symlink /sdcard /mnt/sdcard
 
-# Create cgroup mount point for cpu accounting
-    mkdir /acct
-    mount cgroup none /acct cpuacct
-    mkdir /acct/uid
-
+# create mountpoints
+    mkdir /mnt 0775 root system
     mkdir /system
+    mkdir /mnt/sdcard
     mkdir /data 0771 system system
-    mkdir /cache 0771 system cache
+    #mkdir /cache 0771 system cache
     mkdir /config 0500 root root
-
-    # Directory for putting things only root should see.
     mkdir /mnt/secure 0700 root root
-
-    # Directory for staging bindmounts
     mkdir /mnt/secure/staging 0700 root root
-
-    # Directory-target for where the secure container
-    # imagefile directory will be bind-mounted
     mkdir /mnt/secure/asec  0700 root root
-
-    # Secure container public mount points.
     mkdir /mnt/asec  0700 root system
     mount tmpfs tmpfs /mnt/asec mode=0755,gid=1000
-
-    # Filesystem image public mount points.
     mkdir /mnt/obb 0700 root system
     mount tmpfs tmpfs /mnt/obb mode=0755,gid=1000
+
+    mkdir /marvell 0771 system system
+    mkdir /mnt/nvm
+    mkdir /mnt/.lfs 0755 system system
+    mkdir /efs 0771 system system
 
     write /proc/sys/kernel/panic_on_oops 1
     write /proc/sys/kernel/hung_task_timeout_secs 0
@@ -69,84 +55,144 @@ loglevel 15
     write /proc/sys/kernel/sched_child_runs_first 0
     write /proc/sys/kernel/randomize_va_space 2
 
+# Create cgroup mount point for cpu accounting
+#    mkdir /acct
+#    mount cgroup none /acct cpuacct
+#    mkdir /acct/uid
+
 # Create cgroup mount points for process groups
-    mkdir /dev/cpuctl
-    mount cgroup none /dev/cpuctl cpu
-    chown system system /dev/cpuctl
-    chown system system /dev/cpuctl/tasks
-    chmod 0777 /dev/cpuctl/tasks
-    write /dev/cpuctl/cpu.shares 1024
-
-    mkdir /dev/cpuctl/fg_boost
-    chown system system /dev/cpuctl/fg_boost/tasks
-    chmod 0777 /dev/cpuctl/fg_boost/tasks
-    write /dev/cpuctl/fg_boost/cpu.shares 1024
-
-    mkdir /dev/cpuctl/bg_non_interactive
-    chown system system /dev/cpuctl/bg_non_interactive/tasks
-    chmod 0777 /dev/cpuctl/bg_non_interactive/tasks
-    # 5.0 %
-    write /dev/cpuctl/bg_non_interactive/cpu.shares 52
-
+#    mkdir /dev/cpuctl
+#    mount cgroup none /dev/cpuctl cpu
+#    chown system system /dev/cpuctl
+#    chown system system /dev/cpuctl/tasks
+#    chmod 0777 /dev/cpuctl/tasks
+#    write /dev/cpuctl/cpu.shares 1024
+#    mkdir /dev/cpuctl/fg_boost
+#    chown system system /dev/cpuctl/fg_boost/tasks
+#    chmod 0777 /dev/cpuctl/fg_boost/tasks
+#    write /dev/cpuctl/fg_boost/cpu.shares 1024
+#    mkdir /dev/cpuctl/bg_non_interactive
+#    chown system system /dev/cpuctl/bg_non_interactive/tasks
+#    chmod 0777 /dev/cpuctl/bg_non_interactive/tasks
+#    write /dev/cpuctl/bg_non_interactive/cpu.shares 52
 # Allow everybody to read the xt_qtaguid resource tracking misc dev.
 # This is needed by any process that uses socket tagging.
     chmod 0644 /dev/xt_qtaguid
 
 on fs
-# mount mtd partitions
-    # Mount /system rw first to give the filesystem a chance to save a checkpoint
-    mount yaffs2 mtd@system /system
-    mount yaffs2 mtd@system /system ro remount
-    mount yaffs2 mtd@userdata /data nosuid nodev
-    mount yaffs2 mtd@cache /cache nosuid nodev
+    mount rfs /dev/block/stl16 /data nosuid nodev
+    mount rfs /dev/block/stl17 /system
+    mount rfs /dev/block/stl17 /system ro remount
+    mount rfs /dev/block/stl18 /marvell check=no
+    mount rfs /dev/block/stl19 /mnt/nvm nosuid nodev
+    mount rfs /dev/block/stl20 /cache nosuid nodev
+    mount j4fs /dev/block/stl21 /mnt/.lfs
+    mount rfs /dev/block/stl22 /efs nosuid nodev check=no
+    mount ext3 /dev/block/mmcblk0p2 /sd-ext nosuid nodev
+    #swapon mmcblk0p3
 
 on post-fs
-    # once everything is setup, no need to modify /
     mount rootfs rootfs / ro remount
 
-    # We chown/chmod /cache again so because mount is run as root + defaults
+    chown system system /marvell
+    chmod 0771 /marvell
+
+    chown system system /efs
+    chmod 0771 /efs
+
     chown system cache /cache
     chmod 0771 /cache
-
-    # This may have been created by the recovery system with odd permissions
     chown system cache /cache/recovery
     chmod 0770 /cache/recovery
 
-    #change permissions on vmallocinfo so we can grab it from bugreports
     chown root log /proc/vmallocinfo
     chmod 0440 /proc/vmallocinfo
 
-    #change permissions on kmsg & sysrq-trigger so bugreports can grab kthread stacks
     chown root system /proc/kmsg
     chmod 0440 /proc/kmsg
+
     chown root system /proc/sysrq-trigger
     chmod 0220 /proc/sysrq-trigger
 
-    # create the lost+found directories, so as to enforce our permissions
     mkdir /cache/lost+found 0770 root root
 
+    insmod /system/lib/modules/bmm.ko bmm_size_mb=0
+    insmod /system/lib/modules/galcore.ko registerMemBase=0x54000000 irqLine=70 contiguousSize=0x2000000 baseAddress=0x80000000
+    # insmod /system/lib/modules/pmem.ko pmem_name="pmem","pmem_adsp" pmem_size=0x2000000,0x1000000 pmem_no_allocator=1,0 pmem_cache=1,0
+
+    insmod /system/lib/modules/mlan.ko
+    insmod /system/lib/modules/camacq.ko
+    insmod /system/lib/modules/touch.ko
+
+    chown system system /sys/class/backlight/backlight-0/brightness
+    chmod 0660 /sys/class/backlight/backlight-0/brightness
+    
+    chown system system /sys/class/backlight/torch/brightness
+    chmod 0660 /sys/class/backlight/torch/brightness
+
+    chown system system sys/class/leds/spotlight/brightness
+    chmod 0660 sys/class/leds/spotlight/brightness
+    chmod 0771 /sys/devices/platform/pxa-u2o/composite
+
+    chown system system /sys/power/wait_for_fb_sleep
+    chmod 0660 /sys/power/wait_for_fb_sleep
+    chown system system /sys/power/wait_for_fb_wake
+    chmod 0660 /sys/power/wait_for_fb_wake
+    chown system system /sys/power/deepidle
+    chmod 0660 /sys/power/deepidle
+    chown system system /sys/class/graphics/fbcon
+    chmod 755 /sys/class/graphics/fbcon
+
+    chown root system /sys/samsung_debug/samsung_debug_enable
+    chown root system /sys/samsung_debug/force_operation
+    chown root system /sys/samsung_debug/ssdebug_mode_flag
+    chown root system /sys/samsung_debug/ssdebug_mode_flag2
+    chown root system /sys/samsung_debug/user_tombstone_file
+
+    chown system system /sys/class/rfkill/rfkill0/state
+    chown system system /sys/class/rfkill/rfkill1/state
+
+    chown root system /dev/mmc328x
+    chown root system /dev/ecompass_ctrl
+    chown root system /dev/bma222
+    chown root system /dev/proximity
+
+    chown system system /proc/driver/sirf
+    chown system system /dev/ttyS2
+    
+    chmod 0660 /dev/mmc328x
+    chmod 0660 /dev/ecompass_ctrl
+    chmod 0660 /dev/bma222
+    chmod 0660 /dev/proximity
+
+    chown system system /sys/class/input/input0/enable
+    chown system system /sys/class/input/input0/poll_delay
+    chmod 0660 /sys/class/input/input0/enable
+    chmod 0660 /sys/class/input/input0/poll_delay 
+
+#    write /sys/power/mspm/mspm 1
+#    write /sys/power/mspm/prof 1
+#    write /sys/power/cp 0
+#    write /sys/class/rfkill/rfkill0/state 1
+
+    chmod 0777 /dev/mbtchar0
+    chown system bluetooth /dev/mbtchar0 
+    chown system bluetooth /dev/mbtchar1 
+    chmod 0666  /dev/mbtchar0
+    chmod 0666  /dev/mbtchar1
+
 on post-fs-data
-    # We chown/chmod /data again so because mount is run as root + defaults
     chown system system /data
     chmod 0771 /data
-
-    # Create dump dir and collect dumps.
-    # Do this before we mount cache so eventually we can use cache for
-    # storing dumps on platforms which do not have a dedicated dump partition.
     mkdir /data/dontpanic 0750 root log
-
-    # Collect apanic data, free resources and re-arm trigger
     copy /proc/apanic_console /data/dontpanic/apanic_console
     chown root log /data/dontpanic/apanic_console
     chmod 0640 /data/dontpanic/apanic_console
-
     copy /proc/apanic_threads /data/dontpanic/apanic_threads
     chown root log /data/dontpanic/apanic_threads
     chmod 0640 /data/dontpanic/apanic_threads
-
     write /proc/apanic_console 1
 
-    # create basic filesystem structure
     mkdir /data/misc 01771 system misc
     mkdir /data/misc/bluetoothd 0770 bluetooth bluetooth
     mkdir /data/misc/bluetooth 0770 system system
@@ -154,7 +200,6 @@ on post-fs-data
     mkdir /data/misc/keychain 0771 system system
     mkdir /data/misc/vpn 0770 system vpn
     mkdir /data/misc/systemkeys 0700 system system
-    # give system access to wpa_supplicant.conf for backup and restore
     mkdir /data/misc/wifi 0770 wifi wifi
     chmod 0660 /data/misc/wifi/wpa_supplicant.conf
     mkdir /data/local 0751 root root
@@ -164,40 +209,44 @@ on post-fs-data
     mkdir /data/app 0771 system system
     mkdir /data/property 0700 root root
     mkdir /data/radio 0770 radio radio
-
-    # create dalvik-cache and double-check the perms, so as to enforce our permissions
     mkdir /data/dalvik-cache 0771 system system
     chown system system /data/dalvik-cache
     chmod 0771 /data/dalvik-cache
-
-    # create resource-cache and double-check the perms
     mkdir /data/resource-cache 0771 system system
     chown system system /data/resource-cache
     chmod 0771 /data/resource-cache
-
-    # create the lost+found directories, so as to enforce our permissions
     mkdir /data/lost+found 0770 root root
-
-    # create directory for DRM plug-ins - give drm the read/write access to
-    # the following directory.
     mkdir /data/drm 0770 drm drm
+    mkdir /data/system 0771 system system
+    mkdir /data/system/inputmethod 0771 system system
 
-    # If there is no fs-post-data action in the init.<device>.rc file, you
-    # must uncomment this line, otherwise encrypted filesystems
-    # won't work.
-    # Set indication (checked by vold) that we have finished this action
-    #setprop vold.post_fs_data_done 1
+    symlink /data/dalvik-cache /cache/dalvik-cache
 
-    chown system system /sys/class/android_usb/android0/f_mass_storage/lun/file
-    chmod 0660 /sys/class/android_usb/android0/f_mass_storage/lun/file
-    chown system system /sys/class/android_usb/android0/f_rndis/ethaddr
-    chmod 0660 /sys/class/android_usb/android0/f_rndis/ethaddr
+    setprop vold.post_fs_data_done 1
+
+    #chown system system /sys/class/android_usb/android0/f_mass_storage/lun/file
+    #chmod 0660 /sys/class/android_usb/android0/f_mass_storage/lun/file
+    #chown system system /sys/class/android_usb/android0/f_rndis/ethaddr
+    #chmod 0660 /sys/class/android_usb/android0/f_rndis/ethaddr
+
+    mkdir /data/misc/wifi 0771 wifi wifi
+    mkdir /data/misc/wifi/sockets 0771 wifi wifi
+    mkdir /data/misc/dhcp 0770 dhcp dhcp
+    mkdir /data/Linux 0775 system system
+    mkdir /data/Linux/Marvell 0775 system system
+    mkdir /data/Linux/Marvell/NVM 0775 system system
+
+# permissions for system server and daemons (accelerometer & magnetic & proximity)
+    mkdir /data/misc/sensors 0775 system misc
+    mkdir /data/misc/organ 0775 media media
+    mkdir /data/misc/organ/sockets 0775 media media
+    chown media media /data/misc/organ/sockets
+    chmod 0775 /data/misc/organ/sockets
 
 # Include extra init file
     import /init.cm.rc
 
 on boot
-# basic network init
     ifup lo
     hostname localhost
     domainname localdomain
@@ -285,72 +334,6 @@ on boot
     class_start core
     class_start main
 
-on nonencrypted
-    class_start late_start
-
-on charger
-    class_start charger
-
-on property:vold.decrypt=trigger_reset_main
-    class_reset main
-
-on property:vold.decrypt=trigger_load_persist_props
-    load_persist_props
-
-on property:vold.decrypt=trigger_post_fs_data
-    trigger post-fs-data
-
-on property:vold.decrypt=trigger_restart_min_framework
-    class_start main
-
-on property:vold.decrypt=trigger_restart_framework
-    class_start main
-    class_start late_start
-
-on property:vold.decrypt=trigger_shutdown_framework
-    class_reset late_start
-    class_reset main
-
-# Used to disable USB when switching states
-on property:sys.usb.config=none
-    stop adbd
-    write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/bDeviceClass 0
-    setprop sys.usb.state $sys.usb.config
-
-# adb only USB configuration
-# This should only be used during device bringup
-# and as a fallback if the USB manager fails to set a standard configuration
-on property:sys.usb.config=adb
-    write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/idVendor 18d1
-    write /sys/class/android_usb/android0/idProduct D002
-    write /sys/class/android_usb/android0/functions $sys.usb.config
-    write /sys/class/android_usb/android0/enable 1
-    start adbd
-    setprop sys.usb.state $sys.usb.config
-
-# USB accessory configuration
-on property:sys.usb.config=accessory
-    write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/idVendor 18d1
-    write /sys/class/android_usb/android0/idProduct 2d00
-    write /sys/class/android_usb/android0/functions $sys.usb.config
-    write /sys/class/android_usb/android0/enable 1
-    setprop sys.usb.state $sys.usb.config
-
-# USB accessory configuration, with adb
-on property:sys.usb.config=accessory,adb
-    write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/idVendor 18d1
-    write /sys/class/android_usb/android0/idProduct 2d01
-    write /sys/class/android_usb/android0/functions $sys.usb.config
-    write /sys/class/android_usb/android0/enable 1
-    start adbd
-    setprop sys.usb.state $sys.usb.config
-
-# Used to set USB configuration at boot and to switch the configuration
-# when changing the default configuration
 on property:persist.sys.usb.config=*
     setprop sys.usb.config $persist.sys.usb.config
 
@@ -363,7 +346,7 @@ service ueventd /sbin/ueventd
 service console /system/bin/sh
     class core
     console
-    disabled
+    enabled
     user shell
     group log
 
@@ -373,23 +356,11 @@ on property:ro.debuggable=1
 # adbd is controlled via property triggers in init.<platform>.usb.rc
 service adbd /sbin/adbd
     class core
-    disabled
+    enabled
 
 # adbd on at boot in emulator
 on property:ro.kernel.qemu=1
     start adbd
-
-# This property trigger has added to imitiate the previous behavior of "adb root".
-# The adb gadget driver used to reset the USB bus when the adbd daemon exited,
-# and the host side adb relied on this behavior to force it to reconnect with the
-# new adbd instance after init relaunches it. So now we force the USB bus to reset
-# here when adbd sets the service.adb.root property to 1.  We also restart adbd here
-# rather than waiting for init to notice its death and restarting it so the timing
-# of USB resetting and adb restarting more closely matches the previous behavior.
-on property:service.adb.root=1
-    write /sys/class/android_usb/android0/enable 0
-    restart adbd
-    write /sys/class/android_usb/android0/enable 1
 
 service servicemanager /system/bin/servicemanager
     class core
@@ -415,6 +386,7 @@ service debuggerd /system/bin/debuggerd
     class main
 
 service ril-daemon /system/bin/rild
+# -l libmarvell-ril.so
     class main
     socket rild stream 660 root radio
     socket rild-debug stream 660 radio system
@@ -463,8 +435,6 @@ service bluetoothd /system/bin/bluetoothd -n
     class main
     socket bluetooth stream 660 bluetooth bluetooth
     socket dbus_bluetooth stream 660 bluetooth bluetooth
-    # init.rc does not yet support applying capabilities, so run as root and
-    # let bluetoothd drop uid to bluetooth with the right linux capabilities
     group bluetooth net_bt_admin misc
     disabled
 
@@ -475,7 +445,6 @@ service installd /system/bin/installd
 service racoon /system/bin/racoon
     class main
     socket racoon stream 600 system system
-    # IKE uses UDP port 500. Racoon will setuid to vpn after binding the port.
     group vpn net_admin inet
     disabled
     oneshot
@@ -500,3 +469,43 @@ service dumpstate /system/bin/dumpstate -s
     disabled
     oneshot
 
+service marvelltel /system/bin/sh /marvell/tel/launch
+    console
+    disabled
+    oneshot
+
+service wpa_supplicant /system/bin/wpa_supplicant -Dwext -imlan0 -c/data/misc/wifi/wpa_supplicant.conf
+    socket wpa_mlan0 dgram 660 wifi wifi
+    disabled
+    oneshot
+
+service dhcpcd /system/bin/dhcpcd -ABKL mlan0
+    disabled
+    oneshot
+
+service dhcpcd-wfd0 /system/bin/dhcpcd -ABKL wfd0
+    disabled
+    oneshot
+
+service wlandutservice /system/bin/wlandutservice
+    disabled
+    oneshot
+
+service FMRadiod /system/bin/FMRadioServer
+    disabled
+    oneshot
+
+service mwirelessd /system/bin/MarvellWirelessDaemon
+    disabled
+    oneshot
+
+service memsicd /system/bin/memsicd
+    user system
+    group system
+    oneshot
+
+service mwu /system/bin/mwu -c /system/bin/wifidir_init.conf -p 00000000 -i wfd0 -d /system/etc/wifidirect_defaults.conf -l /tmp/wfd.log
+    user root
+    group wifi
+    disabled
+    oneshot

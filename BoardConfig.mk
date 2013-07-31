@@ -30,7 +30,7 @@ BOARD_ENABLE_FAST_OVERLAY := true
 # Accessories
 HAVE_HTC_AUDIO_DRIVER := false
 BOARD_USES_GENERIC_AUDIO := true
-USE_CAMERA_STUB := true
+USE_CAMERA_STUB := false
 ifeq ($(USE_CAMERA_STUB),false)
 BOARD_CAMERA_LIBRARIES := libcamera
 endif
@@ -40,16 +40,16 @@ BOARD_HAVE_FM_RADIO := true
 #TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/usb_mass_storage/lun0/file
 
 # Init
-TARGET_PROVIDES_INIT_RC := false
-TARGET_PROVIDES_INIT_TARGET_RC := true
+TARGET_PROVIDES_INIT_RC := true
+TARGET_PROVIDES_INIT_TARGET_RC := false
 
 # Recovery
 #TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
 BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/xcover/recovery/recovery_keys.c
 BOARD_CUSTOM_GRAPHICS := ../../../device/samsung/xcover/recovery/graphics.c
 #BOARD_USES_BML_OVER_MTD := true
-BOARD_RECOVERY_HANDLES_MOUNT := true
-TARGET_RECOVERY_INITRC := device/samsung/xcover/recovery/recovery.rc
+#BOARD_RECOVERY_HANDLES_MOUNT := true
+TARGET_RECOVERY_INITRC := device/samsung/xcover/recovery/init.rc
 TARGET_RECOVERY_FSTAB := device/samsung/xcover/recovery/recovery.fstab
 
 # 3D

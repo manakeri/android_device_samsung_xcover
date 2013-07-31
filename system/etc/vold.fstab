@@ -1,0 +1,1 @@
+dev_mount sdcard /mnt/sdcard auto /devices/platform/sdhci-pxa.1/mmc_host/mmc0

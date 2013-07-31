@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SDP version="1.1">
+  <Phonebook>
+    <MaxItemCount value="65535" />
+    <GUITemplate value="ANDROID"/>
+    <PhotoSize accessibility="all" value="100*100"/>
+    <MultipleAccount value="TRUE"/>
+    <SupportSync value="FALSE"/>
+    <MaxSpeedDialCount count="1000" />
+    <DialChar value="*#+,;()/N- ."/>
+    <Enums>
+      <Enum name="TEL_TYPE" >
+        <Element type="Default" name="Mobile"/>
+        <Element type="Default" name="Landline.Private"/>
+        <Element type="Default" name="Landline.Business"/>
+        <Element type="Default" name="Fax.Business"/>
+        <Element type="Default" name="Fax.Private"/>
+        <Element type="Default" name="Pager"/>
+        <Element type="Default" name="Etc"/>
+        <Element type="Default" name="Custom"/>
+        <Element type="Default" name="Callback"/>
+        <Element type="Internet" name="InternetPhone"/>
+      </Enum>
+
+      <Enum name="GENERAL_TYPE">
+        <Element name="Private"/>
+        <Element name="Office" />
+        <Element name="Other" />
+        <Element name="Mobile" />
+        <Element name="Custom" />
+      </Enum>
+
+      <Enum name="ADDRESS_TYPE" DataLength="1">
+        <Element name="Private" value="1" />
+        <Element name="Office" value="2" />
+        <Element name="Other" value="3" />
+      </Enum>
+
+      <Enum name="ORG_TYPE" DataLength="1">
+        <Element name="Office" value="2" />
+        <Element name="Other" value="3" />
+        <Element name="Custom" value="3" />
+      </Enum>
+
+      <Enum name="MESSENGER_TYPE" >
+        <Element name="GoogleTalk"/>
+        <Element name="AIM" />
+        <Element name="WindowsLive"/>
+        <Element name="Yahoo"/>
+        <Element name="Skype"/>
+        <Element name="QQ"/>
+        <Element name="ICQ"/>
+        <Element name="Jabber"/>
+        <Element name="Custom"/>
+      </Enum>
+    </Enums>
+
+    <DataField>
+      <Names>
+		<TitleName type="String" charset="utf-16" MaxLength="2000"  />
+        <LastName 	type="String" charset="utf-16" MaxLength="2000" />
+		<MiddleName 	type="String" charset="utf-16" MaxLength="2000"  />
+        <FirstName 	type="String" charset="utf-16" MaxLength="2000" />
+        <LastName 	type="String" charset="utf-16" MaxLength="2000" />
+      </Names>
+
+      <TelNumbers>
+        <TelNumber Count="9">
+          <TelType 	Type="TEL_TYPE" Value="Default"/>
+          <TelNum 	Type="String" charset="utf-16"	MaxLength="2000" />
+        </TelNumber>
+        <TelNumber Count="1">
+          <TelType 	Type="TEL_TYPE" Value="Internet"/>
+          <TelNum 	Type="String" charset="utf-16"	MaxLength="2000" />
+        </TelNumber>
+      </TelNumbers>
+
+      <Emails>
+        <Email Count="3">
+          <EmailAddr Type="String" charset="utf-16" MaxLength="2000" />
+        </Email>
+      </Emails>
+
+      <MessengerIDs>
+        <MessengerID count ="3">
+          <MessengerType Type ="MESSENGER_TYPE" value="1"/>
+          <MessengerAddr Type ="String" charset="utf-16" MaxLength="2000" />
+        </MessengerID>
+      </MessengerIDs>
+
+      <Addresses>
+        <address count="3">
+          <AddrType 	type="ADDRESS_TYPE" 	value="1"/>
+          <Street		type="Text" charset="utf-16" MaxLength="2000" />
+          <PObox		type="Text" charset="utf-16" MaxLength="2000" />
+          <Neighborhood	type="Text" charset="utf-16" MaxLength="2000" />
+          <City		type="Text" charset="utf-16" MaxLength="2000" />
+          <state		type="Text" charset="utf-16" MaxLength="2000" />
+          <PostalCode	type="String" charset="utf-16" MaxLength="2000" />
+          <country	type="Text" charset="utf-16" MaxLength="2000" />
+        </address>
+      </Addresses>
+
+      <Organizations>
+        <Organization count="1">
+          <OrganizationType type="ORG_TYPE" value="1"/>
+          <Company 	type="String" charset="utf-16" MaxLength="2000" />
+          <Position	type="String" charset="utf-16" MaxLength="2000" />
+        </Organization>
+      </Organizations>
+      <Notes>
+        <Note count="1">
+          <Content type="Text" charset="utf-16" MaxLength="2000" />
+        </Note>
+      </Notes>
+      <Nicknames>
+        <Nickname count="1">
+          <Name type="String" charset="utf-16" MaxLength="2000" />
+        </Nickname>
+      </Nicknames>
+      <Urls>
+        <Url count="1">
+          <UrlAddr type="String" charset="utf-16" MaxLength="2000" />
+        </Url>
+      </Urls>
+    </DataField>
+  </Phonebook>
+</SDP>

@@ -1,14 +1,18 @@
 on early-init
     start ueventd
+    loglevel 15
 
 on init
     export PATH /sbin:/system/bin
     export ANDROID_ROOT /system
+
     mkdir /system
     mount rootfs rootfs / ro remount
+
     write /proc/sys/kernel/panic_on_oops 1
+
     mount rfs /dev/stl17 /system check=no
-    mount rfs /dev/stl17 /system ro remount
+#    mount rfs /dev/stl17 /system ro remount
 
 on boot
     ifup lo
@@ -23,17 +27,14 @@ service ueventd /sbin/ueventd
     critical
 
 service adbd /sbin/adbd
-    user root
-    oneshot
+    enabled
 
 service debuggerd /system/bin/debuggerd
+    enabled
 
 service playlpm /system/bin/playlpm
     user root
     oneshot
-
-#service immvibed /system/bin/immvibed 
-    #oneshot
 
 service lpmkey /system/bin/charging_mode
     user root

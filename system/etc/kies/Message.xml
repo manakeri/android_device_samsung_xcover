@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SDP version="0.9">
+  <Message>
+    <SMSViewer>
+      <IsCanItemDelete value="false"/>
+    </SMSViewer>
+    <MMSViewer>
+      <IsCanItemDelete value="false"/>
+    </MMSViewer>
+    <SupportBox>
+      <SupportInbox value="true"/>
+      <SupportSentbox value="true"/>
+      <SupportQueuedbox value="false"/>
+      <SupportDraftbox value="false"/>
+    </SupportBox>
+  </Message>
+</SDP>
