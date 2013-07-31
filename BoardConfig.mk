@@ -26,10 +26,11 @@ TARGET_NO_INITLOGO := true
 BOARD_USES_ALSA_AUDIO := true
 BUILD_WITH_ALSA_UTILS := true
 BOARD_ENABLE_FAST_OVERLAY := true
+BOARD_USE_LEGACY_TOUCHSCREEN := true
 
 # Accessories
 HAVE_HTC_AUDIO_DRIVER := false
-BOARD_USES_GENERIC_AUDIO := true
+BOARD_USES_GENERIC_AUDIO := false
 USE_CAMERA_STUB := false
 ifeq ($(USE_CAMERA_STUB),false)
 BOARD_CAMERA_LIBRARIES := libcamera
@@ -37,7 +38,7 @@ endif
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_FM_RADIO := true
 #SAMSUNG_USB_MTP_DEVICE := true
-#TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/usb_mass_storage/lun0/file
+TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/usb_mass_storage/lun0/file
 
 # Init
 TARGET_PROVIDES_INIT_RC := true

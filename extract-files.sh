@@ -75,6 +75,9 @@ cameradata/datapattern_420sp_alkon.yuv
 lib/lib_gsd4t.so
 lib/libgcu.so
 lib/libGAL.so
+lib/libbmm.so
+lib/libpmemhelper.so
+lib/libphycontmem.so 
 lib/libcamera.so
 lib/libmarvell-ril.so
 lib/libsecutil.so
@@ -260,6 +263,7 @@ PRODUCT_COPY_FILES += \\
 # Camera
 #
 PRODUCT_COPY_FILES += \\
+    vendor/samsung/__DEVICE__/proprietary/lib/libcamera:system/lib/libcamera.so \\
     vendor/samsung/__DEVICE__/proprietary/cameradata/datapattern_420sp.yuv:system/cameradata/datapattern_420sp.yuv \\
     vendor/samsung/__DEVICE__/proprietary/cameradata/datapattern_front_420sp.yuv:system/cameradata/datapattern_front_420sp.yuv \\
     vendor/samsung/__DEVICE__/proprietary/cameradata/datapattern_420sp_alkon.yuv:system/cameradata/datapattern_420sp_alkon.yuv
