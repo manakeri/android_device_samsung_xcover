@@ -1,7 +1,7 @@
 /boot       bml     boot
 /recovery   bml     recovery
-/system     rfs     /dev/block/stl17 
-/data       rfs     /dev/block/stl16 
+/system     rfs     /dev/block/stl16
+/data       rfs     /dev/block/stl17 
 /cache      rfs     /dev/block/stl20 
 /sdcard     vfat    /dev/block/mmcblk0p1 
 /sd-ext     ext3    /dev/block/mmcblk0p2 

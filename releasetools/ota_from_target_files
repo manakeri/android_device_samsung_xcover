@@ -90,8 +90,8 @@ RELEASETOOLS_DIR = os.path.abspath(os.path.join(LOCAL_DIR, '../../../build/tools
 TARGET_DIR = os.getenv('OUT')
 sys.path.append(RELEASETOOLS_DIR)
 
-import common
-import edify_generator
+import xcover_common as common
+import xcover_edify_generator as edify_generator
 
 OPTIONS = common.OPTIONS
 OPTIONS.package_key = None

@@ -73,11 +73,12 @@ cameradata/datapattern_420sp.yuv
 cameradata/datapattern_front_420sp.yuv
 cameradata/datapattern_420sp_alkon.yuv
 lib/lib_gsd4t.so
+lib/lib_gsd4t_factory.so
 lib/libgcu.so
 lib/libGAL.so
 lib/libbmm.so
 lib/libpmemhelper.so
-lib/libphycontmem.so 
+lib/libphycontmem.so
 lib/libcamera.so
 lib/libmarvell-ril.so
 lib/libsecutil.so
@@ -102,9 +103,11 @@ lib/egl/libGLESv2_MRVL.so
 lib/hw/sensors.default.so
 lib/hw/gps.default.so
 lib/hw/lights.default.so
+bin/npsmobex
 bin/mrvlhcitool
 bin/MarvellWirelessDaemon
 bin/mcfg
+bin/mfgloader
 bin/mwu
 bin/mwu_cli
 bin/mpdc
@@ -173,20 +176,27 @@ done
 PRODUCT_COPY_FILES += \\
     vendor/samsung/__DEVICE__/proprietary/bin/mrvlhcitool:system/bin/mrvlhcitool \\
     vendor/samsung/__DEVICE__/proprietary/bin/memsicd:system/bin/memsicd \\
-    vendor/samsung/__DEVICE__/proprietary/bin/wifidir_init.conf:system/bin/wifidir_init.conf
+    vendor/samsung/__DEVICE__/proprietary/bin/wifidir_init.conf:system/bin/wifidir_init.conf \\
+    vendor/samsung/__DEVICE__/proprietary/bin/MarvellWirelessDaemon:system/bin/MarvellWirelessDaemon \\
+    vendor/samsung/__DEVICE__/proprietary/bin/mwu:system/bin/mwu \\
+    vendor/samsung/__DEVICE__/proprietary/bin/mwu_cli:system/bin/mwu_cli \\
+    vendor/samsung/__DEVICE__/proprietary/bin/mcfg:system/bin/mcfg \\
+    vendor/samsung/__DEVICE__/proprietary/bin/mpdc:system/bin/mpdc \\
+    vendor/samsung/__DEVICE__/proprietary/bin/mpdc_d:system/bin/mpdc_d \\
+    vendor/samsung/__DEVICE__/proprietary/bin/mpdc_svr:system/bin/mpdc_svr \\
+    vendor/samsung/__DEVICE__/proprietary/bin/rfkill:system/bin/rfkill \\
+    vendor/samsung/__DEVICE__/proprietary/bin/samsung_debug:system/bin/samsung_debug \\
+    vendor/samsung/__DEVICE__/proprietary/bin/wlandutservice:system/bin/wlandutservice \\
+    vendor/samsung/__DEVICE__/proprietary/bin/bin/mfgloader:system/bin/mfgloader \\
+    vendor/samsung/__DEVICE__/proprietary/bin/npsmobex:system/bin/npsmobex
 
-#    vendor/samsung/__DEVICE__/proprietary/bin/MarvellWirelessDaemon:system/bin/MarvellWirelessDaemon \\
-#    vendor/samsung/__DEVICE__/proprietary/bin/mwu:system/bin/mwu \\
-#    vendor/samsung/__DEVICE__/proprietary/bin/mwu_cli:system/bin/mwu_cli \\
-#    vendor/samsung/__DEVICE__/proprietary/bin/mcfg:system/bin/mcfg \\
-#    vendor/samsung/__DEVICE__/proprietary/bin/mpdc:system/bin/mpdc \\
-#    vendor/samsung/__DEVICE__/proprietary/bin/mpdc_d:system/bin/mpdc_d \\
-#    vendor/samsung/__DEVICE__/proprietary/bin/mpdc_svr:system/bin/mpdc_svr \\
-#    vendor/samsung/__DEVICE__/proprietary/bin/rfkill:system/bin/rfkill \\
-#    vendor/samsung/__DEVICE__/proprietary/bin/samsung_debug:system/bin/samsung_debug \\
-#    vendor/samsung/__DEVICE__/proprietary/bin/wlandutservice:system/bin/wlandutservice
+PRODUCT_COPY_FILES += \\
+    vendor/samsung/__DEVICE__/proprietary/lib/lib_gsd4t.so:system/lib/lib_gsd4t.so \\
+    vendor/samsung/__DEVICE__/proprietary/lib/lib_gsd4t.so:system/lib/lib_gsd4t_factory.so \\
+    vendor/samsung/__DEVICE__/proprietary/lib/libbmm.so:system/lib/libbmm.so \\
+    vendor/samsung/__DEVICE__/proprietary/lib/libphycontmem.so:system/lib/libphycontmem.so \\
+    vendor/samsung/__DEVICE__/proprietary/lib/libpmemhelper.so:system/lib/libpmemhelper.so
 
-#PRODUCT_COPY_FILES += \\
 #    vendor/samsung/__DEVICE__/proprietary/lib/libopencore_author.so:system/lib/libopencore_author.so \\
 #    vendor/samsung/__DEVICE__/proprietary/lib/libopencore_common.so:system/lib/libopencore_common.so \\
 #    vendor/samsung/__DEVICE__/proprietary/lib/libopencore_download.so:system/lib/libopencore_download.so \\
@@ -201,11 +211,6 @@ PRODUCT_COPY_FILES += \\
 #    vendor/samsung/__DEVICE__/proprietary/lib/libstagefright_color_conversion.so:system/lib/libstagefright_color_conversion.so \\
 #    vendor/samsung/__DEVICE__/proprietary/lib/libstagefright_hardware_renderer.so:system/lib/libstagefright_hardware_renderer.so \\
 #    vendor/samsung/__DEVICE__/proprietary/lib/libstagefrighthw.so:system/lib/libstagefrighthw.so
-#    vendor/samsung/__DEVICE__/proprietary/lib/libstagefright_omx.so:system/lib/libstagefright_omx.so \\
-#    vendor/samsung/__DEVICE__/proprietary/lib/libstagefright_enc_common.so:system/lib/libstagefright_enc_common.so \\
-#    vendor/samsung/__DEVICE__/proprietary/lib/libstagefright_foundation.so:system/lib/libstagefright_foundation.so \\
-#    vendor/samsung/__DEVICE__/proprietary/lib/libstagefright_avc_common.so:system/lib/libstagefright_avc_common.so \\
-#    vendor/samsung/__DEVICE__/proprietary/lib/libstagefright_amrnb_common.so:system/lib/libstagefright_amrnb_common.so \\
 #    vendor/samsung/__DEVICE__/proprietary/lib/libomx_aacdec_sharedlibrary.so:system/lib/libomx_aacdec_sharedlibrary.so \\
 #    vendor/samsung/__DEVICE__/proprietary/lib/libomx_amrdec_sharedlibrary.so:system/lib/libomx_amrdec_sharedlibrary.so \\
 #    vendor/samsung/__DEVICE__/proprietary/lib/libomx_amrenc_sharedlibrary.so:system/lib/libomx_amrenc_sharedlibrary.so \\
@@ -213,19 +218,18 @@ PRODUCT_COPY_FILES += \\
 #    vendor/samsung/__DEVICE__/proprietary/lib/libomx_m4vdec_sharedlibrary.so:system/lib/libomx_m4vdec_sharedlibrary.so \\
 #    vendor/samsung/__DEVICE__/proprietary/lib/libomx_mp3dec_sharedlibrary.so:system/lib/libomx_mp3dec_sharedlibrary.so \\
 #    vendor/samsung/__DEVICE__/proprietary/lib/libomx_mrvl_sharedlibrary.so:system/lib/libomx_mrvl_sharedlibrary.so \\
-#    vendor/samsung/__DEVICE__/proprietary/lib/libomx_sharedlibrary.so:system/lib/libomx_sharedlibrary.so \\
-
 
 PRODUCT_COPY_FILES += \\
-    vendor/samsung/__DEVICE__/proprietary/marvell/etc/asound.conf:system/etc/asound.conf \\
     vendor/samsung/__DEVICE__/proprietary/etc/vold.fstab:system/etc/vold.fstab \\
     vendor/samsung/__DEVICE__/proprietary/etc/gps.conf:system/etc/gps.conf \\
-    vendor/samsung/__DEVICE__/proprietary/etc/mrvl.cfg:system/etc/mrvl.cfg
+    vendor/samsung/__DEVICE__/proprietary/etc/mrvl.cfg:system/etc/mrvl.cfg \\
+    vendor/samsung/__DEVICE__/proprietary/etc/wifidirect_defaults.conf:system/etc/wifidirect_defaults.conf \\
+    vendor/samsung/__DEVICE__/proprietary/etc/firmware/mrvl/sd8787_uapsta.bin:system/etc/firmware/sd8787_uapsta.bin \\
+    vendor/samsung/__DEVICE__/proprietary/etc/firmware/mrvl/w8787_wlan_SDIO_bt_SDIO.bin:system/etc/firmware/w8787_wlan_SDIO_bt_SDIO.bin \\
+    vendor/samsung/__DEVICE__/proprietary/etc/firmware/mrvl/WlanCalData_ext.conf:system/etc/firmware/WlanCalData_ext.conf
 
-#    vendor/samsung/__DEVICE__/proprietary/etc/wifidirect_defaults.conf:system/etc/wifidirect_defaults.conf \\
-#    vendor/samsung/__DEVICE__/proprietary/etc/firmware/mrvl/WlanCalData_ext.conf:system/etc/firmware/WlanCalData_ext.conf \\
-#    vendor/samsung/__DEVICE__/proprietary/etc/firmware/mrvl/w8787_wlan_SDIO_bt_SDIO.bin:system/etc/firmware/w8787_wlan_SDIO_bt_SDIO.bin \\
-#    vendor/samsung/__DEVICE__/proprietary/etc/firmware/mrvl/sd8787_uapsta.bin:system/etc/firmware/sd8787_uapsta.bin
+#    vendor/samsung/__DEVICE__/proprietary/marvell/etc/asound.conf:system/etc/asound.conf \\
+
 #
 # RIL
 #
@@ -238,9 +242,9 @@ PRODUCT_COPY_FILES += \\
 #
 # Wireless
 #
-#PRODUCT_COPY_FILES += \\
-#    vendor/samsung/__DEVICE__/proprietary/lib/libmrvldut.so:system/lib/libmrvldut.so \\
-#    vendor/samsung/__DEVICE__/proprietary/lib/libMarvellWireless.so:system/lib/libMarvellWireless.so
+PRODUCT_COPY_FILES += \\
+    vendor/samsung/__DEVICE__/proprietary/lib/libmrvldut.so:system/lib/libmrvldut.so \\
+    vendor/samsung/__DEVICE__/proprietary/lib/libMarvellWireless.so:system/lib/libMarvellWireless.so
 
 
 #
@@ -263,7 +267,7 @@ PRODUCT_COPY_FILES += \\
 # Camera
 #
 PRODUCT_COPY_FILES += \\
-    vendor/samsung/__DEVICE__/proprietary/lib/libcamera:system/lib/libcamera.so \\
+    vendor/samsung/__DEVICE__/proprietary/lib/libcamera.so:system/lib/libcamera.so \\
     vendor/samsung/__DEVICE__/proprietary/cameradata/datapattern_420sp.yuv:system/cameradata/datapattern_420sp.yuv \\
     vendor/samsung/__DEVICE__/proprietary/cameradata/datapattern_front_420sp.yuv:system/cameradata/datapattern_front_420sp.yuv \\
     vendor/samsung/__DEVICE__/proprietary/cameradata/datapattern_420sp_alkon.yuv:system/cameradata/datapattern_420sp_alkon.yuv

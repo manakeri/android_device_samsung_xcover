@@ -17,34 +17,28 @@ fi
 
 # Comment following 2 lines if need to debug via usb0
 # echo "run_android_mtil.sh: Put usb0 down"
-ifconfig usb0 down
+#ifconfig usb0 down
 
 #########################################################
 vrfperm='located=`ls -d $vrfiles`; chmod 770 $located; chown root.system $located'
-vrfiles="/mnt/nvm /mnt/nvm/*  
-         /marvell/* 
-         /marvell/usr/* /marvell/usr/lib/* /marvell/usr/sbin/* 
-         /marvell/Linux/* /marvell/Linux/Marvell/* 
-         /marvell/etc/* 
-         /marvell/tel/* /marvell/tel/nvm_org/*"
+vrfiles="/mnt/nvm /mnt/nvm/* /marvell/* /marvell/usr/* /marvell/usr/lib/* /marvell/usr/sbin/* /marvell/Linux/* /marvell/Linux/Marvell/* /marvell/etc/* /marvell/tel/* /marvell/tel/nvm_org/*"
 eval $vrfperm
 
 vrfperm='located=`ls -d $vrfiles`; chmod 775 $located; chown root.system $located'
-vrfiles="/mnt/nvm /mnt/nvm/* /marvell/tel/nvm_org/*"  
+vrfiles="/mnt/nvm /mnt/nvm/* /marvell/tel/nvm_org/*"
 eval $vrfperm
 
 sysperm_syst='located=`ls -d $dvfiles`; chmod 660 $located; chown system.system $located'
 sysperm_root='located=`ls -d $dvfiles`; chmod 660 $located; chown root.root $located'
 #########################################################
-# MRD partition 
+# MRD partition
 # /dev/mtd/mtd1      - SAARB MG2 onenand
 # /dev/block/mmcblk0 - SAARB MG1 mmc
 # /dev/bml2          - Alkon FSR
 dvfiles="/dev/mtd/mtd1 /dev/block/mmcblk0 /dev/bml2"
 eval $sysperm_root
 
-dvfiles="/dev/pxa_sim /dev/pm860x_hsdetect  
-         /dev/rtcmon /dev/rtc* /dev/freezer_device /dev/dvfm" 
+dvfiles="/dev/pxa_sim /dev/pm860x_hsdetect /dev/rtcmon /dev/rtc* /dev/freezer_device /dev/dvfm"
 
 eval $sysperm_root
 # Give access to console for system users
@@ -53,9 +47,7 @@ eval $sysperm_syst
 #########################################################
 
 # Keep suplementary group root for accessing /sys files
-mrvlacc="system system keystore radio bluetooth  
-         inet net_raw net_admin vpn wifi  
-         sdcard_rw net_bt net_bt_admin diag log audio shell root"
+mrvlacc="system system keystore radio bluetooth inet net_raw net_admin vpn wifi sdcard_rw net_bt net_bt_admin diag log audio shell root"
 #########################################################
 
 ## hw.sh - apply debug service first
@@ -78,16 +70,15 @@ echo 1 > /sys/power/cp
 # Uncomment the next line in order to enable Suspend and disable Freezer
 #echo 1 > /sys/power/android_freezer_disable
 
-
 chmod 766 /marvell/etc/diag_bsp.cfg
 ml_setid $mrvlacc -- mkdir /data/etc
 
 # Set error log location to /data volume, default is NVM
 # Should be before mtsd starts as diag should be able to override the setting
 # do not use mkdir -p as it fails due to ro fs (busybox mkdir -p is ok)
-if [ ! -e /data/log ]; then 
+if [ ! -e /data/log ]; then
     ml_setid $mrvlacc -- mkdir /data/log
-fi 
+fi
 
 ml_setid $mrvlacc -- sh -c "echo "/data/log" > /mrvlsys/diag_log_path"
 
@@ -97,7 +88,7 @@ ml_setid $mrvlacc -- busybox sh diag_port_conf.sh
 
 insmod osadev.ko
 insmod seh.ko
-## control qos mode - default off 
+## control qos mode - default off
 ## create /marvell/tel/qos_mode_on to enable on boot
 if [ -e /marvell/tel/qos_mode_on ]; then
 insmod acipcdev.ko param_qos_mode=1
@@ -130,7 +121,6 @@ chown system.bluetooth /dev/btduntty*
 # SAMSUNG_SSENI : For serial_client
 chown root.system /dev/citty0
 chown root.system /dev/citty1
-
 chown root.system /sys/class/switch/h2w/state
 
 #The Diag driver works with /mnt/mmc
@@ -163,28 +153,26 @@ else
     # set default usb composite configuration, triggers usb enumeration
     #echo usb_mass_storage,acm,adb,diag > /sys/devices/platform/pxa-u2o/composite
 
-on property:persist.service.adb.enable=1
-   echo usb_mass_storage,acm,adb,diag > /sys/devices/platform/pxa-u2o/composite
-   start adbd
+#on property:persist.service.adb.enable=1
+#   echo usb_mass_storage,acm,adb,diag > /sys/devices/platform/pxa-u2o/composite
+#   start adbd
 
-on property:persist.service.adb.enable=0
-    echo usb_mass_storage,acm > /sys/devices/platform/pxa-u2o/composite
-    stop adbd
-
-    ./mtilatcmd -S -m /dev/ttymodem &
-    ./mtilatcmd -S -m /dev/btduntty1 &
+#on property:persist.service.adb.enable=0
+#    echo usb_mass_storage,acm > /sys/devices/platform/pxa-u2o/composite
+#    stop adbd
+#    ./mtilatcmd -S -m /dev/ttymodem &
+#    ./mtilatcmd -S -m /dev/btduntty1 &
 
 fi
 
 
-./audioserver -S -D yes &
-./eeh -s -D yes -M yes &
-
-./validationif --secure &
+#./audioserver -S -D yes &
+#./eeh -s -D yes -M yes &
+#./validationif --secure &
 
 #set shell as non freezable
-echo "sh 1" > /sys/power/freeze_process/frz_process
-echo "serial_client 1" > /sys/power/freeze_process/frz_process
+#echo "sh 1" > /sys/power/freeze_process/frz_process
+#echo "serial_client 1" > /sys/power/freeze_process/frz_process
 
 #disable D0CS set user constrain on OP 0
 #echo  0, 0  > /sys/devices/system/cpu/cpu0/enable_op
@@ -199,8 +187,8 @@ echo "serial_client 1" > /sys/power/freeze_process/frz_process
 
 
 # Uncomment some of the following lines to create logcat files on target (for debug)
-export LOGCAT_DIR=/sdcard/logcat
-#export LOGCAT_DIR=/data/log
+#export LOGCAT_DIR=/sdcard/logcat
+export LOGCAT_DIR=/data/log
 mkdir $LOGCAT_DIR
 chmod 777 $LOGCAT_DIR
 ml_setid $mrvlacc -- logcat -v time -b main -f $LOGCAT_DIR/logcat.log -r 1024 -n 5 &

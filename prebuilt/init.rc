@@ -25,11 +25,14 @@ on init
     symlink /sys/kernel/debug /d
     symlink /system/vendor /vendor
     symlink /sdcard /mnt/sdcard
+    symlink /mnt/asec/mrvlsys /mrvlsys
+    symlink /mnt/sdcard /sdcard
+    symlink /marvell/Linux /Linux    
 
 # create mountpoints
     mkdir /mnt 0775 root system
     mkdir /system
-    mkdir /mnt/sdcard
+    mkdir /mnt/sdcard 0000 system system
     mkdir /data 0771 system system
     #mkdir /cache 0771 system cache
     mkdir /config 0500 root root
@@ -38,6 +41,8 @@ on init
     mkdir /mnt/secure/asec  0700 root root
     mkdir /mnt/asec  0700 root system
     mount tmpfs tmpfs /mnt/asec mode=0755,gid=1000
+    mkdir /mnt/asec/mrvlsys 0770 system system
+
     mkdir /mnt/obb 0700 root system
     mount tmpfs tmpfs /mnt/obb mode=0755,gid=1000
 
@@ -78,6 +83,8 @@ on init
 # Allow everybody to read the xt_qtaguid resource tracking misc dev.
 # This is needed by any process that uses socket tagging.
     chmod 0644 /dev/xt_qtaguid
+    chown radio system /dev/bml2
+    chown radio system /dev/bml24
 
 on fs
     mount rfs /dev/block/stl16 /data nosuid nodev
@@ -219,6 +226,22 @@ on post-fs-data
     mkdir /data/drm 0770 drm drm
     mkdir /data/system 0771 system system
     mkdir /data/system/inputmethod 0771 system system
+
+    mkdir /data/log 0775 system log
+    chown system log /data/log
+    chmod 0775 /data/log
+    mkdir /data/fota 0775 radio radio
+    chown radio radio /data/fota
+    chmod 0775 /data/fota
+    mkdir /data/anr 0775 system system 
+    chmod 0775 /data/anr
+    mkdir /data/gps 771 gps system
+    chown gps system /data/gps
+
+    chmod 0662 /dev/log/system
+    chmod 0662 /dev/log/radio
+    chmod 0662 /dev/log/events
+    chmod 0662 /dev/log/main
 
     symlink /data/dalvik-cache /cache/dalvik-cache
 
@@ -385,13 +408,12 @@ service netd /system/bin/netd
 service debuggerd /system/bin/debuggerd
     class main
 
-service ril-daemon /system/bin/rild
-# -l libmarvell-ril.so
+service ril-daemon /system/bin/rild -l libmarvell-ril.so
     class main
     socket rild stream 660 root radio
     socket rild-debug stream 660 radio system
     user root
-    group radio cache inet misc audio sdcard_rw qcom_oncrpc diag
+    group radio cache inet misc audio sdcard_rw qcom_oncrpc diag log system
 
 service surfaceflinger /system/bin/surfaceflinger
     class main
@@ -469,39 +491,54 @@ service dumpstate /system/bin/dumpstate -s
     disabled
     oneshot
 
+service atparser /marvell/tel/atcmdtest.sh
+    class main
+    disabled
+    console
+
+service mobex-daemon /system/bin/npsmobex
+    class main
+    user system
+    group system inet
+
 service marvelltel /system/bin/sh /marvell/tel/launch
+    class main
+    disabled
     oneshot
 
 service wpa_supplicant /system/bin/wpa_supplicant -Dwext -imlan0 -c/data/misc/wifi/wpa_supplicant.conf
+    class main
     socket wpa_mlan0 dgram 660 wifi wifi
     disabled
     oneshot
 
 service dhcpcd /system/bin/dhcpcd -ABKL mlan0
+    class main
     disabled
     oneshot
 
 service dhcpcd-wfd0 /system/bin/dhcpcd -ABKL wfd0
+    class main
     disabled
     oneshot
 
 service wlandutservice /system/bin/wlandutservice
-    disabled
-    oneshot
-
-service FMRadiod /system/bin/FMRadioServer
+    class main
     disabled
     oneshot
 
 service mwirelessd /system/bin/MarvellWirelessDaemon
+    class main
     oneshot
 
 service memsicd /system/bin/memsicd
+    class main
     user system
     group system
     oneshot
 
 service mwu /system/bin/mwu -c /system/bin/wifidir_init.conf -p 00000000 -i wfd0 -d /system/etc/wifidirect_defaults.conf -l /tmp/wfd.log
+    class main
     user root
     group wifi
     disabled
