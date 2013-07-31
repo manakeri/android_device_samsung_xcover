@@ -1,0 +1,98 @@
+# Makefile created by Linux Automake V1.0.0
+# This makefile will build a Linux static library
+
+#==============================================================================
+# Codec Name												(user update)
+#==============================================================================
+CODEC_NAME=misc
+
+#==============================================================================
+# Rules.make												(user update)
+#==============================================================================
+include ../../../../example/Rules.make
+
+#==============================================================================
+# Codec Specific Flags											(user update)
+#==============================================================================
+CFLAGS+= -DLOG_OFF -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64
+CXXFLAGS= $(CFLAGS)
+ASFLAGS+= -mcpu=iwmmxt2 --defsym _IPP_NONPRELINK=1  
+
+
+#==============================================================================
+# Log file          										(user update)
+#==============================================================================
+PATH_USR_LOG=$(PATH_USR_BUILD)/wmmx2_linux/log
+USR_LOG_TRACE=$(PATH_USR_LOG)/build_trace_common_linux.log
+PATH_USR_OBJ=$(PATH_USR_BUILD)/wmmx2_linux/obj
+
+#==============================================================================
+# User libraries          										(user update)
+#==============================================================================
+USR_LIBS=\
+
+#==============================================================================
+# Target                                                          (user update)
+#==============================================================================
+OUTPUT_TARGET=$(PATH_USR_LIB)/libmiscgen.a
+OUTPUT_TARGET1=$(PATH_USR_LIB)/libmiscgen.so
+
+#==============================================================================
+# phonies
+#==============================================================================
+.PHONY : all clean banner
+all: clean $(PATH_USR_OBJ) $(PATH_USR_LOG) banner $(OUTPUT_TARGET) $(OUTPUT_TARGET1)
+banner:
+	@echo ------------Build Log------------------------- >$(USR_LOG_TRACE)
+	@date >>$(USR_LOG_TRACE)
+clean:
+	-rm -f $(OUTPUT_TARGET)
+	-rm -f $(OUTPUT_TARGET1)
+	-rm -f $(PATH_USR_OBJ)/*.*
+	-rm -f $(USR_LOG_TRACE)
+	
+#==============================================================================
+# directories
+#==============================================================================
+$(PATH_USR_OBJ):
+	-mkdir $(PATH_USR_OBJ)
+$(PATH_USR_BIN):
+	-mkdir $(PATH_USR_LIB)
+$(PATH_USR_LOG):
+	-mkdir $(PATH_USR_LOG)
+
+#==============================================================================
+# Compile                                                         (user update)
+#==============================================================================
+#Compile C source File to Object_C file
+$(PATH_USR_OBJ)/common.o:$(PATH_USR_SRC)/wmmx2_linux/common.c
+	-$(CC) $(CODECSET) -c $< -o $@ $(CFLAGS) $(OPT_INC_EXT) 1>>$(USR_LOG_TRACE) 2>>$(USR_LOG_TRACE)
+	@if [ -e $@ ]; then echo [success] C Compile [$<] to [$@] 1>>$(USR_LOG_TRACE); else echo [failed] C Compile [$<] to [$@] 1>>$(USR_LOG_TRACE); fi
+$(PATH_USR_OBJ)/thread.o:$(PATH_USR_SRC)/wmmx2_linux/thread.c
+	-$(CC) $(CODECSET) -c $< -o $@ $(CFLAGS) $(OPT_INC_EXT) 1>>$(USR_LOG_TRACE) 2>>$(USR_LOG_TRACE)
+	@if [ -e $@ ]; then echo [success] C Compile [$<] to [$@] 1>>$(USR_LOG_TRACE); else echo [failed] C Compile [$<] to [$@] 1>>$(USR_LOG_TRACE); fi
+$(PATH_USR_OBJ)/misc.o:$(PATH_USR_SRC)/misc.c
+	-$(CC) $(CODECSET) -c $< -o $@ $(CFLAGS) $(OPT_INC_EXT) 1>>$(USR_LOG_TRACE) 2>>$(USR_LOG_TRACE)
+	@if [ -e $@ ]; then echo [success] C Compile [$<] to [$@] 1>>$(USR_LOG_TRACE); else echo [failed] C Compile [$<] to [$@] 1>>$(USR_LOG_TRACE); fi
+$(PATH_USR_OBJ)/render.o:$(PATH_USR_SRC)/wmmx2_linux/render.c
+	-$(CC) $(CODECSET) -c $< -o $@ $(CFLAGS) $(OPT_INC_EXT) 1>>$(USR_LOG_TRACE) 2>>$(USR_LOG_TRACE)
+	@if [ -e $@ ]; then echo [success] C Compile [$<] to [$@] 1>>$(USR_LOG_TRACE); else echo [failed] C Compile [$<] to [$@] 1>>$(USR_LOG_TRACE); fi
+$(PATH_USR_OBJ)/perf.o:$(PATH_USR_SRC)/wmmx2_linux/perf.c
+	-$(CC) $(CODECSET) -c $< -o $@ $(CFLAGS) $(OPT_INC_EXT) 1>>$(USR_LOG_TRACE) 2>>$(USR_LOG_TRACE)
+	@if [ -e $@ ]; then echo [success] C Compile [$<] to [$@] 1>>$(USR_LOG_TRACE); else echo [failed] C Compile [$<] to [$@] 1>>$(USR_LOG_TRACE); fi
+
+#==============================================================================
+# link                                                            (user update)
+#==============================================================================
+OBJS=\
+$(PATH_USR_OBJ)/common.o\
+$(PATH_USR_OBJ)/thread.o\
+$(PATH_USR_OBJ)/misc.o\
+$(PATH_USR_OBJ)/render.o\
+$(PATH_USR_OBJ)/perf.o\
+
+
+$(OUTPUT_TARGET):$(OBJS) $(USR_LIBS)
+	$(AR) $(ARFLAGS) -r $@ $(OBJS) $(USR_LIBS) 1>>$(USR_LOG_TRACE) 2>>$(USR_LOG_TRACE)
+	$(CC) -s -shared -Wl,-soname,libmiscgen.so -o $(OUTPUT_TARGET1) $(OBJS) $(USR_LIBS) 1>>$(USR_LOG_TRACE) 2>>$(USR_LOG_TRACE)
+	@if [ -e $(OUTPUT_TARGET) ]; then echo [success] Link [$@] 1>>$(USR_LOG_TRACE); else echo [failed] Link [$@] 1>>$(USR_LOG_TRACE); fi

@@ -470,8 +470,6 @@ service dumpstate /system/bin/dumpstate -s
     oneshot
 
 service marvelltel /system/bin/sh /marvell/tel/launch
-    console
-    disabled
     oneshot
 
 service wpa_supplicant /system/bin/wpa_supplicant -Dwext -imlan0 -c/data/misc/wifi/wpa_supplicant.conf
@@ -496,7 +494,6 @@ service FMRadiod /system/bin/FMRadioServer
     oneshot
 
 service mwirelessd /system/bin/MarvellWirelessDaemon
-    disabled
     oneshot
 
 service memsicd /system/bin/memsicd

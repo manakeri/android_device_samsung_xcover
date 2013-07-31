@@ -199,14 +199,14 @@ echo "serial_client 1" > /sys/power/freeze_process/frz_process
 
 
 # Uncomment some of the following lines to create logcat files on target (for debug)
-#export LOGCAT_DIR=/sdcard/logcat
+export LOGCAT_DIR=/sdcard/logcat
 #export LOGCAT_DIR=/data/log
-#mkdir $LOGCAT_DIR
-#chmod 777 $LOGCAT_DIR
-#ml_setid $mrvlacc -- logcat -v time -b main -f $LOGCAT_DIR/logcat.log -r 1024 -n 5 &
-#ml_setid $mrvlacc -- logcat -v time -b radio -f $LOGCAT_DIR/logcat-radio.log -r 1024 -n 5 &
-#logcat -v time -b events -f $LOGCAT_DIR/logcat-events.log -r 1024 -n 5 &
-#chmod 777 $LOGCAT_DIR/logcat*
+mkdir $LOGCAT_DIR
+chmod 777 $LOGCAT_DIR
+ml_setid $mrvlacc -- logcat -v time -b main -f $LOGCAT_DIR/logcat.log -r 1024 -n 5 &
+ml_setid $mrvlacc -- logcat -v time -b radio -f $LOGCAT_DIR/logcat-radio.log -r 1024 -n 5 &
+logcat -v time -b events -f $LOGCAT_DIR/logcat-events.log -r 1024 -n 5 &
+chmod 777 $LOGCAT_DIR/logcat*
 
 #chmod 777 /marvell/tel/NVM/audio_hifi.tlv
 

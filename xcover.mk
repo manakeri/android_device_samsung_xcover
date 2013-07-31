@@ -20,16 +20,37 @@
 
 DEVICE_PACKAGE_OVERLAYS := device/samsung/xcover/overlay
 
-PRODUCT_COPY_FILES := \
-	device/samsung/xcover/prebuilt/etc/asound.conf:system/etc/asound.conf \
-	device/samsung/xcover/prebuilt/etc/vold.fstab:system/etc/vold.fstab 
-
 PRODUCT_COPY_FILES += $(call find-copy-subdir-files,*,device/samsung/xcover/prebuilt/modules,system/lib/modules)
 
 PRODUCT_COPY_FILES += \
 	device/samsung/xcover/prebuilt/init.rc:root/init.rc \
 	device/samsung/xcover/prebuilt/lpm.rc:root/lpm.rc \
 	device/samsung/xcover/prebuilt/ueventd.pxa968.rc:root/ueventd.pxa968.rc 
+
+PRODUCT_PACKAGES += \
+	libvmeta \
+	libvmetahal \
+	libcodecaacdec \
+	libcodecaacenc \
+	libcodecmp3dec \
+	libcodech263dec \
+	libcodech264dec \
+	libcodecmpeg4dec \
+	libcodecmpeg2dec \
+	libcodecwmvdec \
+	libcodecamrnbdec \
+	libcodecamrnbenc \
+	libcodecamrwbdec \
+	libcodecamrwbenc \
+	libcodecg711 \
+	libcodecjpegdec \
+	libcodecjpegenc \
+        libcodecmpeg4enc \
+        libcodech264enc \
+        libcodech263enc \
+	libcodecvmetadec \
+	libcodecvmetaenc \
+	libcodecwmadec
 
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 	ro.cwm.enable_key_repeat=true \
