@@ -47,6 +47,7 @@ etc
 etc/firmware
 etc/firmware/mrvl
 lib
+lib/egl
 lib/hw
 media
 "
@@ -57,6 +58,7 @@ for DIR in $DIRS; do
 done
 
 FILES="
+etc/mrvl.cfg
 etc/vold.fstab
 etc/gps.conf
 etc/firmware/mrvl/WlanCalData_ext.conf
@@ -78,6 +80,12 @@ lib/libmrvldut.so
 lib/hw/sensors.default.so
 lib/hw/gps.default.so
 lib/hw/lights.default.so
+lib/hw/gralloc.default.so
+lib/libgcu.so
+lib/libGAL.so
+lib/egl/libEGL_MRVL.so
+lib/egl/libGLESv1_CM_MRVL.so
+lib/egl/libGLESv2_MRVL.so
 bin/npsmobex
 bin/mrvlhcitool
 bin/MarvellWirelessDaemon
@@ -85,9 +93,6 @@ bin/mcfg
 bin/mfgloader
 bin/mwu
 bin/mwu_cli
-bin/mpdc
-bin/mpdc_d
-bin/mpdc_svr
 bin/memsicd
 bin/rfkill
 bin/samsung_debug
@@ -122,14 +127,15 @@ media/battery_charging_95.qmg
 media/battery_charging_100.qmg
 media/chargingwarning.qmg
 media/Disconnected.qmg
+media/TemperatureError.qmg
 "
 
-#etc/mrvl.cfg
+#bin/mpdc
+#bin/mpdc_d
+#bin/mpdc_svr
 #lib/libbmm.so
 #lib/libpmemhelper.so
 #lib/libphycontmem.so
-#lib/libgcu.so
-#lib/libGAL.so
 #lib/libopencore_author.so
 #lib/libopencore_common.so
 #lib/libopencore_download.so
@@ -141,9 +147,7 @@ media/Disconnected.qmg
 #lib/libopencore_rtsp.so
 #lib/libopencore_rtspreg.so
 #lib/libopencorehw.so
-#lib/egl/libEGL_MRVL.so
-#lib/egl/libGLESv1_CM_MRVL.so
-#lib/egl/libGLESv2_MRVL.so
+
 
 for FILE in $FILES; do
 	echo $FILE
@@ -175,8 +179,9 @@ done
 
 PRODUCT_COPY_FILES += \\
     vendor/samsung/__DEVICE__/proprietary/bin/mrvlhcitool:system/bin/mrvlhcitool \\
-    vendor/samsung/__DEVICE__/proprietary/bin/memsicd:system/bin/memsicd \\ 
+    vendor/samsung/__DEVICE__/proprietary/bin/memsicd:system/bin/memsicd \\
     vendor/samsung/__DEVICE__/proprietary/bin/wifidir_init.conf:system/bin/wifidir_init.conf \\
+    vendor/samsung/__DEVICE__/proprietary/bin/uap.conf:system/bin/uap.conf \\
     vendor/samsung/__DEVICE__/proprietary/bin/MarvellWirelessDaemon:system/bin/MarvellWirelessDaemon \\
     vendor/samsung/__DEVICE__/proprietary/bin/mwu:system/bin/mwu \\
     vendor/samsung/__DEVICE__/proprietary/bin/rfkill:system/bin/rfkill \\
@@ -185,13 +190,14 @@ PRODUCT_COPY_FILES += \\
     vendor/samsung/__DEVICE__/proprietary/bin/mcfg:system/bin/mcfg \\
     vendor/samsung/__DEVICE__/proprietary/bin/mfgloader:system/bin/mfgloader \\
     vendor/samsung/__DEVICE__/proprietary/bin/samsung_debug:system/bin/samsung_debug \\
-    vendor/samsung/__DEVICE__/proprietary/bin/mwu_cli:system/bin/mwu_cli \\
-    vendor/samsung/__DEVICE__/proprietary/bin/mpdc:system/bin/mpdc \\
-    vendor/samsung/__DEVICE__/proprietary/bin/mpdc_d:system/bin/mpdc_d \\
-    vendor/samsung/__DEVICE__/proprietary/bin/mpdc_svr:system/bin/mpdc_svr \\
+    vendor/samsung/__DEVICE__/proprietary/bin/mwu_cli:system/bin/mwu_cli
+
+#    vendor/samsung/__DEVICE__/proprietary/bin/mpdc:system/bin/mpdc \\
+#    vendor/samsung/__DEVICE__/proprietary/bin/mpdc_d:system/bin/mpdc_d \\
+#    vendor/samsung/__DEVICE__/proprietary/bin/mpdc_svr:system/bin/mpdc_svr \\
 
 PRODUCT_COPY_FILES += \\
-    vendor/samsung/__DEVICE__/proprietary/lib/lib_gsd4t.so:system/lib/lib_gsd4t.so
+    vendor/samsung/__DEVICE__/proprietary/lib/lib_gsd4t.so:system/lib/lib_gsd4t.so \\
     vendor/samsung/__DEVICE__/proprietary/lib/lib_gsd4t.so:system/lib/lib_gsd4t_factory.so
 
 #    vendor/samsung/__DEVICE__/proprietary/lib/libbmm.so:system/lib/libbmm.so \\
@@ -223,10 +229,8 @@ PRODUCT_COPY_FILES += \\
 
 PRODUCT_COPY_FILES += \\
     vendor/samsung/__DEVICE__/proprietary/etc/vold.fstab:system/etc/vold.fstab \\
+    vendor/samsung/__DEVICE__/proprietary/etc/mrvl.cfg:system/etc/mrvl.cfg \\
     vendor/samsung/__DEVICE__/proprietary/etc/gps.conf:system/etc/gps.conf
-
-#    vendor/samsung/__DEVICE__/proprietary/marvell/etc/asound.conf:system/etc/asound.conf \\
-#    vendor/samsung/__DEVICE__/proprietary/etc/mrvl.cfg:system/etc/mrvl.cfg \\
 
 #
 # RIL
@@ -252,10 +256,11 @@ PRODUCT_COPY_FILES += \\
 #
 # Display (3D)
 #
-#PRODUCT_COPY_FILES += \\
-#    vendor/samsung/__DEVICE__/proprietary/lib/egl/libEGL_MRVL.so:system/lib/egl/libEGL_MRVL.so \\
-#    vendor/samsung/__DEVICE__/proprietary/lib/egl/libGLESv1_CM_MRVL.so:system/lib/egl/libGLESv1_CM_MRVL.so \\
-#    vendor/samsung/__DEVICE__/proprietary/lib/egl/libGLESv2_MRVL.so:system/lib/egl/libGLESv2_MRVL.so
+PRODUCT_COPY_FILES += \\
+    vendor/samsung/__DEVICE__/proprietary/lib/egl/libEGL_MRVL.so:system/lib/egl/libEGL_MRVL.so \\
+    vendor/samsung/__DEVICE__/proprietary/lib/egl/libGLESv1_CM_MRVL.so:system/lib/egl/libGLESv1_CM_MRVL.so \\
+    vendor/samsung/__DEVICE__/proprietary/lib/egl/libGLESv2_MRVL.so:system/lib/egl/libGLESv2_MRVL.so \\
+    vendor/samsung/__DEVICE__/proprietary/lib/libGAL.so:system/lib/libGAL.so
 
 #
 # Sensors, Lights etc
@@ -263,6 +268,7 @@ PRODUCT_COPY_FILES += \\
 PRODUCT_COPY_FILES += \\
     vendor/samsung/__DEVICE__/proprietary/lib/hw/sensors.default.so:system/lib/hw/sensors.default.so \\
     vendor/samsung/__DEVICE__/proprietary/lib/hw/lights.default.so:system/lib/hw/lights.default.so \\
+    vendor/samsung/__DEVICE__/proprietary/lib/hw/gralloc.default.so:system/lib/hw/gralloc.default.so \\
     vendor/samsung/__DEVICE__/proprietary/lib/hw/gps.default.so:system/lib/hw/gps.default.so
 
 #

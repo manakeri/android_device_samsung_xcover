@@ -7,9 +7,10 @@ TARGET_BOOTLOADER_BOARD_NAME := pxa968
 TARGET_CPU_ABI := armeabi-v7a
 TARGET_CPU_ABI2 := armeabi
 TARGET_ARCH := arm
-TARGET_ARCH_VARIANT := armv6-vfp
-#TARGET_ARCH_VARIANT := armv7-a # crashes?
-ARCH_ARM_HAVE_TLS_REGISTER := false
+TARGET_ARCH_VARIANT := armv7-a
+#TARGET_ARCH_VARIANT_CPU := marvell-pj4 # in gcc 4.8
+TARGET_ARCH_VARIANT_FPU := vfpv3-d16
+TARGET_CPU_SMP := false
 
 
 # Misc
@@ -22,11 +23,9 @@ BOARD_HAS_NO_SELECT_BUTTON := true
 #ENABLE_WEBGL := true
 TARGET_OTA_ASSERT_DEVICE := xcover,GT-S5690
 TARGET_NO_INITLOGO := true
-#BOARD_ENABLE_GSTREAMER := true
 BOARD_USES_ALSA_AUDIO := true
 BUILD_WITH_ALSA_UTILS := true
 BOARD_ENABLE_FAST_OVERLAY := true
-BOARD_USE_LEGACY_TOUCHSCREEN := false
 
 # Accessories
 HAVE_HTC_AUDIO_DRIVER := false
@@ -37,7 +36,6 @@ BOARD_CAMERA_LIBRARIES := libcamera
 endif
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_FM_RADIO := true
-#SAMSUNG_USB_MTP_DEVICE := true
 TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/usb_mass_storage/lun0/file
 
 # Init
@@ -45,7 +43,6 @@ TARGET_PROVIDES_INIT_RC := true
 TARGET_PROVIDES_INIT_TARGET_RC := false
 
 # Recovery
-#TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
 BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/xcover/recovery/recovery_keys.c
 BOARD_CUSTOM_GRAPHICS := ../../../device/samsung/xcover/recovery/graphics.c
 #BOARD_USES_BML_OVER_MTD := true
@@ -64,11 +61,12 @@ BOARD_KERNEL_BASE := 0x80000000
 BOARD_KERNEL_PAGESIZE := 4096
 TARGET_PREBUILT_KERNEL := device/samsung/xcover/prebuilt/kernel
 #TARGET_KERNEL_CONFIG := alkon_03_defconfig
-WPA_SUPPLICANT_VERSION := VER_0_8_X
+WPA_SUPPLICANT_VERSION := VER_0_6_X
 BOARD_WPA_SUPPLICANT_DRIVER := WEXT
 WIFI_DRIVER_MODULE_PATH := "/system/lib/modules/sd8787.ko"
 WIFI_DRIVER_MODULE_NAME := "sd8787"
-WIFI_DRIVER_MODULE_ARG := "fw_name=mrvl/w8787_wlan_SDIO_bt_SDIO.bin"
+#WIFI_DRIVER_MODULE_ARG := "fw_name=mrvl/w8787_wlan_SDIO_bt_SDIO.bin"
+
 TARGET_RELEASETOOL_OTA_FROM_TARGET_SCRIPT := device/samsung/xcover/releasetools/ota_from_target_files
 
 # Partitions
