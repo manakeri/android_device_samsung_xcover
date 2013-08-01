@@ -41,15 +41,12 @@ ZIP="true"
 #fi
 
 DIRS="
-marvell
-marvell/etc
-marvell/tel
+bin
+cameradata
 etc
 etc/firmware
 etc/firmware/mrvl
-bin
-cameradata
-lib/egl
+lib
 lib/hw
 media
 "
@@ -60,11 +57,8 @@ for DIR in $DIRS; do
 done
 
 FILES="
-marvell/etc/asound.conf
 etc/vold.fstab
 etc/gps.conf
-etc/gst.conf
-etc/mrvl.cfg
 etc/firmware/mrvl/WlanCalData_ext.conf
 etc/firmware/mrvl/w8787_wlan_SDIO_bt_SDIO.bin
 etc/firmware/mrvl/sd8787_uapsta.bin
@@ -74,11 +68,6 @@ cameradata/datapattern_front_420sp.yuv
 cameradata/datapattern_420sp_alkon.yuv
 lib/lib_gsd4t.so
 lib/lib_gsd4t_factory.so
-lib/libgcu.so
-lib/libGAL.so
-lib/libbmm.so
-lib/libpmemhelper.so
-lib/libphycontmem.so
 lib/libcamera.so
 lib/libmarvell-ril.so
 lib/libsecutil.so
@@ -86,20 +75,6 @@ lib/libriloemhook.so
 lib/libsvcmd.so
 lib/libMarvellWireless.so
 lib/libmrvldut.so
-lib/libopencore_author.so
-lib/libopencore_common.so
-lib/libopencore_download.so
-lib/libopencore_downloadreg.so
-lib/libopencore_mp4local.so
-lib/libopencore_mp4localreg.so
-lib/libopencore_net_support.so
-lib/libopencore_player.so
-lib/libopencore_rtsp.so
-lib/libopencore_rtspreg.so
-lib/libopencorehw.so
-lib/egl/libEGL_MRVL.so
-lib/egl/libGLESv1_CM_MRVL.so
-lib/egl/libGLESv2_MRVL.so
 lib/hw/sensors.default.so
 lib/hw/gps.default.so
 lib/hw/lights.default.so
@@ -117,9 +92,13 @@ bin/memsicd
 bin/rfkill
 bin/samsung_debug
 bin/wifidir_init.conf
+bin/uap.conf
 bin/wlandutservice
 bin/playlpm
 bin/charging_mode
+bin/passcodemanager
+bin/pxidle
+bin/pxksymaddr
 lib/libQmageDecoder.so
 media/battery_charging_5.qmg
 media/battery_charging_10.qmg
@@ -145,6 +124,27 @@ media/chargingwarning.qmg
 media/Disconnected.qmg
 "
 
+#etc/mrvl.cfg
+#lib/libbmm.so
+#lib/libpmemhelper.so
+#lib/libphycontmem.so
+#lib/libgcu.so
+#lib/libGAL.so
+#lib/libopencore_author.so
+#lib/libopencore_common.so
+#lib/libopencore_download.so
+#lib/libopencore_downloadreg.so
+#lib/libopencore_mp4local.so
+#lib/libopencore_mp4localreg.so
+#lib/libopencore_net_support.so
+#lib/libopencore_player.so
+#lib/libopencore_rtsp.so
+#lib/libopencore_rtspreg.so
+#lib/libopencorehw.so
+#lib/egl/libEGL_MRVL.so
+#lib/egl/libGLESv1_CM_MRVL.so
+#lib/egl/libGLESv2_MRVL.so
+
 for FILE in $FILES; do
 	echo $FILE
 	if [ "$ZIP" ]; then
@@ -152,7 +152,7 @@ for FILE in $FILES; do
 	else
 		adb pull system/$FILE ../../../vendor/$VENDOR/$DEVICE/proprietary/$FILE
 	fi
-	chmod 0644 ../../../vendor/$VENDOR/$DEVICE/proprietary/$FILE
+#	chmod 0755 ../../../vendor/$VENDOR/$DEVICE/proprietary/$FILE
 done
 #if [ "$ZIP" ]; then rm -rf tmp ; fi
 
@@ -175,28 +175,30 @@ done
 
 PRODUCT_COPY_FILES += \\
     vendor/samsung/__DEVICE__/proprietary/bin/mrvlhcitool:system/bin/mrvlhcitool \\
-    vendor/samsung/__DEVICE__/proprietary/bin/memsicd:system/bin/memsicd \\
+    vendor/samsung/__DEVICE__/proprietary/bin/memsicd:system/bin/memsicd \\ 
     vendor/samsung/__DEVICE__/proprietary/bin/wifidir_init.conf:system/bin/wifidir_init.conf \\
     vendor/samsung/__DEVICE__/proprietary/bin/MarvellWirelessDaemon:system/bin/MarvellWirelessDaemon \\
     vendor/samsung/__DEVICE__/proprietary/bin/mwu:system/bin/mwu \\
-    vendor/samsung/__DEVICE__/proprietary/bin/mwu_cli:system/bin/mwu_cli \\
+    vendor/samsung/__DEVICE__/proprietary/bin/rfkill:system/bin/rfkill \\
+    vendor/samsung/__DEVICE__/proprietary/bin/npsmobex:system/bin/npsmobex \\
+    vendor/samsung/__DEVICE__/proprietary/bin/wlandutservice:system/bin/wlandutservice \\
     vendor/samsung/__DEVICE__/proprietary/bin/mcfg:system/bin/mcfg \\
+    vendor/samsung/__DEVICE__/proprietary/bin/mfgloader:system/bin/mfgloader \\
+    vendor/samsung/__DEVICE__/proprietary/bin/samsung_debug:system/bin/samsung_debug \\
+    vendor/samsung/__DEVICE__/proprietary/bin/mwu_cli:system/bin/mwu_cli \\
     vendor/samsung/__DEVICE__/proprietary/bin/mpdc:system/bin/mpdc \\
     vendor/samsung/__DEVICE__/proprietary/bin/mpdc_d:system/bin/mpdc_d \\
     vendor/samsung/__DEVICE__/proprietary/bin/mpdc_svr:system/bin/mpdc_svr \\
-    vendor/samsung/__DEVICE__/proprietary/bin/rfkill:system/bin/rfkill \\
-    vendor/samsung/__DEVICE__/proprietary/bin/samsung_debug:system/bin/samsung_debug \\
-    vendor/samsung/__DEVICE__/proprietary/bin/wlandutservice:system/bin/wlandutservice \\
-    vendor/samsung/__DEVICE__/proprietary/bin/bin/mfgloader:system/bin/mfgloader \\
-    vendor/samsung/__DEVICE__/proprietary/bin/npsmobex:system/bin/npsmobex
 
 PRODUCT_COPY_FILES += \\
-    vendor/samsung/__DEVICE__/proprietary/lib/lib_gsd4t.so:system/lib/lib_gsd4t.so \\
-    vendor/samsung/__DEVICE__/proprietary/lib/lib_gsd4t.so:system/lib/lib_gsd4t_factory.so \\
-    vendor/samsung/__DEVICE__/proprietary/lib/libbmm.so:system/lib/libbmm.so \\
-    vendor/samsung/__DEVICE__/proprietary/lib/libphycontmem.so:system/lib/libphycontmem.so \\
-    vendor/samsung/__DEVICE__/proprietary/lib/libpmemhelper.so:system/lib/libpmemhelper.so
+    vendor/samsung/__DEVICE__/proprietary/lib/lib_gsd4t.so:system/lib/lib_gsd4t.so
+    vendor/samsung/__DEVICE__/proprietary/lib/lib_gsd4t.so:system/lib/lib_gsd4t_factory.so
 
+#    vendor/samsung/__DEVICE__/proprietary/lib/libbmm.so:system/lib/libbmm.so \\
+#    vendor/samsung/__DEVICE__/proprietary/lib/libphycontmem.so:system/lib/libphycontmem.so \\
+#    vendor/samsung/__DEVICE__/proprietary/lib/libpmemhelper.so:system/lib/libpmemhelper.so
+
+#PRODUCT_COPY_FILES += \\
 #    vendor/samsung/__DEVICE__/proprietary/lib/libopencore_author.so:system/lib/libopencore_author.so \\
 #    vendor/samsung/__DEVICE__/proprietary/lib/libopencore_common.so:system/lib/libopencore_common.so \\
 #    vendor/samsung/__DEVICE__/proprietary/lib/libopencore_download.so:system/lib/libopencore_download.so \\
@@ -221,14 +223,10 @@ PRODUCT_COPY_FILES += \\
 
 PRODUCT_COPY_FILES += \\
     vendor/samsung/__DEVICE__/proprietary/etc/vold.fstab:system/etc/vold.fstab \\
-    vendor/samsung/__DEVICE__/proprietary/etc/gps.conf:system/etc/gps.conf \\
-    vendor/samsung/__DEVICE__/proprietary/etc/mrvl.cfg:system/etc/mrvl.cfg \\
-    vendor/samsung/__DEVICE__/proprietary/etc/wifidirect_defaults.conf:system/etc/wifidirect_defaults.conf \\
-    vendor/samsung/__DEVICE__/proprietary/etc/firmware/mrvl/sd8787_uapsta.bin:system/etc/firmware/sd8787_uapsta.bin \\
-    vendor/samsung/__DEVICE__/proprietary/etc/firmware/mrvl/w8787_wlan_SDIO_bt_SDIO.bin:system/etc/firmware/w8787_wlan_SDIO_bt_SDIO.bin \\
-    vendor/samsung/__DEVICE__/proprietary/etc/firmware/mrvl/WlanCalData_ext.conf:system/etc/firmware/WlanCalData_ext.conf
+    vendor/samsung/__DEVICE__/proprietary/etc/gps.conf:system/etc/gps.conf
 
 #    vendor/samsung/__DEVICE__/proprietary/marvell/etc/asound.conf:system/etc/asound.conf \\
+#    vendor/samsung/__DEVICE__/proprietary/etc/mrvl.cfg:system/etc/mrvl.cfg \\
 
 #
 # RIL
@@ -243,6 +241,10 @@ PRODUCT_COPY_FILES += \\
 # Wireless
 #
 PRODUCT_COPY_FILES += \\
+    vendor/samsung/__DEVICE__/proprietary/etc/wifidirect_defaults.conf:system/etc/wifidirect_defaults.conf \\
+    vendor/samsung/__DEVICE__/proprietary/etc/firmware/mrvl/sd8787_uapsta.bin:system/etc/firmware/mrvl/sd8787_uapsta.bin \\
+    vendor/samsung/__DEVICE__/proprietary/etc/firmware/mrvl/w8787_wlan_SDIO_bt_SDIO.bin:system/etc/firmware/mrvl/w8787_wlan_SDIO_bt_SDIO.bin \\
+    vendor/samsung/__DEVICE__/proprietary/etc/firmware/mrvl/WlanCalData_ext.conf:system/etc/firmware/mrvl/WlanCalData_ext.conf \\
     vendor/samsung/__DEVICE__/proprietary/lib/libmrvldut.so:system/lib/libmrvldut.so \\
     vendor/samsung/__DEVICE__/proprietary/lib/libMarvellWireless.so:system/lib/libMarvellWireless.so
 

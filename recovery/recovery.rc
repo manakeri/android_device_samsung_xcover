@@ -28,10 +28,10 @@ on init
     #mkdir /marvell
 
 on fs
-    mount vfat /dev/block/mmcblk0p1 /sdcard
-    mount rfs /dev/block/stl20 /cache
-    mount rfs /dev/block/stl17 /system
-    mount rfs /dev/block/stl16 /data
+#    mount vfat /dev/block/mmcblk0p1 /sdcard
+#    mount rfs /dev/block/stl20 /cache
+#    mount rfs /dev/block/stl16 /system
+#    mount rfs /dev/block/stl17 /data
 
 on post-fs
     write /proc/sys/kernel/panic_on_oops 1
@@ -55,7 +55,6 @@ service ueventd /sbin/ueventd
 service recovery /sbin/recovery
 
 service adbd /sbin/adbd recovery
-    enabled
 
 on property:persist.service.adb.enable=1
     start adbd

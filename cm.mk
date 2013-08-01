@@ -2,7 +2,7 @@
 PRODUCT_RELEASE_NAME := xcover
 
 # Inherit common CM stuff
-$(call inherit-product, vendor/cm/config/common_phone.mk)
+$(call inherit-product, vendor/cm/config/common_mini_phone.mk)
 
 # Inherit GSM stuff
 $(call inherit-product, vendor/cm/config/gsm.mk)

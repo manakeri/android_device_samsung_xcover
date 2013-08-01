@@ -26,7 +26,7 @@ TARGET_NO_INITLOGO := true
 BOARD_USES_ALSA_AUDIO := true
 BUILD_WITH_ALSA_UTILS := true
 BOARD_ENABLE_FAST_OVERLAY := true
-BOARD_USE_LEGACY_TOUCHSCREEN := true
+BOARD_USE_LEGACY_TOUCHSCREEN := false
 
 # Accessories
 HAVE_HTC_AUDIO_DRIVER := false
@@ -64,9 +64,11 @@ BOARD_KERNEL_BASE := 0x80000000
 BOARD_KERNEL_PAGESIZE := 4096
 TARGET_PREBUILT_KERNEL := device/samsung/xcover/prebuilt/kernel
 #TARGET_KERNEL_CONFIG := alkon_03_defconfig
-#WIFI_DRIVER_FW_PATH_STA     := "/etc/firmware/fw_bcmdhd.bin"
-#WIFI_DRIVER_FW_PATH_AP      := "/etc/firmware/mrvl/sd8787_uapsta.bin"
-
+WPA_SUPPLICANT_VERSION := VER_0_8_X
+BOARD_WPA_SUPPLICANT_DRIVER := WEXT
+WIFI_DRIVER_MODULE_PATH := "/system/lib/modules/sd8787.ko"
+WIFI_DRIVER_MODULE_NAME := "sd8787"
+WIFI_DRIVER_MODULE_ARG := "fw_name=mrvl/w8787_wlan_SDIO_bt_SDIO.bin"
 TARGET_RELEASETOOL_OTA_FROM_TARGET_SCRIPT := device/samsung/xcover/releasetools/ota_from_target_files
 
 # Partitions

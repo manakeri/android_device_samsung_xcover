@@ -10,8 +10,8 @@ on init
 
     write /proc/sys/kernel/panic_on_oops 1
 
-    mount rfs /dev/stl17 /system check=no
-    mount rfs /dev/stl17 /system ro remount
+    mount rfs /dev/stl16 /system check=no
+    mount rfs /dev/stl16 /system ro remount
 
 on boot
     ifup lo
@@ -22,6 +22,8 @@ on boot
 
 service ueventd /sbin/ueventd
     critical
+
+service adbd /sbin/adbd
 
 service playlpm /system/bin/playlpm
     user root
