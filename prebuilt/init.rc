@@ -9,6 +9,7 @@ on init
 # setup the global environment
     export PATH /sbin:/system/sbin:/system/bin:/system/xbin:/marvell/tel:/vendor/bin
     export LD_LIBRARY_PATH /vendor/lib:/system/lib:/marvell/usr/lib
+    export NVM_ROOT_DIR=/marvell/tel/NVM
     export ANDROID_BOOTLOGO 1
     export ANDROID_ROOT /system
     export ANDROID_ASSETS /system/app
@@ -16,7 +17,6 @@ on init
     export ANDROID_CACHE /data/cache
     export EXTERNAL_STORAGE /sdcard
     export SD_EXT_DIRECTORY /sd-ext
-
     export ASEC_MOUNTPOINT /mnt/asec
     export LOOP_MOUNTPOINT /mnt/obb
     export BOOTCLASSPATH /system/framework/core.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/filterfw.jar
@@ -94,12 +94,11 @@ on fs
     mount rfs /dev/block/stl19 /mnt/nvm nosuid nodev
     mount rfs /dev/block/stl20 /cache nosuid nodev
     mount j4fs /dev/block/stl21 /mnt/.lfs
-
     mount rfs /dev/block/stl22 /efs nosuid nodev check=no
     insmod /system/lib/modules/mrvl-aes.ko
     chown system system /efs
     chmod 0771 /efs
-    exec apply_sec_devenc_init
+# exec apply_sec_devenc_init
 
     mount ext3 /dev/block/mmcblk0p2 /sd-ext nosuid nodev
 
@@ -132,6 +131,67 @@ on post-fs
     insmod /system/lib/modules/mlan.ko
     insmod /system/lib/modules/camacq.ko
     insmod /system/lib/modules/touch.ko
+
+
+## MARVELL SHIT
+    insmod /marvell/tel/hwmap.ko
+    mknod /dev/hwmap c 237 0
+    chmod 660 /dev/hwmap
+    chown system system /dev/hwmap
+
+#    exec /marvell/tel/nvm_upgrade.sh
+#    exec /marvell/tel/hwacc w 0x40F5001C 1
+
+    write /sys/power/cp 1
+    write /mrvlsys/diag_log_path "/data/log"
+
+    exec cp /marvell/etc/asound.conf /data/etc/asound.conf
+    exec /marvell/tel/diag_port_conf.sh
+
+    mkdir /marvell/tel/NVM
+
+    insmod /marvell/tel/osadev.ko
+    insmod /marvell/tel/seh.ko
+    insmod /marvell/tel/acipcdev.ko param_qos_mode=0
+    insmod /marvell/tel/cci_datastub.ko
+    exec sleep 1
+    insmod /marvell/tel/citty.ko
+    insmod /marvell/tel/ccinetdev.ko
+    insmod /marvell/tel/cidatatty.ko
+    insmod /marvell/tel/bt_tty.ko
+    chmod 760 /dev/btduntty*
+    chown system.bluetooth /dev/btduntty*
+
+    chown root system /dev/citty0
+    chown root system /dev/citty1
+    chown root system /sys/class/switch/h2w/state
+    chmod 777 /dev/acipcddrv
+
+    symlink /dev/ttyDIAG0 /dev/ttygserial
+    symlink /dev/ttyGS0 /dev/ttymodem
+
+    insmod /marvell/tel/ppp.ko
+    write /sys/power/cp 1
+
+#    /marvell/tel/hwacc w 40e10294 000018c2
+#    /marvell/tel/hwacc w 40e10298 000018c2
+#    /marvell/tel/hwacc w 40e1029c 000018c2
+#    /marvell/tel/hwacc w 40e102a0 000018c2
+#    /marvell/tel/hwacc w 40e102a4 000018c2
+#    /marvell/tel/hwacc w 40e102a8 000018c2
+
+    write /proc/driver/88pm860x -0x28
+    write /proc/driver/88pm860x 0x0b
+
+#    exec sleep 1
+#    exec /marvell/tel/mtsd --secure &
+#    exec sleep 1
+#    exec /marvell/tel/mtilatcmd -S &
+#    exec /marvell/tel/audioserver -S -D yes &
+#    exec /marvell/tel/eeh -s -D yes -M yes &
+#    exec /marvell/tel/validationif --secure &
+
+## MARVELL SHIT ENDS
 
     chmod 0771 /sys/devices/platform/pxa-u2o/composite
 
@@ -496,40 +556,42 @@ service dumpstate /system/bin/dumpstate -s
     disabled
     oneshot
 
-service mobex-daemon /system/bin/npsmobex
-    class main
-    user system
-    group system inet
+#service mobex-daemon /system/bin/npsmobex
+#    class main
+#    user system
+#    group system inet
+#    disabled
 
-service marvelltel /system/bin/sh /marvell/tel/launch
-    class main
-    disabled
-    oneshot
+#service marvelltel /system/bin/sh /marvell/tel/launch
+#    class main
+#    disabled
+#    oneshot
 
-service wpa_supplicant /system/bin/wpa_supplicant -Dwext -imlan0 -c/data/misc/wifi/wpa_supplicant.conf
-    class main
-    socket wpa_mlan0 dgram 660 wifi wifi
-    disabled
-    oneshot
+#service wpa_supplicant /system/bin/wpa_supplicant -Dwext -imlan0 -c/data/misc/wifi/wpa_supplicant.conf
+#    class main
+#    socket wpa_mlan0 dgram 660 wifi wifi
+#    disabled
+#    oneshot
 
-service dhcpcd /system/bin/dhcpcd -ABKL mlan0
-    class main
-    disabled
-    oneshot
+#service dhcpcd /system/bin/dhcpcd -ABKL mlan0
+#    class main
+#    disabled
+#    oneshot
 
-service dhcpcd-wfd0 /system/bin/dhcpcd -ABKL wfd0
-    class main
-    disabled
-    oneshot
+#service dhcpcd-wfd0 /system/bin/dhcpcd -ABKL wfd0
+#    class main
+#    disabled
+#    oneshot
 
-service wlandutservice /system/bin/wlandutservice
-    class main
-    disabled
-    oneshot
+#service wlandutservice /system/bin/wlandutservice
+#    class main
+#    disabled
+#    oneshot
 
-service mwirelessd /system/bin/MarvellWirelessDaemon
-    class main
-    oneshot
+#service mwirelessd /system/bin/MarvellWirelessDaemon
+#    class main
+#    disabled
+#    oneshot
 
 service memsicd /system/bin/memsicd
     class main
@@ -537,9 +599,9 @@ service memsicd /system/bin/memsicd
     group system
     oneshot
 
-service mwu /system/bin/mwu -c /system/bin/wifidir_init.conf -p 00000000 -i wfd0 -d /system/etc/wifidirect_defaults.conf -l /tmp/wfd.log
-    class main
-    user root
-    group wifi
-    disabled
-    oneshot
+#service mwu /system/bin/mwu -c /system/bin/wifidir_init.conf -p 00000000 -i wfd0 -d /system/etc/wifidirect_defaults.conf -l /tmp/wfd.log
+#    class main
+#    user root
+#    group wifi
+#    disabled
+#    oneshot

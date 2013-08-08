@@ -31,30 +31,30 @@ PRODUCT_COPY_FILES += \
 
 PRODUCT_COPY_FILES += device/samsung/xcover/prebuilt/zinitix_touch.idc:system/usr/idc/zinitix_touch.idc
 
-PRODUCT_PACKAGES += \
-	libvmeta \
-	libvmetahal \
-	libcodecaacdec \
-	libcodecaacenc \
-	libcodecmp3dec \
-	libcodech263dec \
-	libcodech264dec \
-	libcodecmpeg4dec \
-	libcodecmpeg2dec \
-	libcodecwmvdec \
-	libcodecamrnbdec \
-	libcodecamrnbenc \
-	libcodecamrwbdec \
-	libcodecamrwbenc \
-	libcodecg711 \
-	libcodecjpegdec \
-	libcodecjpegenc \
-	libcodecmpeg4enc \
-	libcodech264enc \
-	libcodech263enc \
-	libcodecvmetadec \
-	libcodecvmetaenc \
-	libcodecwmadec
+#PRODUCT_PACKAGES += \
+#	libvmeta \
+#	libvmetahal \
+#	libcodecaacdec \
+#	libcodecaacenc \
+#	libcodecmp3dec \
+#	libcodech263dec \
+#	libcodech264dec \
+#	libcodecmpeg4dec \
+#	libcodecmpeg2dec \
+#	libcodecwmvdec \
+#	libcodecamrnbdec \
+#	libcodecamrnbenc \
+#	libcodecamrwbdec \
+#	libcodecamrwbenc \
+#	libcodecg711 \
+#	libcodecjpegdec \
+#	libcodecjpegenc \
+#	libcodecmpeg4enc \
+#	libcodech264enc \
+#	libcodech263enc \
+#	libcodecvmetadec \
+#	libcodecvmetaenc \
+#	libcodecwmadec
 
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 	ro.cwm.enable_key_repeat=true \
