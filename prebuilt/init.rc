@@ -7,9 +7,8 @@ on init
     loglevel 15
 
 # setup the global environment
-    export PATH /sbin:/system/sbin:/system/bin:/system/xbin:/marvell/tel:/vendor/bin
+    export PATH /sbin:/system/sbin:/system/bin:/system/xbin:/vendor/bin
     export LD_LIBRARY_PATH /vendor/lib:/system/lib:/marvell/usr/lib
-    export NVM_ROOT_DIR=/marvell/tel/NVM
     export ANDROID_BOOTLOGO 1
     export ANDROID_ROOT /system
     export ANDROID_ASSETS /system/app
@@ -34,7 +33,7 @@ on init
     mkdir /system
     mkdir /mnt/sdcard 0000 system system
     mkdir /data 0771 system system
-    #mkdir /cache 0771 system cache
+    mkdir /cache 0771 system cache
     mkdir /config 0500 root root
     mkdir /mnt/secure 0700 root root
     mkdir /mnt/secure/staging 0700 root root
@@ -83,8 +82,6 @@ on init
 # Allow everybody to read the xt_qtaguid resource tracking misc dev.
 # This is needed by any process that uses socket tagging.
     chmod 0644 /dev/xt_qtaguid
-    chown radio system /dev/bml2
-    chown radio system /dev/bml24
 
 on fs
     mount rfs /dev/block/stl16 /system
@@ -95,6 +92,7 @@ on fs
     mount rfs /dev/block/stl20 /cache nosuid nodev
     mount j4fs /dev/block/stl21 /mnt/.lfs
     mount rfs /dev/block/stl22 /efs nosuid nodev check=no
+
     insmod /system/lib/modules/mrvl-aes.ko
     chown system system /efs
     chmod 0771 /efs
@@ -124,74 +122,14 @@ on post-fs
 
     mkdir /cache/lost+found 0770 root root
 
+### MARVELL SHIT
     insmod /system/lib/modules/bmm.ko bmm_size_mb=0
-    insmod /system/lib/modules/galcore.ko registerMemBase=0x54000000 irqLine=70 contiguousSize=0x2000000 baseAddress=0x80000000
+    # insmod /system/lib/modules/galcore.ko registerMemBase=0x54000000 irqLine=70 contiguousSize=0x2000000 baseAddress=0x80000000
     # insmod /system/lib/modules/pmem.ko pmem_name="pmem","pmem_adsp" pmem_size=0x2000000,0x1000000 pmem_no_allocator=1,0 pmem_cache=1,0
 
     insmod /system/lib/modules/mlan.ko
     insmod /system/lib/modules/camacq.ko
     insmod /system/lib/modules/touch.ko
-
-
-## MARVELL SHIT
-    insmod /marvell/tel/hwmap.ko
-    mknod /dev/hwmap c 237 0
-    chmod 660 /dev/hwmap
-    chown system system /dev/hwmap
-
-#    exec /marvell/tel/nvm_upgrade.sh
-#    exec /marvell/tel/hwacc w 0x40F5001C 1
-
-    write /sys/power/cp 1
-    write /mrvlsys/diag_log_path "/data/log"
-
-    exec cp /marvell/etc/asound.conf /data/etc/asound.conf
-    exec /marvell/tel/diag_port_conf.sh
-
-    mkdir /marvell/tel/NVM
-
-    insmod /marvell/tel/osadev.ko
-    insmod /marvell/tel/seh.ko
-    insmod /marvell/tel/acipcdev.ko param_qos_mode=0
-    insmod /marvell/tel/cci_datastub.ko
-    exec sleep 1
-    insmod /marvell/tel/citty.ko
-    insmod /marvell/tel/ccinetdev.ko
-    insmod /marvell/tel/cidatatty.ko
-    insmod /marvell/tel/bt_tty.ko
-    chmod 760 /dev/btduntty*
-    chown system.bluetooth /dev/btduntty*
-
-    chown root system /dev/citty0
-    chown root system /dev/citty1
-    chown root system /sys/class/switch/h2w/state
-    chmod 777 /dev/acipcddrv
-
-    symlink /dev/ttyDIAG0 /dev/ttygserial
-    symlink /dev/ttyGS0 /dev/ttymodem
-
-    insmod /marvell/tel/ppp.ko
-    write /sys/power/cp 1
-
-#    /marvell/tel/hwacc w 40e10294 000018c2
-#    /marvell/tel/hwacc w 40e10298 000018c2
-#    /marvell/tel/hwacc w 40e1029c 000018c2
-#    /marvell/tel/hwacc w 40e102a0 000018c2
-#    /marvell/tel/hwacc w 40e102a4 000018c2
-#    /marvell/tel/hwacc w 40e102a8 000018c2
-
-    write /proc/driver/88pm860x -0x28
-    write /proc/driver/88pm860x 0x0b
-
-#    exec sleep 1
-#    exec /marvell/tel/mtsd --secure &
-#    exec sleep 1
-#    exec /marvell/tel/mtilatcmd -S &
-#    exec /marvell/tel/audioserver -S -D yes &
-#    exec /marvell/tel/eeh -s -D yes -M yes &
-#    exec /marvell/tel/validationif --secure &
-
-## MARVELL SHIT ENDS
 
     chmod 0771 /sys/devices/platform/pxa-u2o/composite
 
@@ -228,9 +166,6 @@ on post-fs
     chmod 0660 /sys/class/input/input0/enable
     chown system system /sys/class/input/input0/poll_delay
     chmod 0660 /sys/class/input/input0/poll_delay 
-
-    setprop have.internal.modem 1
-    setprop wifi.interface mlan0
 
     write /sys/power/mspm/mspm 1
     write /sys/power/mspm/prof 1
@@ -556,42 +491,40 @@ service dumpstate /system/bin/dumpstate -s
     disabled
     oneshot
 
-#service mobex-daemon /system/bin/npsmobex
-#    class main
-#    user system
-#    group system inet
-#    disabled
+######## MARVELL'S SHIT
 
-#service marvelltel /system/bin/sh /marvell/tel/launch
+service marvelltel /system/bin/sh /system/bin/marvelltel.sh
+    class main
+    oneshot
+
+#service displaymodel /system/bin/displaymodel
 #    class main
-#    disabled
 #    oneshot
 
-#service wpa_supplicant /system/bin/wpa_supplicant -Dwext -imlan0 -c/data/misc/wifi/wpa_supplicant.conf
-#    class main
-#    socket wpa_mlan0 dgram 660 wifi wifi
-#    disabled
-#    oneshot
+service wpa_supplicant /system/bin/wpa_supplicant -Dwext -imlan0 -c/data/misc/wifi/wpa_supplicant.conf
+    class main
+    socket wpa_mlan0 dgram 660 wifi wifi
+    disabled
+    oneshot
 
-#service dhcpcd /system/bin/dhcpcd -ABKL mlan0
-#    class main
-#    disabled
-#    oneshot
+service dhcpcd /system/bin/dhcpcd -ABKL mlan0
+    class main
+    oneshot
 
-#service dhcpcd-wfd0 /system/bin/dhcpcd -ABKL wfd0
-#    class main
-#    disabled
-#    oneshot
+service dhcpcd-wfd0 /system/bin/dhcpcd -ABKL wfd0
+    class main
+    disabled
+    oneshot
 
-#service wlandutservice /system/bin/wlandutservice
-#    class main
-#    disabled
-#    oneshot
+service wlandutservice /system/bin/wlandutservice
+    class main
+    disabled
+    oneshot
 
-#service mwirelessd /system/bin/MarvellWirelessDaemon
-#    class main
-#    disabled
-#    oneshot
+service mwirelessd /system/bin/MarvellWirelessDaemon
+    class main
+    disabled
+    oneshot
 
 service memsicd /system/bin/memsicd
     class main

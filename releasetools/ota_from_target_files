@@ -414,15 +414,15 @@ def WriteFullOTAPackage(input_zip, output_zip):
   #if OPTIONS.wipe_user_data:
   #  script.FormatPartition("/data")
 
-  script.ShowProgress(0.1, 2)
+  script.ShowProgress(0.1, 0)
   #script.FormatPartition("/system")
   script.Mount("/system")
 
-  script.ShowProgress(0.7, 30)
+  script.ShowProgress(0.8, 40)
   #script.UnpackPackageDir("recovery", "/system")
   script.UnpackPackageDir("system", "/system")
 
-  script.ShowProgress(0.1, 2)
+  script.ShowProgress(0.1, 0)
   (symlinks, retouch_files) = CopySystemFiles(input_zip, output_zip)
   script.MakeSymlinks(symlinks)
   if OPTIONS.aslr_mode:
@@ -436,13 +436,11 @@ def WriteFullOTAPackage(input_zip, output_zip):
   if OPTIONS.modelidcfg:
     script.RunConfig("")
 
-  script.ShowProgress(0.2, 2)
   output_zip.write(os.path.join(TARGET_DIR, "ramdisk.img"),"ramdisk.img")
   #output_zip.write(os.path.join(TARGET_DIR, "recovery.img"),"recovery.img")
   script.WriteRawImage("/boot", "ramdisk.img")
   #script.WriteRawImage("/recovery", "recovery.img")
 
-  script.ShowProgress(0.1, 0)
 
   device_specific.FullOTA_InstallEnd()
 

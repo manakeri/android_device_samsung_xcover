@@ -25,40 +25,47 @@ PRODUCT_COPY_FILES += $(call find-copy-subdir-files,*,device/samsung/xcover/preb
 PRODUCT_COPY_FILES += \
 	device/samsung/xcover/prebuilt/init.rc:root/init.rc \
 	device/samsung/xcover/prebuilt/lpm.rc:root/lpm.rc \
-	device/samsung/xcover/prebuilt/ueventd.pxa968.rc:root/ueventd.pxa968.rc 
+	device/samsung/xcover/prebuilt/ueventd.pxa968.rc:root/ueventd.pxa968.rc
+
+PRODUCT_COPY_FILES += \
+	device/samsung/xcover/prebuilt/marvelltel.sh:system/bin/marvelltel.sh
 
 #	device/samsung/xcover/prebuilt/init.pxa968.rc:root/init.pxa968.rc \
 
-PRODUCT_COPY_FILES += device/samsung/xcover/prebuilt/zinitix_touch.idc:system/usr/idc/zinitix_touch.idc
+PRODUCT_COPY_FILES += \
+	device/samsung/xcover/prebuilt/zinitix_touch.idc:system/usr/idc/zinitix_touch.idc
 
-#PRODUCT_PACKAGES += \
-#	libvmeta \
-#	libvmetahal \
-#	libcodecaacdec \
-#	libcodecaacenc \
-#	libcodecmp3dec \
-#	libcodech263dec \
-#	libcodech264dec \
-#	libcodecmpeg4dec \
-#	libcodecmpeg2dec \
-#	libcodecwmvdec \
-#	libcodecamrnbdec \
-#	libcodecamrnbenc \
-#	libcodecamrwbdec \
-#	libcodecamrwbenc \
-#	libcodecg711 \
-#	libcodecjpegdec \
-#	libcodecjpegenc \
-#	libcodecmpeg4enc \
-#	libcodech264enc \
-#	libcodech263enc \
-#	libcodecvmetadec \
-#	libcodecvmetaenc \
-#	libcodecwmadec
+PRODUCT_PACKAGES += \
+	Torch
+
+PRODUCT_PACKAGES += \
+	libvmeta \
+	libvmetahal \
+	libmiscgen \
+	libcodecaacdec \
+	libcodecaacenc \
+	libcodecmp3dec \
+	libcodech263dec \
+	libcodech264dec \
+	libcodecmpeg4dec \
+	libcodecmpeg2dec \
+	libcodecwmvdec \
+	libcodecamrnbdec \
+	libcodecamrnbenc \
+	libcodecamrwbdec \
+	libcodecamrwbenc \
+	libcodecg711 \
+	libcodecjpegdec \
+	libcodecjpegenc \
+	libcodecmpeg4enc \
+	libcodech264enc \
+	libcodech263enc \
+	libcodecvmetadec \
+	libcodecvmetaenc \
+	libcodecwmadec
 
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 	ro.cwm.enable_key_repeat=true \
 	ro.cwm.repeatable_keys=114,115 \
-
 
 $(call inherit-product-if-exists, vendor/samsung/xcover/xcover-vendor.mk)

@@ -19,7 +19,7 @@ LOCAL_SRC_FILES:= \
 
 LOCAL_PRELINK_MODULE := false
 
-LOCAL_MODULE:=libmiscgen
+LOCAL_MODULE := libmiscgen
 
 include $(BUILD_SHARED_LIBRARY)
 

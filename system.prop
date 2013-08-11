@@ -2,7 +2,7 @@ ro.opengles.version=131072
 ro.sf.lcd_density=160
 ro.cwm.enable_key_repeat=true
 ro.cwm.repeatable_keys=114,115
-have.internal.modem 1
+have.internal.modem=1
 wifi.interface=mlan0
 ro.kernel.android.checkjni=1
 dalvik.vm.checkjni=true

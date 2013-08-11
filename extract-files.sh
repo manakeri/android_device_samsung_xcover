@@ -14,10 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# WiMAX Support Note: All WiMAX framework and library proprietary blobs
-# needed for this build are available at
-# http://code.google.com/android/nexus/drivers.html#crespo4g
-
 VENDOR=samsung
 DEVICE=xcover
 
@@ -58,67 +54,26 @@ for DIR in $DIRS; do
 done
 
 FILES="
-etc/mrvl.cfg
 etc/vold.fstab
 etc/gps.conf
-etc/firmware/mrvl/WlanCalData_ext.conf
-etc/firmware/mrvl/w8787_wlan_SDIO_bt_SDIO.bin
-etc/firmware/mrvl/sd8787_uapsta.bin
-etc/wifidirect_defaults.conf
-cameradata/datapattern_420sp.yuv
-cameradata/datapattern_front_420sp.yuv
-cameradata/datapattern_420sp_alkon.yuv
-lib/libseccameraadaptor.so
-lib/libseccamera.so
 lib/lib_gsd4t.so
-lib/lib_gsd4t_factory.so
-lib/libaudiopolicy.so
-lib/libcamera.so
+lib/liblabtool.so
 lib/libmarvell-ril.so
-lib/libsecutil.so
-lib/libriloemhook.so
-lib/libsvcmd.so
-lib/libMarvellWireless.so
-lib/libmrvldut.so
-lib/libbmm.so
-lib/libpmemhelper.so
-lib/libphycontmem.so
-lib/libgcu.so
-lib/libGAL.so
-lib/libiasbtapi.so
-lib/libiasbtjni.so
-lib/libpxcmext.so
-lib/libpxcmprofiler.so
-lib/libpxsdk.so
-lib/libpxserial.so
-lib/libpxutils.so
 lib/libquramimagecodec.so
 lib/libQmageDecoder.so
-lib/libwlandut.so
 lib/hw/sensors.default.so
 lib/hw/gps.default.so
 lib/hw/lights.default.so
-bin/npsmobex
-bin/mrvlhcitool
-bin/MarvellWirelessDaemon
-bin/mcfg
-bin/mfgloader
-bin/mpdc
-bin/mpdc_d
-bin/mpdc_svr
-bin/mwu
-bin/mwu_cli
+bin/mtilatcmd
+bin/ml_setid
+bin/validationif
+bin/mtsd
+bin/audioserver
+bin/eeh
+bin/hwacc
 bin/memsicd
-bin/rfkill
-bin/samsung_debug
-bin/wifidir_init.conf
-bin/uap.conf
-bin/wlandutservice
 bin/playlpm
 bin/charging_mode
-bin/passcodemanager
-bin/pxidle
-bin/pxksymaddr
 media/battery_charging_5.qmg
 media/battery_charging_10.qmg
 media/battery_charging_15.qmg
@@ -144,14 +99,38 @@ media/Disconnected.qmg
 media/TemperatureError.qmg
 "
 
+#lib/libsecutil.so
+#lib/libriloemhook.so
+#lib/libsvcmd.so
+#lib/libasound.so
+#lib/lib_gsd4t_factory.so
+#lib/libpmemhelper.so
+#lib/libphycontmem.so
+#lib/lib_gsd4t_factory.so
+#lib/libseccameraadaptor.so
+#lib/libseccamera.so
+#etc/mrvl.cfg
+#bin/displaymodel
+#etc/dms.cfg
+#etc/firmware/mrvl/WlanCalData_ext.conf
+#etc/firmware/mrvl/w8787_wlan_SDIO_bt_SDIO.bin
+#etc/firmware/mrvl/sd8787_uapsta.bin
+#etc/wifidirect_defaults.conf
+#cameradata/datapattern_420sp.yuv
+#cameradata/datapattern_front_420sp.yuv
+#cameradata/datapattern_420sp_alkon.yuv
+#lib/hw/audio.primary.default.so
+#lib/hw/audio.a2dp.default.so
+#lib/hw/audio_policy.default.so
+#lib/libbmm.so
+#lib/libcamera.so
+#lib/libGAL.so
+#lib/libgcu.so
 #lib/egl/libEGL_MRVL.so
 #lib/egl/libGLESv1_CM_MRVL.so
 #lib/egl/libGLESv2_MRVL.so
+#lib/hw/hwcomposer.default.so
 #lib/hw/gralloc.default.so
-#lib/libMrvlOmxConfig.so
-#lib/libMrvlOmx.so
-#lib/libMrvlOmxWrapper.so
-#lib/lib_R2VS_ARM_GA_Library_for_EUROPA.so
 #lib/libopencore_author.so
 #lib/libopencore_common.so
 #lib/libopencore_download.so
@@ -194,8 +173,12 @@ for FILE in $FILES; do
 		adb pull system/$FILE ../../../vendor/$VENDOR/$DEVICE/proprietary/$FILE
 	fi
 	echo "    vendor/samsung/xcover/proprietary/$FILE:system/$FILE \\" >> ../../../vendor/samsung/xcover/xcover-vendor-blobs.mk 
-#	chmod 0755 ../../../vendor/$VENDOR/$DEVICE/proprietary/$FILE
 done
+
+chmod -v 0755 ../../../vendor/$VENDOR/$DEVICE/proprietary/bin/*
+chmod -v 0664 ../../../vendor/$VENDOR/$DEVICE/proprietary/lib/*.so
+chmod -v 0664 ../../../vendor/$VENDOR/$DEVICE/proprietary/lib/*/*.so
+
 #if [ "$ZIP" ]; then rm -rf tmp ; fi
 
 (cat << EOF) | sed s/__DEVICE__/$DEVICE/g > ../../../vendor/samsung/$DEVICE/$DEVICE-vendor.mk
