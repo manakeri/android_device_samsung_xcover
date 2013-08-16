@@ -7,6 +7,6 @@ Incomplete!
 
 * Recovery working pretty well, able to backup,restore and install zips.
 * Gets to the home screen without errors.
-* Touchscreen worked. Broke it though.
-* Problems with RIL. Some progress at getting it to work.
+* Touchscreen works.
+* Problems with RIL. Works without mobile data, reboots with it.
 * Haven't tried camera, Wi-Fi etc yet.
