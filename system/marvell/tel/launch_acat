@@ -1,0 +1,19 @@
+#!/system/busybox/sh
+    ln -s /marvell/tel/busybox /marvell/tel/tail
+    ln -s /marvell/tel/busybox /marvell/tel/vi
+    ln -s /marvell/tel/busybox /marvell/tel/find
+    ln -s /marvell/tel/busybox /marvell/tel/grep
+    ln -s /marvell/tel/busybox /marvell/tel/cp
+    ln -s /marvell/tel/busybox /marvell/tel/mv
+    ln -s /marvell/tel/busybox /marvell/tel/ls
+    ln -s /marvell/tel/busybox /marvell/tel/tftp
+    ln -s /marvell/tel/busybox /marvell/tel/tee
+    ln -s /marvell/tel/busybox /marvell/tel/killall
+
+cd /marvell/tel
+
+echo "launch run_rfconfig_mtil.sh"
+busybox sh run_rfconfig_mtil.sh
+
+echo "launch run_android_mtil_acat.sh"
+busybox sh run_android_mtil_acat.sh

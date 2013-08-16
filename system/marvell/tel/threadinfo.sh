@@ -1,4 +1,4 @@
-# Parse /mrvlsys/tasklist.txt ($1), identify all pids present
+# Parse /tmp/tasklist.txt ($1), identify all pids present
 # and print certain proc FS files for all the threads of these pids
 tlist=$1
 outname="$2/ap_thread_info.txt"

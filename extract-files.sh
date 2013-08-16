@@ -46,6 +46,11 @@ lib
 lib/egl
 lib/hw
 media
+usr
+usr/share
+usr/share/alsa
+usr/share/alsa/pcm
+usr/share/alsa/cards
 "
 
 for DIR in $DIRS; do
@@ -54,16 +59,28 @@ for DIR in $DIRS; do
 done
 
 FILES="
+usr/share/alsa/alsa.conf
+usr/share/alsa/cards/aliases.conf
 etc/vold.fstab
 etc/gps.conf
+etc/sirfgps.conf
+lib/libaudio.so
+lib/libaudiopath.so
+lib/liba2dp.so
+lib/libasound.so
 lib/lib_gsd4t.so
 lib/liblabtool.so
 lib/libmarvell-ril.so
+lib/libpmemhelper.so
+lib/libphycontmem.so
 lib/libquramimagecodec.so
 lib/libQmageDecoder.so
 lib/hw/sensors.default.so
 lib/hw/gps.default.so
 lib/hw/lights.default.so
+lib/hw/audio.primary.default.so
+lib/hw/audio.a2dp.default.so
+lib/hw/audio_policy.default.so
 bin/mtilatcmd
 bin/ml_setid
 bin/validationif
@@ -102,10 +119,6 @@ media/TemperatureError.qmg
 #lib/libsecutil.so
 #lib/libriloemhook.so
 #lib/libsvcmd.so
-#lib/libasound.so
-#lib/lib_gsd4t_factory.so
-#lib/libpmemhelper.so
-#lib/libphycontmem.so
 #lib/lib_gsd4t_factory.so
 #lib/libseccameraadaptor.so
 #lib/libseccamera.so
@@ -119,9 +132,6 @@ media/TemperatureError.qmg
 #cameradata/datapattern_420sp.yuv
 #cameradata/datapattern_front_420sp.yuv
 #cameradata/datapattern_420sp_alkon.yuv
-#lib/hw/audio.primary.default.so
-#lib/hw/audio.a2dp.default.so
-#lib/hw/audio_policy.default.so
 #lib/libbmm.so
 #lib/libcamera.so
 #lib/libGAL.so

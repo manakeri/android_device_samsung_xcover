@@ -1,4 +1,5 @@
 
+./hw.sh
 ./hwacc w 40e10294 000018c2
 ./hwacc w 40e10298 000018c2
 ./hwacc w 40e1029c 000018c2

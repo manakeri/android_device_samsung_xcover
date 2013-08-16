@@ -33,6 +33,3 @@ service ueventd /sbin/ueventd
 service recovery /sbin/recovery
 
 service adbd /sbin/adbd recovery
-    enabled
-
-

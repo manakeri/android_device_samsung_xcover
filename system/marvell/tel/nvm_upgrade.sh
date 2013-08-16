@@ -10,7 +10,7 @@
 # Records the upgrade event in NVM file upgrade_record.txt
 # Copies the version_signature from /marvell/tel/nvm_org into NVM
 
-nvm_dir=/mnt/nvm
+nvm_dir=/Linux/Marvell/NVM
 nvm_org=/marvell/tel/nvm_org
 nvm_ts=version_signature
 
