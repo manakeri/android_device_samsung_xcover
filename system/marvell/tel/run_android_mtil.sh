@@ -7,7 +7,8 @@ if [ -e /data/log/dump_normal_flag ]; then
     # respawn myself with output redirection
         cat /proc/kmsg > /data/log/dump_normal_log &
         #echo "==== respawn /marvell/tel/run_android_mtil.sh ====" > /dev/ttyS0
-    busybox sh /system/bin/run_android_mtil.sh I_respawned $* 1>/dev/kmsg 2>&1
+    cd /marvell/tel
+    ./busybox sh ./run_android_mtil.sh I_respawned $* 1>/dev/kmsg 2>&1
     exit $?
   fi
   # removing "I_respawned" parameter
@@ -15,7 +16,7 @@ if [ -e /data/log/dump_normal_flag ]; then
 fi
 
 # Comment following 2 lines if need to debug via usb0
-echo "run_android_mtil.sh: Put usb0 down"
+# echo "run_android_mtil.sh: Put usb0 down"
 ifconfig usb0 down
 
 #########################################################
@@ -39,13 +40,9 @@ sysperm_root='located=`ls -d $dvfiles`; chmod 660 $located; chown root.root $loc
 # /dev/mtd/mtd1      - SAARB MG2 onenand
 # /dev/block/mmcblk0 - SAARB MG1 mmc
 # /dev/bml2          - Alkon FSR
-dvfiles="/dev/block/bml2"
-mknod /dev/bml2 b 137 2
-mknod /dev/bml24 b 137 24
-ln -s /dev/block/bml2 /dev/bml2
-ln -s /dev/block/bml24 /dev/bml24
-
+dvfiles="/dev/mtd/mtd1 /dev/block/mmcblk0 /dev/bml2"
 eval $sysperm_root
+
 dvfiles="/dev/pxa_sim /dev/pm860x_hsdetect  
          /dev/rtcmon /dev/rtc* /dev/freezer_device /dev/dvfm" 
 
@@ -62,15 +59,15 @@ mrvlacc="system system keystore radio bluetooth
 #########################################################
 
 ## hw.sh - apply debug service first
-insmod /system/lib/modules/hwmap.ko
+insmod ./hwmap.ko
 mknod /dev/hwmap c 237 0
 chmod 660 /dev/hwmap
 chown system.system /dev/hwmap
 
-export NVM_ROOT_DIR="/mnt/nvm"
+export NVM_ROOT_DIR="/marvell/tel/NVM"
 ml_setid $mrvlacc -- mkdir $NVM_ROOT_DIR
 # Run the upgrade check script to detect and fix NVM contents produced by another version
-ml_setid $mrvlacc -- busybox sh /system/bin/nvm_upgrade.sh
+ml_setid $mrvlacc -- ./busybox sh /marvell/tel/nvm_upgrade.sh
 
 # Release COMM from reset
 ./hwacc w 0x40F5001C   1
@@ -94,24 +91,24 @@ fi
 
 ml_setid $mrvlacc -- sh -c "echo "/data/log" > /mrvlsys/diag_log_path"
 
-ml_setid $mrvlacc -- busybox cp /etc/asound.conf /data/etc/asound.conf
+ml_setid $mrvlacc -- busybox cp /marvell/etc/asound.conf /data/etc/asound.conf
 echo 0 > /proc/sys/kernel/hung_task_timeout_secs
 ml_setid $mrvlacc -- busybox sh diag_port_conf.sh
 
-insmod /system/lib/modules/osadev.ko
-insmod /system/lib/modules/seh.ko
+insmod osadev.ko
+insmod seh.ko
 ## control qos mode - default off 
 ## create /marvell/tel/qos_mode_on to enable on boot
 if [ -e /marvell/tel/qos_mode_on ]; then
-insmod /system/lib/modules/acipcdev.ko param_qos_mode=1
+insmod acipcdev.ko param_qos_mode=1
 else
-insmod /system/lib/modules/acipcdev.ko param_qos_mode=0
+insmod acipcdev.ko param_qos_mode=0
 fi
-insmod /system/lib/modules/cci_datastub.ko
+insmod cci_datastub.ko
 sleep 1
-insmod /system/lib/modules/citty.ko
-insmod /system/lib/modules/ccinetdev.ko
-insmod /system/lib/modules/cidatatty.ko
+insmod citty.ko
+insmod ccinetdev.ko
+insmod cidatatty.ko
 
 dvfiles="/sys/bus/platform/drivers/88pm860x-charger/88pm860x-charger.1/control
          /sys/devices/platform/pxa95x-i2c.0/i2c-0/0-0034/88pm860x-rtc/rtcOffset
@@ -126,7 +123,7 @@ dvfiles="/sys/bus/platform/drivers/88pm860x-charger/88pm860x-charger.1/control
 eval $sysperm_root
 
 # Remove following remark to enable Bluetooth DUN support
-insmod /system/lib/modules/bt_tty.ko
+insmod bt_tty.ko
 chmod 760 /dev/btduntty*
 chown system.bluetooth /dev/btduntty*
 
@@ -143,9 +140,9 @@ chown root.system /sys/class/switch/h2w/state
 # delay 1 second to get udevd notified about the devices creation
 # in the modules above, before atcmdsrv and audioserver start
 sleep 1
-/system/bin/mtsd --secure &
+./mtsd --secure &
 sleep 1
-/system/bin/mtilatcmd -S &
+./mtilatcmd -S &
 
 # add wakelock - start
 # note: uncomment next line -  this may be needed if you dont have proper permissions to write into this device from java layer
@@ -156,11 +153,11 @@ port=`cat /mrvlsys/at_port.txt`
 if [ $port == 'UART' ]; then
 	#Set AT and Diag over UART
 
-    /system/bin/mtilatcmd -S -u 1&
+    ./mtilatcmd -S -u 1&
 else
     busybox ln -s /dev/ttyDIAG0 /dev/ttygserial
     busybox ln -s /dev/ttyGS0 /dev/ttymodem
-    insmod /system/lib/modules/ppp.ko
+    insmod ppp.ko
     dvfiles="/dev/ttyDIAG* /dev/ttyGS*"
     eval $sysperm_root
     # set default usb composite configuration, triggers usb enumeration
@@ -174,15 +171,16 @@ on property:persist.service.adb.enable=0
     echo usb_mass_storage,acm > /sys/devices/platform/pxa-u2o/composite
     stop adbd
 
-    /system/bin/mtilatcmd -S -m /dev/ttymodem &
-    /system/bin/mtilatcmd -S -m /dev/btduntty1 &
+    ./mtilatcmd -S -m /dev/ttymodem &
+    ./mtilatcmd -S -m /dev/btduntty1 &
 
 fi
 
 
-/system/bin/audioserver -S -D yes &
-/system/bin/eeh -s -D yes -M yes &
-/system/bin/validationif --secure &
+./audioserver -S -D yes &
+./eeh -s -D yes -M yes &
+
+./validationif --secure &
 
 #set shell as non freezable
 echo "sh 1" > /sys/power/freeze_process/frz_process
