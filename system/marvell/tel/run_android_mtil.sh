@@ -1,61 +1,57 @@
-#######################Added by Jim###########################
-
-SDCARD_DEBUG_FLAG="/marvell/tel/NVM/yuhuatel/sdcard_debug"
-NOCOMM_FLAG="/marvell/tel/NVM/yuhuatel/NO_COMM"
-
-## Jim: check whether debug flag is marked
-if [ -e $SDCARD_DEBUG_FLAG ]; then
-    busybox rm /mrvlsys/diag_bsp.cfg
-    busybox cp /marvell/etc/diag_bsp_sd.cfg /mrvlsys/diag_bsp.cfg
-    chmod 0666 /dev/log/main
-    chmod 0666 /dev/log/radio
-    chmod 0666 /dev/log/events
-    chmod 0666 /dev/log/system    
-else
-    busybox rm /mrvlsys/diag_bsp.cfg
-    busybox cp /marvell/etc/diag_bsp_usb.cfg /mrvlsys/diag_bsp.cfg
-fi    
-
-#######################Added by Jim End###########################
+cntt_start=`date "+%s"`
+#
+# Allow debug info collection under some flag
+#
+if [ -e /data/log/dump_normal_flag ]; then
+  if [ "$1" != "I_respawned" ]; then
+    # respawn myself with output redirection
+        cat /proc/kmsg > /data/log/dump_normal_log &
+        #echo "==== respawn /marvell/tel/run_android_mtil.sh ====" > /dev/ttyS0
+    busybox sh /system/bin/run_android_mtil.sh I_respawned $* 1>/dev/kmsg 2>&1
+    exit $?
+  fi
+  # removing "I_respawned" parameter
+  shift
+fi
 
 # Comment following 2 lines if need to debug via usb0
 echo "run_android_mtil.sh: Put usb0 down"
 ifconfig usb0 down
 
 #########################################################
-## YH/jim change 770 to 771
-vrfperm='located=`ls -d $vrfiles`; chmod 771 $located; chown root.system $located'
+vrfperm='located=`ls -d $vrfiles`; chmod 770 $located; chown root.system $located'
 vrfiles="/mnt/nvm /mnt/nvm/*  
          /marvell/* 
          /marvell/usr/* /marvell/usr/lib/* /marvell/usr/sbin/* 
          /marvell/Linux/* /marvell/Linux/Marvell/* 
          /marvell/etc/* 
-         /marvell/tel/* /marvell/tel/nvm_org/*
-	/sys/devices/virtual/switch/h2w/*
-	/sys/devices/virtual/switch/h3w/*"
+         /marvell/tel/* /marvell/tel/nvm_org/*"
 eval $vrfperm
 
-## YH/jim Change 660 to 771,or Battery read will be error in Android
-sysperm_syst='located=`ls -d $dvfiles`; chmod 771 $located; chown system.system $located'
-sysperm_root='located=`ls -d $dvfiles`; chmod 771 $located; chown root.root $located'
-sysperm_root_roth='located=`ls -d $dvfiles`; chmod 771 $located; chown root.root $located'
+vrfperm='located=`ls -d $vrfiles`; chmod 775 $located; chown root.system $located'
+vrfiles="/mnt/nvm /mnt/nvm/* /marvell/tel/nvm_org/*"  
+eval $vrfperm
+
+sysperm_syst='located=`ls -d $dvfiles`; chmod 660 $located; chown system.system $located'
+sysperm_root='located=`ls -d $dvfiles`; chmod 660 $located; chown root.root $located'
 #########################################################
 # MRD partition 
 # /dev/mtd/mtd1      - SAARB MG2 onenand
 # /dev/block/mmcblk0 - SAARB MG1 mmc
 # /dev/bml2          - Alkon FSR
-dvfiles="/dev/bml2"
+dvfiles="/dev/block/bml2"
+mknod /dev/bml2 b 137 2
+mknod /dev/bml24 b 137 24
+ln -s /dev/block/bml2 /dev/bml2
+ln -s /dev/block/bml24 /dev/bml24
+
 eval $sysperm_root
-
-#Added by YH/jim: brwxrwx--x  -> brwxrwx-
-chmod 770  /dev/block/mmcblk0
-
 dvfiles="/dev/pxa_sim /dev/pm860x_hsdetect  
          /dev/rtcmon /dev/rtc* /dev/freezer_device /dev/dvfm" 
 
 eval $sysperm_root
 # Give access to console for system users
-dvfiles="/dev/ttyS0 /dev/console"
+dvfiles="/dev/ttyS0 /dev/console /dev/spa"
 eval $sysperm_syst
 #########################################################
 
@@ -66,24 +62,19 @@ mrvlacc="system system keystore radio bluetooth
 #########################################################
 
 ## hw.sh - apply debug service first
-insmod ./hwmap.ko
+insmod /system/lib/modules/hwmap.ko
 mknod /dev/hwmap c 237 0
 chmod 660 /dev/hwmap
 chown system.system /dev/hwmap
 
-## Added by YH
-chown system.system /dev/gpo
-
-export NVM_ROOT_DIR="/marvell/tel/NVM"
+export NVM_ROOT_DIR="/mnt/nvm"
 ml_setid $mrvlacc -- mkdir $NVM_ROOT_DIR
 # Run the upgrade check script to detect and fix NVM contents produced by another version
-ml_setid $mrvlacc -- ./busybox sh /marvell/tel/nvm_upgrade.sh
+ml_setid $mrvlacc -- busybox sh /system/bin/nvm_upgrade.sh
 
 # Release COMM from reset
-if [ ! -e $NOCOMM_FLAG ]; then
 ./hwacc w 0x40F5001C   1
 echo 1 > /sys/power/cp
-fi
 
 # Uncomment the next line in order to disable Suspend and Freezer
 #echo "Marvell" > "/sys/power/wake_lock"
@@ -103,199 +94,123 @@ fi
 
 ml_setid $mrvlacc -- sh -c "echo "/data/log" > /mrvlsys/diag_log_path"
 
-ml_setid $mrvlacc -- busybox cp /marvell/etc/asound.conf /data/etc/asound.conf
+ml_setid $mrvlacc -- busybox cp /etc/asound.conf /data/etc/asound.conf
 echo 0 > /proc/sys/kernel/hung_task_timeout_secs
 ml_setid $mrvlacc -- busybox sh diag_port_conf.sh
 
-insmod osadev.ko
-insmod seh.ko
-
+insmod /system/lib/modules/osadev.ko
+insmod /system/lib/modules/seh.ko
 ## control qos mode - default off 
 ## create /marvell/tel/qos_mode_on to enable on boot
 if [ -e /marvell/tel/qos_mode_on ]; then
-    insmod acipcdev.ko param_qos_mode=1
+insmod /system/lib/modules/acipcdev.ko param_qos_mode=1
 else
-    insmod acipcdev.ko param_qos_mode=0
+insmod /system/lib/modules/acipcdev.ko param_qos_mode=0
 fi
-
-insmod cci_datastub.ko
+insmod /system/lib/modules/cci_datastub.ko
 sleep 1
+insmod /system/lib/modules/citty.ko
+insmod /system/lib/modules/ccinetdev.ko
+insmod /system/lib/modules/cidatatty.ko
 
-insmod citty.ko
-insmod ccinetdev.ko
-insmod cidatatty.ko
-
-## YH/jim:  Remove /sys/devices/platform/pxa95x-i2c.0/i2c-0/0-0034/88pm860x-rtc/rtcOffset, no this node
 dvfiles="/sys/bus/platform/drivers/88pm860x-charger/88pm860x-charger.1/control
+         /sys/devices/platform/pxa95x-i2c.0/i2c-0/0-0034/88pm860x-rtc/rtcOffset
          /sys/devices/platform/pxa95x-i2c.0/i2c-0/0-0034/88pm860x-battery.0/*
          /sys/power/cp
+         /sys/devices/virtual/switch/h2w/state 
          /sys/power/android_freezer_disable
+         /sys/devices/platform/pxa-u2o/composite 
          /dev/ramfile /dev/mipsram /dev/osadrv /dev/seh /dev/acipc 
          /dev/acipcddrv /dev/ccidatastub /dev/citty*  
          /dev/cctdev* /dev/ccichar /dev/cidatatty* /dev/cctdatadev*"
 eval $sysperm_root
 
-eval $sysperm_root_roth
-
-
-insmod bt_tty.ko
+# Remove following remark to enable Bluetooth DUN support
+insmod /system/lib/modules/bt_tty.ko
 chmod 760 /dev/btduntty*
 chown system.bluetooth /dev/btduntty*
 
-# Enable GPS support
-insmod gps_sirf.ko
-chown system.system /dev/gps_sirf
-chown system.system /dev/ttyS2
+# SAMSUNG_SSENI : For serial_client
+chown root.system /dev/citty0
+chown root.system /dev/citty1
+
+chown root.system /sys/class/switch/h2w/state
+
+#The Diag driver works with /mnt/mmc
+#Therefore it is linked to /mnt/SD1
+#ln -s /mnt/SD1 /mnt/mmc
 
 # delay 1 second to get udevd notified about the devices creation
 # in the modules above, before atcmdsrv and audioserver start
 sleep 1
-./mtsd --secure &
+/system/bin/mtsd --secure &
 sleep 1
-./mtilatcmd -S &
+/system/bin/mtilatcmd -S &
 
+# add wakelock - start
+# note: uncomment next line -  this may be needed if you dont have proper permissions to write into this device from java layer
+chmod 777 /dev/acipcddrv
+# add wakelock - end
 
-## YH debug.
-export USB_ETHERNET_FILE="/marvell/tel/run_ether_usb.sh"
-export USB_ANDROID_FILE="/marvell/tel/run_android_usb.sh"
-export NVM_ROOT_DIR="/marvell/tel/NVM"
-
-## YH gadget method
-if [ -f $USB_ETHERNET_FILE ]; then
-     busybox sh $USB_ETHERNET_FILE
-else
-if [ -f $USB_ANDROID_FILE ]; then
-     setprop ctl.stop adbd
-     busybox sh $USB_ANDROID_FILE
-     adbd &
-else
 port=`cat /mrvlsys/at_port.txt`
 if [ $port == 'UART' ]; then
-        #Set AT and Diag over UART
+	#Set AT and Diag over UART
 
-    ./mtilatcmd -S -u 1&
+    /system/bin/mtilatcmd -S -u 1&
 else
     busybox ln -s /dev/ttyDIAG0 /dev/ttygserial
     busybox ln -s /dev/ttyGS0 /dev/ttymodem
-    insmod ppp.ko
+    insmod /system/lib/modules/ppp.ko
     dvfiles="/dev/ttyDIAG* /dev/ttyGS*"
     eval $sysperm_root
     # set default usb composite configuration, triggers usb enumeration
-    #./mtilatcmd -S -m /dev/ttymodem &
-    #./mtilatcmd -S -m /dev/btduntty1 &
-fi
-fi
+    #echo usb_mass_storage,acm,adb,diag > /sys/devices/platform/pxa-u2o/composite
+
+on property:persist.service.adb.enable=1
+   echo usb_mass_storage,acm,adb,diag > /sys/devices/platform/pxa-u2o/composite
+   start adbd
+
+on property:persist.service.adb.enable=0
+    echo usb_mass_storage,acm > /sys/devices/platform/pxa-u2o/composite
+    stop adbd
+
+    /system/bin/mtilatcmd -S -m /dev/ttymodem &
+    /system/bin/mtilatcmd -S -m /dev/btduntty1 &
+
 fi
 
-if [ -e $NOCOMM_FLAG ]; then
-echo "philipssetup started"
- /system/bin/philipssetup 
-echo "philipssetup End"
-fi
 
-./audioserver -S -D yes &
-
-## Jim: check whether debug flag is marked, if debug mode, don't use silent reset.
-if [ -e $SDCARD_DEBUG_FLAG ]; then
-./eeh -s -D yes -M yes &
-else
-./eeh -s -D yes -M yes -a 5&
-fi
-
-./validationif --secure &
+/system/bin/audioserver -S -D yes &
+/system/bin/eeh -s -D yes -M yes &
+/system/bin/validationif --secure &
 
 #set shell as non freezable
 echo "sh 1" > /sys/power/freeze_process/frz_process
+echo "serial_client 1" > /sys/power/freeze_process/frz_process
 
 #disable D0CS set user constrain on OP 0
 #echo  0, 0  > /sys/devices/system/cpu/cpu0/enable_op
 #echo 0, 0  > /sys/devices/system/cpu/cpu0/control
+###################################################################
+# Not required any more for since 8787 A1 fixes the uplink issue
+#insmod /system/lib/modules/mlan.ko
+#insmod /system/lib/modules/sd8787.ko
+#insmod /system/lib/modules/bt8787.ko
+#echo 1 > /sys/class/rfkill/rfkill0/state
+###################################################################
 
 
- 
-## YH gadget.update by zenith
-if [ -e  /data/data/com.android.contacts/usbacat ]; then
-    setprop sys.acat.mode yes
-    setprop sys.usb.config acm,diag
-else
-if [ `grep -c ACAT=USB /proc/cmdline` == 1 ]; then
-    setprop sys.usb.config acm,diag
-fi
-fi
+# Uncomment some of the following lines to create logcat files on target (for debug)
+#export LOGCAT_DIR=/sdcard/logcat
+#export LOGCAT_DIR=/data/log
+#mkdir $LOGCAT_DIR
+#chmod 777 $LOGCAT_DIR
+#ml_setid $mrvlacc -- logcat -v time -b main -f $LOGCAT_DIR/logcat.log -r 1024 -n 5 &
+#ml_setid $mrvlacc -- logcat -v time -b radio -f $LOGCAT_DIR/logcat-radio.log -r 1024 -n 5 &
+#logcat -v time -b events -f $LOGCAT_DIR/logcat-events.log -r 1024 -n 5 &
+#chmod 777 $LOGCAT_DIR/logcat*
 
-## attention. replace following to bootcompleted.sh
-## if [ -e  /data/data/com.android.contacts/serial_debug ]; then
-##     busybox dmesg -n 7
-## else
-##     busybox dmesg -n 1
-## fi
-
-
-## YH do it. 
-## Uncomment some of the following lines to create logcat files on target (for debug)
-LOGCAT_DIR="/data/log/terminal_log"
-RAMDUMP_FILE="/sdcard/RAMDUMP0000.gz"
-RAMDUMP_TEXT_FILE="/sdcard/RAMDUMP0000.txt"
-
-if [ -e $SDCARD_DEBUG_FLAG ]; then
-
-    while [ `grep -c sdcard /proc/mounts`  == 0 ]
-    do
-        echo "Wait for SD card mounted"
-        sleep 2
-    done
-
-    echo "SD Card mounted"
-    sleep 2    
-
-    TIME=`date "+%Y-%m-%d-%H-%M-%S"`
-    RAMDUMP_SAVED_DIR="RAMDUMP-LOG-$TIME"
-    LAST_REBOOT_SAVED_DIR="LAST_REBOOT-LOG-$TIME"
-    
-    if [ -e $RAMDUMP_FILE ] || [ -e $RAMDUMP_TEXT_FILE ]; then
-        busybox mkdir /sdcard/$RAMDUMP_SAVED_DIR
-        mv $RAMDUMP_FILE /sdcard/$RAMDUMP_SAVED_DIR
-        mv $RAMDUMP_TEXT_FILE /sdcard/$RAMDUMP_SAVED_DIR
-        busybox chmod -R 777 /data/log
-	busybox chown -R 1000:1000 /data/log
-        busybox cp -rf /data/log /sdcard/$RAMDUMP_SAVED_DIR
-        echo "Ramdump files saved successfully"
-    fi
-    
-    busybox mkdir /sdcard/$LAST_REBOOT_SAVED_DIR
-    busybox cp -rf /data/log /sdcard/$LAST_REBOOT_SAVED_DIR
-    busybox cp -f  /data/anr/traces.txt /sdcard/$LAST_REBOOT_SAVED_DIR
-    
-    busybox rm -rf /data/log
-    busybox rm -rf /data/anr/traces.txt
-    busybox mkdir -p $LOGCAT_DIR
-        
-    echo 1 > /sys/class/yh_nodes/misc/cp_reset
-    /marvell/tel/diag_mmi start
-        
-    chmod 777 $LOGCAT_DIR	
-    logcat -f $LOGCAT_DIR/logcat.log -r 512 -n 4 -v time &
-    logcat -b radio -f $LOGCAT_DIR/logcat-radio.log -r 512 -n 16 -v time &
-    logcat -b events -f $LOGCAT_DIR/logcat-events.log -r 512 -n 4 -v time &
-    cat /proc/kmsg > $LOGCAT_DIR/kernel.txt &
-    chmod 777 $LOGCAT_DIR/*    
-	    
-    kernel_log_size=0
-    const_number=0
-	while [ $const_number == 0 ]
-     do
-	       kernel_log_size=`ls -l /data/log/terminal_log/kernel.txt | awk '{print $4}'`
-	       if [ $kernel_log_size -ge 1048576 ]; then
-	            killall cat
-	            busybox cp -f $LOGCAT_DIR/kernel.txt $LOGCAT_DIR/kernel.txt.1
-	            cat /dev/null > $LOGCAT_DIR/kernel.txt
-                cat /proc/kmsg > $LOGCAT_DIR/kernel.txt &  
-	       else
-	           sleep 60
-	       fi    
-     done
-fi
-## end of not do it.
+#chmod 777 /marvell/tel/NVM/audio_hifi.tlv
 
 # Uncomment one of the following lines to change the USB default configuration after reboot (for debug)
 # 1. ADB ACM USB_MASS_STORAGE DIAG (default)
@@ -310,3 +225,8 @@ fi
 # echo usb_mass_storage > /sys/devices/platform/pxa-u2o/composite
 # 6. RNDIS
 # echo rndis > /sys/devices/platform/pxa-u2o/composite
+
+# for checking VBAT_MIN SYMP#458827
+echo "-9a" > /proc/driver/88pm860x 
+echo `date` VBAT-MIN in `cat /proc/driver/88pm860x` > /tmp/vbat_min.txt 
+cat /tmp/vbat_min.txt > /dev/kmsg

@@ -1,19 +1,23 @@
-#!/system/busybox/sh
-    ln -s /marvell/tel/busybox /marvell/tel/tail
-    ln -s /marvell/tel/busybox /marvell/tel/vi
-    ln -s /marvell/tel/busybox /marvell/tel/find
-    ln -s /marvell/tel/busybox /marvell/tel/grep
-    ln -s /marvell/tel/busybox /marvell/tel/cp
-    ln -s /marvell/tel/busybox /marvell/tel/mv
-    ln -s /marvell/tel/busybox /marvell/tel/ls
-    ln -s /marvell/tel/busybox /marvell/tel/tftp
-    ln -s /marvell/tel/busybox /marvell/tel/tee
-    ln -s /marvell/tel/busybox /marvell/tel/killall
+#!/marvell/tel/busybox sh
+    ln -s /marvell/tel/busybox /marvell/tel/tail >/dev/null 2>&1
+    ln -s /marvell/tel/busybox /marvell/tel/vi >/dev/null 2>&1
+    ln -s /marvell/tel/busybox /marvell/tel/find >/dev/null 2>&1
+    ln -s /marvell/tel/busybox /marvell/tel/grep >/dev/null 2>&1
+    ln -s /marvell/tel/busybox /marvell/tel/cp >/dev/null 2>&1
+    ln -s /marvell/tel/busybox /marvell/tel/mv >/dev/null 2>&1
+    ln -s /marvell/tel/busybox /marvell/tel/ls >/dev/null 2>&1
+    ln -s /marvell/tel/busybox /marvell/tel/tftp >/dev/null 2>&1
+    ln -s /marvell/tel/busybox /marvell/tel/tee >/dev/null 2>&1
+    ln -s /marvell/tel/busybox /marvell/tel/killall /dev/null 2>&1
 
 cd /marvell/tel
 
-echo "launch run_rfconfig_mtil.sh"
-busybox sh run_rfconfig_mtil.sh
+log_status=`cat /mnt/.lfs/log_enable`
 
-echo "launch run_android_mtil.sh"
-busybox sh run_android_mtil.sh
+case $log_status in
+	"LOGD")
+	./busybox sh run_android_mtil.sh $* 1>/dev/null 2>&1 ;;
+	"LOGE")
+	./busybox sh run_android_mtil.sh ;;
+esac
+

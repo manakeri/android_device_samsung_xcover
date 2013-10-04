@@ -4,11 +4,13 @@ j=`grep -c "PROD=1,2" /proc/cmdline`
 if [ $i == '1' ]; then
 #Set for Diag over UART
 	cp /marvell/etc/diag_bsp.cfg /mrvlsys
+	echo " " >>/mrvlsys/diag_bsp.cfg
 	echo extr=3 >> /mrvlsys/diag_bsp.cfg
 else
 if [ $j == '1' ];then
 #Set AT and Diag over UART
 	cp /marvell/etc/diag_bsp.cfg /mrvlsys
+	echo " " >>/mrvlsys/diag_bsp.cfg
 	echo extr=3 >> /mrvlsys/diag_bsp.cfg
 	echo delayConnectToExtr=1 >> /mrvlsys/diag_bsp.cfg
 	echo UART > /mrvlsys/at_port.txt

@@ -1,0 +1,64 @@
+#
+# Define the client num on the Tavor EVB
+#
+[audioserver]
+CLIENT_NUM=3
+
+#
+# Configuration file for Tavor EvbII Platform
+# Define default hifi playback channel configuration
+#
+[client0]
+NAME=hifi
+MONO=1
+BEAR=1
+STEREO=1
+MIC1=0
+MIC2=0
+PLAYBACK_VOLUME=83
+CAPTURE_VOLUME=80
+
+#
+# Configuration file for Tavor EvbII Platform
+# Define voice playback&capture channel configuration
+#
+[client1]
+NAME=voice
+MONO=0
+BEAR=
+STEREO=0
+MIC1=0
+MIC2=0
+PLAYBACK_VOLUME=83
+CAPTURE_VOLUME=80
+
+#
+# Configuration file for Tavor EvbII Platform
+# Define phone voicecall channel configuration
+#
+[client2]
+NAME=phone
+MONO=1
+BEAR=1
+STEREO=0
+MIC1=1
+MIC2=0
+PLAYBACK_VOLUME=83
+CAPTURE_VOLUME=80
+
+
+#
+# Used to emulate the autodection of BT or Headphone and other GUI selection for MONO BEAR and Stereo
+#
+[runtime]
+MONO=0
+BEAR=0
+STEREO=0
+MIC1=0
+MIC2=0
+PLAYBACK_VOLUME=83
+CAPTURE_VOLUME=80
+
+BT_DETECT=0
+HP_DETECT=0
+BTADDR=00:1A:0E:7C:DA:57

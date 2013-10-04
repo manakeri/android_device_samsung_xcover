@@ -1,19 +1,16 @@
+# for checking VBAT_MIN SYMP#458827
+echo "-9a" > /proc/driver/88pm860x 
+echo `date` VBAT-MIN in `cat /proc/driver/88pm860x` >> /tmp/vbat_min.txt 
+cat /tmp/vbat_min.txt > /dev/kmsg 
+
+#exit 0
 echo "SD TEL START is running!!"
 /marvell/tel/diag_mmi force_mount
-
-
-# The SD card power-management feature activated by default
-# The access to the SD is prohibited whilst Android in SUSPEND
-# So the "logcat to sd" is also prohibited
-# EXIT here and do not continue with LOGCAT...
-# If "logcat to sd" required for any debug
-# disable the SD feature and place the "exit 0" below to the commentary
-
-exit 0
-
 export LOGCAT_DIR=/sdcard/logcat
 export OLD_LOGCAT_DIR=/sdcard/logcat_old
 export LOGCAT_FS_BOOT=/data/log
+
+exit 0
 
 # find new ramdump files and touch to update timestamps
 ls -l /sdcard/RAMDUMP*|busybox awk '/20[2-9][0-9]-01-01 00:00/ { print "/sdcard/" $(NF); }' | busybox xargs busybox touch
@@ -32,6 +29,7 @@ mkdir $LOGCAT_DIR
 # we expect logcat to be running since it is started in run_android_mtil.sh
 # so we need to kill all logcat processes 
 killall -9 logcat
+exit
 # move logcat logs from file system to SD card 
 cp -r -f $LOGCAT_FS_BOOT/logcat* $LOGCAT_DIR
 rm -f $LOGCAT_FS_BOOT/logcat*

@@ -1,4 +1,4 @@
-#!/system/busybox/sh
+#!/marvell/tel/busybox sh
     ln -s /marvell/tel/busybox /marvell/tel/tail
     ln -s /marvell/tel/busybox /marvell/tel/vi
     ln -s /marvell/tel/busybox /marvell/tel/find
@@ -11,7 +11,4 @@
     ln -s /marvell/tel/busybox /marvell/tel/killall
 
 cd /marvell/tel
-echo "launch run_rfconfig_mtil.sh"
-busybox sh run_rfconfig_mtil.sh
-echo "launch run_android_bsp_only.sh"
 busybox sh run_android_bsp_only.sh

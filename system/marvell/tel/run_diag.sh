@@ -9,6 +9,6 @@ insmod ccinetdev.ko
 insmod cidatatty.ko
 insmod citty.ko
 
-./atcmdsrv -D yes&
-./audioserver &
-./eeh &
+/system/bin/atcmdsrv -D yes&
+/system/bin/audioserver &
+/system/bin/eeh &
