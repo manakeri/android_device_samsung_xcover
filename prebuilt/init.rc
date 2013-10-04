@@ -7,8 +7,8 @@ on init
     loglevel 15
 
 # setup the global environment
-    export PATH /sbin:/system/sbin:/system/bin:/system/xbin
-    export LD_LIBRARY_PATH /system/lib:/marvell/usr/lib
+    export PATH /sbin:/system/sbin:/system/bin:/system/xbin:/marvell/tel
+    export LD_LIBRARY_PATH /system/lib
     export ANDROID_BOOTLOGO 1
     export ANDROID_ROOT /system
     export ANDROID_ASSETS /system/app
@@ -21,6 +21,10 @@ on init
     export NVM_ROOT_DIR=/mnt/nvm
     export BOOTCLASSPATH /system/framework/core.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/filterfw.jar
 
+    symlink /dev/block/bml2 /dev/bml2
+    symlink /dev/block/bml24 /dev/bml24
+    symlink /dev/block/bml25 /dev/bml25
+    
     symlink /system/etc /etc
     symlink /sys/kernel/debug /d
     symlink /system/vendor /vendor
@@ -30,7 +34,7 @@ on init
     
     symlink /system/marvell /marvell
     symlink /system/marvell/Linux /Linux
-    symlink /system/marvell/tel/NVM /mnt/nvm
+    symlink /system/xbin/busybox /marvell/tel/busybox
     #mkdir /marvell 0771 system system
 
 # create mountpoints
@@ -50,10 +54,11 @@ on init
     mkdir /mnt/obb 0700 root system
     mount tmpfs tmpfs /mnt/obb mode=0755,gid=1000
 
+    symlink /system/marvell/tel/NVM /mnt/nvm
+
     mkdir /tmp
     mount tmpfs tmpfs /tmp
 
-#    mkdir /mnt/nvm
     mkdir /mnt/.lfs 0755 system system
     mkdir /efs 0771 system system
 

@@ -71,6 +71,11 @@ FILES="
 etc/vold.fstab
 etc/gps.conf
 etc/sirfgps.conf
+bin/llnker
+bin/memsicd
+bin/samsung_debug
+bin/playlpm
+bin/charging_mode
 lib/lib_gsd4t.so
 lib/libmarvell-ril.so
 lib/libsecutil.so
@@ -173,17 +178,7 @@ lib/llbbluedroid.so
 lib/llbcamera_client.so
 lib/llbcrypto.so
 lib/llbandroid_runtime.so
-marvell/tel/mtilatcmd
-marvell/tel/ml_setid
-marvell/tel/validationif
-marvell/tel/mtsd
-marvell/tel/audioserver
-marvell/tel/eeh
-marvell/tel/hwacc
-bin/memsicd
-bin/samsung_debug
-bin/playlpm
-bin/charging_mode
+lib/llbmtiltrace.so
 marvell/etc/.audiorc
 marvell/etc/asound.conf
 marvell/etc/diag_bsp.cfg
@@ -192,6 +187,23 @@ marvell/etc/diag_bsp_usb.cfg
 marvell/etc/protocols
 marvell/tel/NVM/EMPTY
 marvell/Linux/Marvell/EMPTY
+marvell/tel/rtc_offsetapp
+marvell/tel/rdfut
+marvell/tel/serial_client
+marvell/tel/bttest
+marvell/tel/diag_mmi
+marvell/tel/i2cacc
+marvell/tel/launch
+marvell/tel/launch_bsp
+marvell/tel/mtil_client_template
+marvell/tel/v_test
+marvell/tel/mtilatcmd
+marvell/tel/ml_setid
+marvell/tel/validationif
+marvell/tel/mtsd
+marvell/tel/audioserver
+marvell/tel/eeh
+marvell/tel/hwacc
 marvell/tel/run_android_mtil.sh
 marvell/tel/nvm_upgrade.sh
 marvell/tel/restart.sh
@@ -252,13 +264,13 @@ usr/share/alsa/pcm/surround41.conf
 usr/share/alsa/pcm/surround50.conf
 usr/share/alsa/pcm/surround51.conf
 usr/share/alsa/pcm/surround71.conf
-marvell/usr/lib/libagps_MTIL.so
-marvell/usr/lib/libasound_module_ctl_phone.so
-marvell/usr/lib/libasound_module_pcm_amr.so
-marvell/usr/lib/libasound_module_pcm_phone.so
-marvell/usr/lib/libasound_module_pcm_wb_phone.so
-marvell/usr/lib/libCaddoARMLNXExt.so
-marvell/usr/lib/libCaddoARMLNX.so
+lib/libagps_MTIL.so
+lib/libasound_module_ctl_phone.so
+lib/libasound_module_pcm_amr.so
+lib/libasound_module_pcm_phone.so
+lib/libasound_module_pcm_wb_phone.so
+lib/libCaddoARMLNXExt.so
+lib/libCaddoARMLNX.so
 "
 
 (cat << EOF) | sed s/__DEVICE__/$DEVICE/g > ../../../vendor/samsung/$DEVICE/$DEVICE-vendor-blobs.mk
@@ -296,6 +308,7 @@ done
 chmod -v 0755 ../../../vendor/$VENDOR/$DEVICE/proprietary/bin/*
 chmod -v 0664 ../../../vendor/$VENDOR/$DEVICE/proprietary/lib/*.so
 chmod -v 0664 ../../../vendor/$VENDOR/$DEVICE/proprietary/lib/*/*.so
+chmod -v 0755 ../../../vendor/$VENDOR/$DEVICE/proprietary/marvell/tel/*
 
 #if [ "$ZIP" ]; then rm -rf tmp ; fi
 

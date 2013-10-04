@@ -5,6 +5,6 @@ case $? in
 	sh -i /dev/ttyS0 ;;
     1)
 	echo 1 > /mrvlsys/test.txt
-	/system/bin/serial_client ;;
+	serial_client ;;
 esac
 

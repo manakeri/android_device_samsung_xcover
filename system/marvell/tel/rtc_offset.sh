@@ -1,2 +1,2 @@
-/system/bin/rtc_offsetapp &
+rtc_offsetapp &
 
