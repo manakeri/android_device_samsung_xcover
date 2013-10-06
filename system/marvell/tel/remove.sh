@@ -1,3 +1,4 @@
+#!/system/xbin/sh
 killall atcmdsrv
 
 sleep 1

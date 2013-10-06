@@ -12,7 +12,6 @@ TARGET_ARCH_VARIANT := armv7-a
 TARGET_ARCH_VARIANT_FPU := vfpv3-d16
 TARGET_CPU_SMP := false
 
-
 # Misc
 TARGET_NO_KERNEL := false
 TARGET_NO_BOOTLOADER := true
@@ -29,7 +28,7 @@ BOARD_USES_ALSA_AUDIO := true
 TARGET_PROVIDES_LIBAUDIO := true
 
 # Accessories
-USE_CAMERA_STUB := true
+USE_CAMERA_STUB := false
 ifeq ($(USE_CAMERA_STUB),false)
 BOARD_CAMERA_LIBRARIES := libcamera
 endif

@@ -1,0 +1,60 @@
+on early-init
+    start ueventd
+
+on init
+
+
+# setup the global environment
+    export PATH /sbin:/system/bin
+    export ANDROID_ROOT /system
+
+
+
+# create mountpoints and mount tmpfs on sqlite_stmt_journals
+    mkdir /system
+
+    mount rootfs rootfs / ro remount
+
+    write /proc/sys/kernel/panic_on_oops 1
+
+
+
+# mount mtd partitions
+    # Mount /system rw first to give the filesystem a chance to save a checkpoint
+    #mount yaffs2 mtd@system /system
+    mount rfs /dev/stl16 /system check=no
+    mount rfs /dev/stl16 /system ro remount
+# Comment the next line for having system in RW mode (debug)
+    #mount yaffs2 mtd@system /system ro remount
+
+
+on boot
+# basic network init
+    ifup lo
+    hostname localhost
+    domainname localdomain
+
+
+    class_start default
+
+## Daemon processes to be run by init.
+##
+service ueventd /sbin/ueventd
+    critical
+
+
+service debuggerd /system/bin/debuggerd
+
+
+service playlpm /system/bin/playlpm
+    user root
+	oneshot
+
+#service immvibed /system/bin/immvibed 
+	#oneshot
+
+service lpmkey /system/bin/charging_mode
+    user root
+    oneshot
+
+

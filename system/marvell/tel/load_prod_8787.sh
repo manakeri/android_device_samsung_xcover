@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/system/xbin/sh
 
 rmmod sd8xxx
 rmmod mlan
@@ -10,3 +10,4 @@ insmod /system/lib/modules/mlan.ko
 insmod /system/lib/modules/sd8787.ko
 
 ifconfig uap0 up
+ifconfig mlan0 up

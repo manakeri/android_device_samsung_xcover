@@ -1,0 +1,219 @@
+on init
+    chown system system /sys/power/wait_for_fb_sleep
+    chmod 0660 /sys/power/wait_for_fb_sleep
+    chown system system /sys/power/wait_for_fb_wake
+    chmod 0660 /sys/power/wait_for_fb_wake
+    chown system system /sys/power/deepidle
+    chmod 0660 /sys/power/deepidle
+    chown system system /sys/class/graphics/fbcon
+    chmod 755 /sys/class/graphics/fbcon
+
+    chown root system /sys/samsung_debug/samsung_debug_enable
+    chown root system /sys/samsung_debug/force_operation
+    chown root system /sys/samsung_debug/ssdebug_mode_flag
+    chown root system /sys/samsung_debug/ssdebug_mode_flag2
+    chown root system /sys/samsung_debug/user_tombstone_file
+
+    # for wifi and bluetooth power
+    chown system system /sys/class/rfkill/rfkill0/state
+    # chown system system /sys/class/rfkill/rfkill1/state
+
+    #setprop persist.service.adb.enable 1
+    setprop have.internal.modem 1
+    setprop wifi.interface mlan0
+
+    # properties to control media decoder
+    setprop ro.media.gst.enabled 1
+    setprop ro.media.dec.aud.wma.enabled 1
+    setprop ro.media.dec.vid.wmv.enabled 1
+    setprop ro.mrvl.h264.dec.cap 3
+    #setprop media.settings.xml /etc/media_profiles.xml
+
+    # set opengles version as 0x20000
+    # opengles major version = (version & 0xffff0000)>>16
+    # opengles minor version = version & 0xffff
+    setprop ro.opengles.version 131072
+    # setprop dalvik.vm.heapsize "32m"
+
+    write /sys/power/mspm/mspm 1
+    write /sys/power/mspm/prof 1
+    write /sys/power/cp 0
+
+on post-fs
+    # reserve BMM device node for skia GC path
+    insmod /system/lib/modules/bmm.ko bmm_size_mb=0
+#GFORCE only -start
+    insmod /system/lib/modules/touch.ko
+    # insmod /system/lib/modules/backlight.ko
+    insmod /system/lib/modules/camacq.ko
+#GFORCE only -end
+
+    # for control LCD backlight
+    chown system system /sys/class/backlight/backlight-0/brightness
+    chmod 0660 /sys/class/backlight/backlight-0/brightness
+    
+    chown system system /sys/class/backlight/torch/brightness
+    chmod 0660 /sys/class/backlight/torch/brightness
+
+    chown system system sys/class/leds/spotlight/brightness
+    chmod 0660 sys/class/leds/spotlight/brightness
+
+    insmod /system/lib/modules/galcore.ko registerMemBase=0x54000000 irqLine=70 contiguousSize=0x2000000 baseAddress=0x80000000
+    # insmod /system/lib/modules/pmem.ko pmem_name="pmem","pmem_adsp" pmem_size=0x2000000,0x1000000 pmem_no_allocator=1,0 pmem_cache=1,0
+
+#+bired - Yokogawa SMT porting
+    # YDC_SMT_DEBUG
+    # when you use Yokogawa SMT, unblock below line.
+    #insmod /system/lib/modules/tlx204_le.ko
+#-bired - Yokogawa SMT porting
+
+    # create filesystem for wifi & dhcp
+    insmod /system/lib/modules/mlan.ko
+    chmod 0755 /system/bin/mcfg    
+    mkdir /data/misc/wifi 0771 wifi wifi
+    chown wifi wifi /data/misc/wifi
+    chmod 0771 /data/misc/wifi
+    mkdir /data/misc/wifi/sockets 0771 wifi wifi
+    chown wifi wifi /data/misc/wifi/sockets
+    chmod 0771 /data/misc/wifi/sockets
+    mkdir /data/misc/dhcp 0770 dhcp dhcp
+    chown dhcp dhcp /data/misc/dhcp
+    chmod 0770 /data/misc/dhcp
+ 
+    # create directory for NVM data
+    mkdir /data/Linux 0775 system system
+    mkdir /data/Linux/Marvell 0775 system system
+    mkdir /data/Linux/Marvell/NVM 0775 system system
+
+# permissions for system server and daemons (accelerometer & magnetic & proximity)
+    mkdir /data/misc/sensors 0775 system misc
+
+    chown root system /dev/mmc328x
+    chown root system /dev/ecompass_ctrl
+    chown root system /dev/bma222
+    chown root system /dev/proximity
+    
+    chmod 0660 /dev/mmc328x
+    chmod 0660 /dev/ecompass_ctrl
+    chmod 0660 /dev/bma222
+    chmod 0660 /dev/proximity
+
+    chown system system /sys/class/input/input0/enable
+    chown system system /sys/class/input/input0/poll_delay
+    chmod 0660 /sys/class/input/input0/enable
+    chmod 0660 /sys/class/input/input0/poll_delay 
+
+    write /sys/power/mspm/mspm 1
+    write /sys/power/mspm/prof 1
+ # for organV2
+    mkdir /data/misc/organ 0775 media media
+    mkdir /data/misc/organ/sockets 0775 media media
+    chown media media /data/misc/organ/sockets
+    chmod 0775 /data/misc/organ/sockets
+    
+
+    #write /sys/power/cp 0
+    insmod /system/lib/modules/mbtchar.ko
+#   insmod /system/lib/modules/mbt8787.ko
+#   write /sys/class/rfkill/rfkill0/state 1
+#   chmod 0777 /dev/mbtchar0
+
+    chown system bluetooth /dev/mbtchar0 
+    chown system bluetooth /dev/mbtchar1 
+    chmod 0666  /dev/mbtchar0
+    chmod 0666  /dev/mbtchar1
+on boot
+    #setprop power.fake_power true
+    setprop battery.fake_ac false
+    #by default using 'gc' to accelerate video output
+    #setting to 'overlay' means using overlay to output video
+    #setting to none or other values means using SW color conversion.
+    setprop video.accelerate.hw gc
+    setprop rild.libpath /system/lib/libmarvell-ril.so
+    setprop rild.libargs "-d /dev/ttyS0"
+    setprop ro.sf.lcd_density 160
+ #   chmod 0777 /marvell/tel/run_android_usb.sh
+    chmod 0771 /sys/devices/platform/pxa-u2o/composite
+
+    #service.camera.id	-choose camera sensor id, default '0' if not set
+    #service.camera.hw	-choose preview output, default 'base' if not set
+    #			-overlay
+    #			-base, default
+    setprop service.camera.id 0
+    setprop service.camera.hw base
+    setprop service.camera.af 1
+    setprop service.camera.width_preview 0
+    setprop service.camera.height_preview 0
+    setprop service.camera.width_still 0
+    setprop service.camera.height_still 0
+    setprop service.camera.tuning 0
+    setprop overlay.rotate.sensor 1
+    setprop service.overlay.rotate 90
+    #setprop hardware.overlay.rotate  0
+    #setprop rild.libpath /system/lib/libreference-ril.so
+    #setprop rild.libargs "-d /dev/ttyGS0"
+    setprop ro.ril.wake_lock_timeout 3000
+
+    # Settings for GPS
+    chown system system /proc/driver/sirf
+    chown system system /dev/ttyS2
+    setprop persist.service.gps.support false
+
+    #### Bluetooth Setup
+    # Install virtual network interface (needed by user-space BNEP/PAN)
+    insmod /system/lib/modules/vuni.ko
+
+    #### 720P video blocking
+    setprop video.resolution.check 1
+    setprop max.supported.width 800
+    setprop max.supported.height 480
+    
+service wpa_supplicant /system/bin/wpa_supplicant -Dwext -imlan0 -c/data/misc/wifi/wpa_supplicant.conf
+    socket wpa_mlan0 dgram 660 wifi wifi
+    disabled
+    oneshot
+
+service dhcpcd /system/bin/dhcpcd -ABKL mlan0
+    disabled
+    oneshot
+
+service dhcpcd-wfd0 /system/bin/dhcpcd -ABKL wfd0
+    disabled
+    oneshot
+
+#for WiFi MFG(TestMode)
+service mfgloader /system/bin/mfgloader
+    disabled
+    oneshot
+
+service wlandutservice /system/bin/wlandutservice
+    disabled
+    oneshot
+    
+service marvelltel /system/bin/sh /marvell/tel/launch
+    class main
+    oneshot
+
+service mwirelessd /system/bin/MarvellWirelessDaemon
+    class main
+
+service filemonitor /system/bin/FileMonitorService
+    class main
+    user system
+    group system
+
+service memsicd /system/bin/memsicd
+    class main
+    user system
+    group system
+    oneshot
+
+    
+# Marvell-0.01: the mwu daemon must run as root
+# label is 'mwu' : the binary wfdd will be replaced by the mwu utility
+service mwu /system/bin/mwu -c /system/bin/wifidir_init.conf -p 00000000 -i wfd0 -d /system/etc/wifidirect_defaults.conf -l /tmp/wfd.log
+    user root
+    group wifi
+    disabled
+    oneshot
+

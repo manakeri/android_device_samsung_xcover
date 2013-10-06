@@ -1,23 +1,16 @@
-#!/marvell/tel/busybox sh
-    ln -s /marvell/tel/busybox /marvell/tel/tail >/dev/null 2>&1
-    ln -s /marvell/tel/busybox /marvell/tel/vi >/dev/null 2>&1
-    ln -s /marvell/tel/busybox /marvell/tel/find >/dev/null 2>&1
-    ln -s /marvell/tel/busybox /marvell/tel/grep >/dev/null 2>&1
-    ln -s /marvell/tel/busybox /marvell/tel/cp >/dev/null 2>&1
-    ln -s /marvell/tel/busybox /marvell/tel/mv >/dev/null 2>&1
-    ln -s /marvell/tel/busybox /marvell/tel/ls >/dev/null 2>&1
-    ln -s /marvell/tel/busybox /marvell/tel/tftp >/dev/null 2>&1
-    ln -s /marvell/tel/busybox /marvell/tel/tee >/dev/null 2>&1
-    ln -s /marvell/tel/busybox /marvell/tel/killall /dev/null 2>&1
-
-cd /marvell/tel
-
-log_status=`cat /mnt/.lfs/log_enable`
-
-case $log_status in
-	"LOGD")
-	./busybox sh run_android_mtil.sh $* 1>/dev/null 2>&1 ;;
-	"LOGE")
-	./busybox sh run_android_mtil.sh ;;
-esac
+#!/system/xbin/busybox sh
+ln -s /system/xbin/busybox /marvell/tel/busybox
+ln -s /system/xbin/busybox /marvell/tel/tail >/dev/null 2>&1
+ln -s /system/xbin/busybox /marvell/tel/vi >/dev/null 2>&1
+ln -s /system/xbin/busybox /marvell/tel/find >/dev/null 2>&1
+ln -s /system/xbin/busybox /marvell/tel/grep >/dev/null 2>&1
+ln -s /system/xbin/busybox /marvell/tel/cp >/dev/null 2>&1
+ln -s /system/xbin/busybox /marvell/tel/mv >/dev/null 2>&1
+ln -s /system/xbin/busybox /marvell/tel/ls >/dev/null 2>&1
+ln -s /system/xbin/busybox /marvell/tel/tftp >/dev/null 2>&1
+ln -s /system/xbin/busybox /marvell/tel/tee >/dev/null 2>&1
+ln -s /system/xbin/busybox /marvell/tel/killall /dev/null 2>&1
+cd /marvell/tel/
+./run_android_mtil.sh
+./load_prod_8787.sh
 

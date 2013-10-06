@@ -1,3 +1,4 @@
+#!/system/xbin/sh
 echo 1 > /sys/power/cp
 
 insmod g_serial.ko

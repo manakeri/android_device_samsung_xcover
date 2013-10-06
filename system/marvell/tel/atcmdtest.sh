@@ -1,3 +1,4 @@
+#!/system/xbin/sh
 ls /mrvlsys/test.txt >/dev/null 2>/dev/null
 
 case $? in

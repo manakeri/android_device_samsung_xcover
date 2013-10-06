@@ -1,3 +1,4 @@
+#!/system/xbin/sh
 # for checking VBAT_MIN SYMP#458827
 echo "-9a" > /proc/driver/88pm860x 
 echo `date` VBAT-MIN in `cat /proc/driver/88pm860x` >> /tmp/vbat_min.txt 

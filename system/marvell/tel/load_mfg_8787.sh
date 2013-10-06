@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/system/xbin/sh
 
 ifconfig uap0 down
 hciconfig hci0 down

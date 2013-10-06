@@ -1,3 +1,4 @@
+#!/system/xbin/sh
 i=0
 while [ $i -lt 120 ]
 do

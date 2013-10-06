@@ -28,10 +28,6 @@ PRODUCT_COPY_FILES += \
 	device/samsung/xcover/prebuilt/ueventd.pxa968.rc:root/ueventd.pxa968.rc
 
 PRODUCT_COPY_FILES += \
-#	device/samsung/xcover/prebuilt/marvelltel.sh:system/bin/marvelltel.sh
-#	device/samsung/xcover/prebuilt/init.pxa968.rc:root/init.pxa968.rc \
-
-PRODUCT_COPY_FILES += \
 	device/samsung/xcover/prebuilt/zinitix_touch.idc:system/usr/idc/zinitix_touch.idc
 
 PRODUCT_PACKAGES += \

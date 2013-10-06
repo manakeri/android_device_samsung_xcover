@@ -1,0 +1,48 @@
+#
+# The init dameon will first parse the init.rc and then this rc file. The commands
+# in the same section will be combined together. Then the commands are executed one
+# section by another in the following order: early-init, init, early-boot, boot.
+#
+
+#
+# init.rc doesn't define this section. If you want to make sure that your "on init" commands
+# are executed before those on init commands of init.rc, put the commands here.
+#
+on early-init
+   device /dev/pcm* 0660 root audio
+   device /dev/controlC0 0660 root audio
+   device /dev/audio 0660 root audio
+   device /dev/adsp 0660 root audio
+   device /dev/dsp 0660 root audio
+   device /dev/mixer 0660 root audio
+   device /dev/timer 0660 root audio
+#
+# If you need modify an environmental variable which is already defined in init.rc, 
+# you should edit the init.rc. 
+# The export command here doesn't support the usage of: export PATH $PATH:\system\bin
+#
+on init
+    export BOARD EVBPV2
+
+write /sys/power/mspm/mspm 1
+write /sys/power/mspm/prof 1
+
+#    mkdir /marvell 0771 system system
+#    mount yaffs2 /dev/block/mtdblock6 /marvell
+#    chown system system /marvell
+#    chmod 0771 /marvell
+#
+# init.rc doesn't define this section. If you want to make sure that your "on boot" commands
+# are executed before those on boot commands of init.rc, put the commands here.
+#
+on early-boot
+
+on boot
+service marvelltel /system/bin/sh /marvell/tel/launch_bsp
+    oneshot
+
+#console
+#there's no console in production mode - having this console causes kernel to send sighup to chil processes once sh exits
+service filemonitor /system/bin/FileMonitorService
+	user system
+	group system

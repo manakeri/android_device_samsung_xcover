@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/system/xbin/sh
 
 FAIL_IDLE_CYCLE=99.0
 FATAL_IDLE_CYCLE=60.0
